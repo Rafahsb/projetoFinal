@@ -1,0 +1,11 @@
+exemplo references
+
+numero: {
+  type: Sequelize.INTEGER,
+  allowNull: true,
+  references: { model: "venda", key: "numero" },
+  onDelete: "CASCADE",
+  onUpdate: "CASCADE",
+},
+
+  

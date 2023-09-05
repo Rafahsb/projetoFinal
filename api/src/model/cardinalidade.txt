@@ -1,0 +1,66 @@
+
+Relacionamento N:1 
+Funcionario 1 : N Venda = Funcionario possui n Venda e Venda possui 1 Funcionario
+
+Funcionario Model 
+static associate(models) {
+    this.hasMany(models.Venda, { foreignKey: "id_funcionario" });
+}
+
+Venda Model
+static associate(models) {
+  this.belongsTo(models.Funcionario, { foreignKey: "id_funcionario" });
+}
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Relacionamento N: N
+
+Produto N : N Venda
+
+Produto Model
+static associate(models) {
+  this.belongsToMany(models.Venda, {
+    foreignKey: "id_produto",
+    through: models.vendaProduto,
+  });
+}
+
+Venda Model
+static associate(models) {
+  this.belongsToMany(models.Produto, {
+    foreignKey: "numero",
+    through: models.vendaProduto,
+  });
+}
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Relacionamento 1:1
+
+Antes de fazer o Relacionamento crie uma coluna na TabelaB(ModelB) adicionando o id da TabelaA(ModelA) na migration
+e adicione no atribuito adicionado o tipo "unique: true". Ex:
+
+idA: {
+  type: Sequelize.INTEGER,
+  allowNull: true,
+  unique: true,
+  references: { model: "TabelaA", key: "idA" },
+  onDelete: "CASCADE",
+  onUpdate: "CASCADE",
+},
+
+ModelA 1 : 1 ModelB
+
+ModelA 
+static associate(models) {
+  this.hasOne(models.ModelB, { foreignKey: "id_ModelA });
+}
+
+ModelB
+this.belongsTo(models.ModelA, { foreignKey: "id_ModelA" });
+
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
