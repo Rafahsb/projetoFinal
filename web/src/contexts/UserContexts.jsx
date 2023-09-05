@@ -19,7 +19,7 @@ export function UserContextProvider({ children }) {
                 JSON.stringify(result.data.accessToken)
             );
             setAccessToken(result.data.accessToken);
-            navigate("/teste");
+            navigate("/painel");
         } catch (e) {
             setError({
                 title: "Houve um erro no login!",
