@@ -1,12 +1,11 @@
-const { UsuarioModel } = require("../model/usuario-model");
+const { UsuariosModel } = require("../model/usuarios-model");
 const jwt = require("jsonwebtoken");
 
 class UsuarioController {
   async criarUsuario(request, response) {
-    const { matricula, senha } = request.body;
+    const { matricula, senha, email, unidade, cargo } = request.body;
     try {
-    
-      const userExists = await UsuarioModel.findOne({
+      const userExists = await UsuariosModel.findOne({
         where: { matricula },
       });
 
@@ -16,22 +15,24 @@ class UsuarioController {
         });
       }
 
-      const createUser = await UsuarioModel.create({
-        matricula: matricula,
-        senha: senha,
+      const createUser = await UsuariosModel.create({
+        matricula,
+        senha,
+        email: "teste@teste.com",
+        unidade: "teste",
+        cargo: "teste",
       });
 
-
-       // Gera e retorna o access token
-       const accessToken = jwt.sign(
+      // Gera e retorna o access token
+      const accessToken = jwt.sign(
         { id: createUser.id },
         process.env.TOKEN_SECRET,
         { expiresIn: "300m" }
       );
-   
+
       return response.status(201).json({
         message: "Usuario criado com sucesso!",
-        accessToken
+        accessToken,
       });
     } catch (error) {
       return response.status(400).json({
@@ -52,7 +53,7 @@ class UsuarioController {
       }
 
       // Verifica se usuário existe
-      const userExists = await UsuarioModel.findOne({
+      const userExists = await UsuariosModel.findOne({
         where: { matricula },
       });
 
@@ -74,12 +75,56 @@ class UsuarioController {
       const accessToken = jwt.sign(
         { id: userExists.id },
         process.env.TOKEN_SECRET,
-        { expiresIn: "30m" }
+        { expiresIn: "300m" }
       );
       return response.status(200).json({ accessToken });
     } catch (error) {
       return response.status(500).json({
         error: `Erro interno: ${error}`,
+      });
+    }
+  }
+
+  async pesquisarUsuarios(request, response) {
+    try {
+      const filtro = await UsuariosModel.findAll({});
+
+      return response.status(200).json({
+        Usuarios: filtro,
+      });
+    } catch (error) {
+      return response.status(400).json({
+        message: `Erro: ${error}`,
+      });
+    }
+  }
+
+  async atualizarUsuario(request, response) {
+    const { id, matricula, senha, email, unidade, cargo } = request.body;
+
+    try {
+      await UsuariosModel.update(
+        {
+          id_usuario: id,
+          matricula,
+          senha,
+          email,
+          unidade,
+          cargo,
+        },
+        {
+          where: {
+            id_usuario: id,
+          },
+        }
+      );
+
+      return response.status(200).json({
+        massage: `O usuário foi atualizado com sucesso`,
+      });
+    } catch (error) {
+      return response.status(400).json({
+        message: `Erro: ${error}`,
       });
     }
   }

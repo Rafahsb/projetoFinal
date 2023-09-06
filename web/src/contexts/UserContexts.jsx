@@ -30,6 +30,11 @@ export function UserContextProvider({ children }) {
         }
     }
 
+    async function logout() {
+        sessionStorage.removeItem("token");
+        navigate("/");
+    }
+
     async function registerUser(data) {
         try {
             const user = await api.post("/register", data);
@@ -38,7 +43,7 @@ export function UserContextProvider({ children }) {
                 JSON.stringify(user.data.accessToken)
             );
             setAccessToken(user.data.accessToken);
-            navigate("/foods");
+            navigate("/painel");
         } catch (e) {
             setError({
                 title: "Houve um erro no cadastro!",
@@ -56,6 +61,7 @@ export function UserContextProvider({ children }) {
                 error,
                 setError,
                 loading,
+                logout,
             }}
         >
             {children}

@@ -1,6 +1,6 @@
 const { Model, DataTypes } = require("sequelize");
 
-class UsuarioModel extends Model {
+class UsuariosModel extends Model {
   static init(database) {
     super.init(
       {
@@ -17,10 +17,22 @@ class UsuarioModel extends Model {
           type: DataTypes.TEXT,
           allowNull: false,
         },
+        email: {
+          type: DataTypes.TEXT,
+          allowNull: false,
+        },
+        unidade: {
+          type: DataTypes.TEXT,
+          allowNull: false,
+        },
+        cargo: {
+          type: DataTypes.TEXT,
+          allowNull: false,
+        },
       },
       {
-        modelName: "Usuario",
-        tableName: "usuario",
+        modelName: "Usuarios",
+        tableName: "usuarios",
         timestamps: false,
         sequelize: database,
       }
@@ -28,4 +40,4 @@ class UsuarioModel extends Model {
   }
 }
 
-module.exports = { UsuarioModel };
+module.exports = { UsuariosModel };
