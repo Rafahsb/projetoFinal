@@ -5,13 +5,33 @@ class UsuarioController {
   async criarUsuario(request, response) {
     const { matricula, senha } = request.body;
     try {
-      await UsuarioModel.create({
+    
+      const userExists = await UsuarioModel.findOne({
+        where: { matricula },
+      });
+
+      if (userExists) {
+        return response.status(400).json({
+          error: "Usuario já existe!",
+        });
+      }
+
+      const createUser = await UsuarioModel.create({
         matricula: matricula,
         senha: senha,
       });
 
+
+       // Gera e retorna o access token
+       const accessToken = jwt.sign(
+        { id: createUser.id },
+        process.env.TOKEN_SECRET,
+        { expiresIn: "300m" }
+      );
+   
       return response.status(201).json({
         message: "Usuario criado com sucesso!",
+        accessToken
       });
     } catch (error) {
       return response.status(400).json({
@@ -56,7 +76,6 @@ class UsuarioController {
         process.env.TOKEN_SECRET,
         { expiresIn: "30m" }
       );
-
       return response.status(200).json({ accessToken });
     } catch (error) {
       return response.status(500).json({
