@@ -5,6 +5,9 @@ import { Register } from "./pages/Register";
 import { Painel } from "./pages/Painel";
 import { UserContextProvider } from "./contexts/UserContexts";
 import { isAuthenticated } from "./utils/is-authenticated";
+import { Viaturas } from "./pages/Viaturas";
+import { Manutencoes } from "./pages/Manutencoes";
+import { Usuarios } from "./pages/Usuarios";
 
 export function PrivateRoute({ children }) {
     if (!isAuthenticated()) {
@@ -28,6 +31,34 @@ export function Navigations() {
                             </PrivateRoute>
                         }
                     />
+                    <Route
+                        path="/viaturas"
+                        element={
+                            <PrivateRoute>
+                                <Viaturas/>
+                            </PrivateRoute>
+                        }
+                    />
+                    <Route
+                        path="/manutencoes"
+                        element={
+                            <PrivateRoute>
+                                <Manutencoes/>
+                            </PrivateRoute>
+                        }
+                    />
+                    <Route
+                        path="/usuarios"
+                        element={
+                            <PrivateRoute>
+                                <Usuarios/>
+                            </PrivateRoute>
+                        }
+                    />
+                    
+                    
+                                
+                                
                 </Routes>
             </UserContextProvider>
         </BrowserRouter>

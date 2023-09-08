@@ -1,3 +1,5 @@
+const { HttpHelper } = require('../utils/http-helper');
+
 const { ViaturasModel } = require("../model/viaturas-model");
 
 class ViaturaController {
@@ -39,7 +41,7 @@ class ViaturaController {
   }
 
   async deletarViatura(request, response) {
-    const { id } = request.body;
+    const { id } = request.params;
     try {
       await ViaturasModel.destroy({
         where: {
@@ -92,21 +94,28 @@ class ViaturaController {
   }
 
   async atualizarViatura(request, response) {
-    const {
-      id,
-      marca,
-      modelo,
-      chassi,
-      portas,
-      bancos,
-      cor,
-      kilometragem,
-      orgao_vinculado,
-      batalhao,
-      piloto,
-    } = request.body;
+    const httpHelper = new HttpHelper(response);
 
     try {
+      const { id } = request.params;
+      const {
+        marca,
+        modelo,
+        chassi,
+        portas,
+        bancos,
+        cor,
+        kilometragem,
+        orgao_vinculado,
+        batalhao,
+        piloto,
+      } = request.body;
+      if (!id) return httpHelper.badRequest('Parâmetros inválidos!');
+      
+      const viaturaExists = await ViaturasModel.findOne({id_viatura:id});
+      
+      if(!viaturaExists) return httpHelper.notFound('Viatura não encontrada!');
+
       await ViaturasModel.update(
         {
           id_viatura: id,
@@ -128,13 +137,11 @@ class ViaturaController {
         }
       );
 
-      return response.status(200).json({
-        massage: `A Viatura foi atualizada com sucesso`,
-      });
+      return httpHelper.ok({
+        message: 'Viatura atualizada com sucesso!'
+    });
     } catch (error) {
-      return response.status(400).json({
-        message: `Erro: ${error}`,
-      });
+      return httpHelper.internalError(error);
     }
   }
 }

@@ -35,7 +35,7 @@ class ManutencoesModel extends Model {
     );
   }
   static associate(models) {
-    this.hasMany(models.Viaturas, { foreignKey: "id_funcionario" });
+    this.hasMany(models.Viaturas, { foreignKey: "id_viatura" });
   }
 }
 

@@ -8,8 +8,6 @@ import { Link } from "react-router-dom";
 import { Container } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { UserContext } from "../contexts/UserContexts";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
 
 export function Head() {
     const {
@@ -18,10 +16,10 @@ export function Head() {
     } = useForm();
     const { logout } = useContext(UserContext);
     return (
-        <Navbar className="bg-body-tertiary">
+        <Navbar className="bg-body-tertiary p-0">
             <Container fluid>
-                <Navbar.Brand className="d-flex align-items-center">
-                    <HomeOutlinedIcon className="text-primary"></HomeOutlinedIcon>
+                <Navbar.Brand className="d-flex align-items-center ">
+                    <HomeOutlinedIcon className="text-primary me-3 fs-2"></HomeOutlinedIcon>
                     <h3 className="d-flex">
                         Via <div className="text-primary">Gestão</div>
                     </h3>
@@ -29,7 +27,7 @@ export function Head() {
                 <Navbar.Brand className="d-flex align-items-center">
                     <Dropdown>
                         <Dropdown.Toggle variant="light" id="dropdown-basic">
-                            <Image src={Perfil} fluid />
+                            <Image src={Perfil} className="w-50" fluid />
                         </Dropdown.Toggle>
 
                         <Dropdown.Menu>

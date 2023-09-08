@@ -1,5 +1,6 @@
 const { UsuariosModel } = require("../model/usuarios-model");
 const jwt = require("jsonwebtoken");
+const bcrypt = require('bcrypt');
 
 class UsuarioController {
   async criarUsuario(request, response) {
@@ -14,10 +15,13 @@ class UsuarioController {
           error: "Usuario já existe!",
         });
       }
-
+      const passwordHashed = await bcrypt.hash(
+        senha,
+        Number(process.env.SALT)
+    );
       const createUser = await UsuariosModel.create({
         matricula,
-        senha,
+        senha: passwordHashed,
         email: "teste@teste.com",
         unidade: "teste",
         cargo: "teste",
@@ -64,8 +68,9 @@ class UsuarioController {
       }
 
       // Verifica se a senha está correta
+      const isPasswordValid = await bcrypt.compare(senha, userExists.senha);
 
-      if (senha != userExists.senha) {
+      if (!isPasswordValid) {
         return response.status(400).json({
           error: "Senha incorreta!",
         });
