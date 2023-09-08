@@ -11,5 +11,6 @@ UsuariosModel.init(database);
 ManutencoesModel.init(database);
 ViaturasModel.init(database);
 ManutencoesModel.associate(database.models);
+ViaturasModel.associate(database.models);
 
 module.exports = { database };

@@ -21,7 +21,7 @@ module.exports = {
         type: Sequelize.FLOAT,
         allowNull: false,
       },
-      data: {
+      data_nota: {
         type: Sequelize.DATE,
         allowNull: false,
       },

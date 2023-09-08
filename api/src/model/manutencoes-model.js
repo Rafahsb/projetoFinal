@@ -21,7 +21,7 @@ class ManutencoesModel extends Model {
           type: DataTypes.FLOAT,
           allowNull: false,
         },
-        data: {
+        data_nota: {
           type: DataTypes.SMALLINT,
           allowNull: false,
         },

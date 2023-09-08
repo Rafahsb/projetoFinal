@@ -8,7 +8,7 @@ import Col from 'react-bootstrap/Col';
 
 
 
-export function Viatura(props) {
+export function Manutencao(props) {
     const {
         handleSubmit,
         register,
@@ -18,7 +18,7 @@ export function Viatura(props) {
     
 
     async function editViatura(data) {
-        await props.editViatura({ ...data, id: props.viatura.id_viatura});
+        await props.editViatura({ ...data, id: props.manutencao.id_manutencao});
         setIsUpdated(false);
     }
 

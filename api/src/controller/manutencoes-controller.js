@@ -1,14 +1,16 @@
 const { ManutencoesModel } = require("../model/manutencoes-model");
 
 class ManutencoesController {
-  async criarManutencoes(request, response) {
-    const { numero_nota, descricao, preco, data } = request.body;
+  async criarManutencao(request, response) {
+    console.log("teste2",request);
+    const { numero_nota, descricao, preco, data, id_viatura } = request.body;
     try {
       await ManutencoesModel.create({
         numero_nota,
         descricao,
         preco,
-        data,
+        data_nota: data,
+        id_viatura
       });
 
       return response.status(201).json({
@@ -21,7 +23,7 @@ class ManutencoesController {
     }
   }
 
-  async deletarManutencoes(request, response) {
+  async deletarManutencao(request, response) {
     const { id } = request.body;
     try {
       await ManutencoesModel.destroy({
@@ -74,8 +76,8 @@ class ManutencoesController {
     }
   }
 
-  async atualizarManutencoes(request, response) {
-    const { id, numero_nota, descricao, preco, data } = request.body;
+  async atualizarManutencao(request, response) {
+    const { id, numero_nota, descricao, preco, data, id_viatura } = request.body;
 
     try {
       await ManutencoesModel.update(
@@ -84,7 +86,8 @@ class ManutencoesController {
           numero_nota,
           descricao,
           preco,
-          data,
+          data_nota: data,
+          id_viatura
         },
         {
           where: {
