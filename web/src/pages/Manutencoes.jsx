@@ -93,7 +93,8 @@ export function Manutencoes() {
                 numero_nota: data.numero_nota,
                 descricao: data.descricao,
                 preco: data.preco,
-                data: data.data,
+                data: data.data_nota,
+                id_viatura: data.id_viatura,
             });
             await findManutencoes();
         } catch (error) {
@@ -111,7 +112,7 @@ export function Manutencoes() {
                     <Col sm={7} md={8}>
                         <Row>
                             <Col>
-                                <p class="h3 mt-4">Manutenções</p>
+                                <p className="h3 mt-4">Manutenções</p>
                             </Col>
                         </Row>
                         <Row className="mt-4">
@@ -159,14 +160,14 @@ export function Manutencoes() {
                                         </thead>
                                         <tbody>
                                             
-                                            {manutencoes.map((viatura, index) => (
+                                            {manutencoes.map((manutencao, index) => (
                                                 <tr key={index}>
                                                     <Manutencao
-                                                        viatura={viatura}
-                                                        removeViatura={async () =>
-                                                            await removeManutencao(viatura.id_manutencao)
+                                                        manutencao={manutencao}
+                                                        removeManutencao={async () =>
+                                                            await removeManutencao(manutencao.id_manutencao)
                                                         }
-                                                        editViatura={editManutencao}
+                                                        editManutencao={editManutencao}
                                                     />
                                                 </tr>
                                             ))}

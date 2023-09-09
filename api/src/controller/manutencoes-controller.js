@@ -1,8 +1,11 @@
+const { Sequelize } = require("sequelize");
 const { ManutencoesModel } = require("../model/manutencoes-model");
+const { ViaturasModel } = require("../model/viaturas-model");
+const { Validates } = require('../utils/validates');
+const { format } = require("date-fns");
 
 class ManutencoesController {
   async criarManutencao(request, response) {
-    console.log("teste2",request);
     const { numero_nota, descricao, preco, data, id_viatura } = request.body;
     try {
       await ManutencoesModel.create({
@@ -10,7 +13,7 @@ class ManutencoesController {
         descricao,
         preco,
         data_nota: data,
-        id_viatura
+        id_viatura,
       });
 
       return response.status(201).json({
@@ -24,11 +27,13 @@ class ManutencoesController {
   }
 
   async deletarManutencao(request, response) {
-    const { id } = request.body;
+    console.log(request);
+    const { id } = request.params;
+    console.log('id', id);
     try {
       await ManutencoesModel.destroy({
         where: {
-          id_Manutencoes: id,
+          id_manutencao: id,
         },
       });
 
@@ -66,6 +71,12 @@ class ManutencoesController {
     try {
       const filtro = await ManutencoesModel.findAll({});
 
+
+      filtro.forEach((manutencao) => {
+        manutencao.dataValues.data_nota = Validates.formatDate(manutencao.dataValues.data_nota);
+        // manutencao.dataValues.data_nota = format(new Date(manutencao.dataValues.data_nota), "dd/MM/yyyy")
+      });
+
       return response.status(200).json({
         Manutencoes: filtro,
       });
@@ -77,16 +88,16 @@ class ManutencoesController {
   }
 
   async atualizarManutencao(request, response) {
-    const { id, numero_nota, descricao, preco, data, id_viatura } = request.body;
+    const { id } = request.params;
+    const { numero_nota, descricao, preco, data_nota, id_viatura } = request.body;
 
     try {
       await ManutencoesModel.update(
         {
-          id_manutencao: id,
           numero_nota,
           descricao,
           preco,
-          data_nota: data,
+          data_nota,
           id_viatura
         },
         {

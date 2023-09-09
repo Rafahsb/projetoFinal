@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 
 class UsuarioController {
   async criarUsuario(request, response) {
-    const { matricula, senha, email, unidade, cargo } = request.body;
+    const { matricula, email, unidade, cargo } = request.body;
     try {
       const userExists = await UsuariosModel.findOne({
         where: { matricula },
@@ -16,15 +16,15 @@ class UsuarioController {
         });
       }
       const passwordHashed = await bcrypt.hash(
-        senha,
+        '123',
         Number(process.env.SALT)
     );
       const createUser = await UsuariosModel.create({
         matricula,
         senha: passwordHashed,
-        email: "teste@teste.com",
-        unidade: "teste",
-        cargo: "teste",
+        email,
+        unidade,
+        cargo,
       });
 
       // Gera e retorna o access token
@@ -105,7 +105,8 @@ class UsuarioController {
   }
 
   async atualizarUsuario(request, response) {
-    const { id, matricula, senha, email, unidade, cargo } = request.body;
+    const { id } = request.params;
+    const { matricula, senha, email, unidade, cargo } = request.body;
 
     try {
       await UsuariosModel.update(
@@ -126,6 +127,25 @@ class UsuarioController {
 
       return response.status(200).json({
         massage: `O usuário foi atualizado com sucesso`,
+      });
+    } catch (error) {
+      return response.status(400).json({
+        message: `Erro: ${error}`,
+      });
+    }
+  }
+
+  async deletarUsuario(request, response) {
+    const { id } = request.params;
+    try {
+      await UsuariosModel.destroy({
+        where: {
+          id_usuario: id,
+        },
+      });
+
+      return response.status(202).json({
+        message: "Usuário deletado com sucesso!",
       });
     } catch (error) {
       return response.status(400).json({

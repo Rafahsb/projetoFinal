@@ -101,7 +101,7 @@ export function Viaturas() {
                     <Col sm={7} md={8}>
                         <Row>
                             <Col>
-                                <p class="h3 mt-4">Viaturas</p>
+                                <p className="h3 mt-4">Viaturas</p>
                             </Col>
                         </Row>
                         <Row className="mt-4">

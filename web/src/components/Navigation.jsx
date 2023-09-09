@@ -1,5 +1,3 @@
-
-
 import Nav from 'react-bootstrap/Nav';
 
 export function Navigation() {
@@ -12,6 +10,8 @@ export function Navigation() {
             <Nav.Link href="/manutencoes" eventKey="link-2">Manutenções</Nav.Link>
             <Nav.Link href="/usuarios" eventKey="">Usuários</Nav.Link>
         </Nav>
+
+        
         
     );
 }

@@ -111,14 +111,6 @@ export function Login() {
                         >
                             Entrar
                         </Button>
-                        <Link to="/register">
-                            <Button
-                                className="w-100 btn-lg btn-xs-md"
-                                variant="primary"
-                            >
-                                Cadastrar
-                            </Button>
-                        </Link>
                     </Form>
                 </Col>
             </Row>

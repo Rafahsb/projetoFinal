@@ -25,6 +25,10 @@ class ManutencoesModel extends Model {
           type: DataTypes.SMALLINT,
           allowNull: false,
         },
+        id_viatura: { 
+          type: DataTypes.TEXT,
+          allowNull: false,
+        }
       },
       {
         modelName: "Manutencoes",

@@ -9,10 +9,10 @@ export function Painel() {
 
                 <Head></Head>
                 <Row className="vh-100">
-                    <Col sm={3}>
+                    <Col sm={3} md={2}>
                         <Navigation></Navigation>
                     </Col>
-                    <Col sm={9}>
+                    <Col sm={7} md={8}>
                         <div>
                             a
                         </div>  

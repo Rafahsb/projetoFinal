@@ -1,8 +1,8 @@
 import { api } from "./api";
 
-export async function getManutencoes() {
+export async function getUsuarios() {
     const accessToken = sessionStorage.getItem('token');
-    const result = await api.get('/manutencoes', {
+    const result = await api.get('/usuarios', {
         headers: {
             'Authorization': `Bearer ${JSON.parse(accessToken)}`
         }
@@ -10,9 +10,9 @@ export async function getManutencoes() {
     return result;
 }
 
-export async function deleteManutencao(id) {
+export async function deleteUsuario(id) {
     const accessToken = sessionStorage.getItem('token');
-    const result = await api.delete(`/manutencao/${id}`, {
+    const result = await api.delete(`/usuario/${id}`, {
         headers: {
             'Authorization': `Bearer ${JSON.parse(accessToken)}`
         }
@@ -20,14 +20,14 @@ export async function deleteManutencao(id) {
     return result;
 }
 
-export async function updateManutencao(data) {
+export async function updateUsuario(data) {
     const accessToken = sessionStorage.getItem('token');
-    const result = await api.put(`/manutencao/${data.id_manutencao}`, {      
-        numero_nota: data.numero_nota,
-        descricao: data.descricao,
-        preco: data.preco,
-        data_nota: data.data,
-        id_viatura: data.id_viatura,
+    const result = await api.put(`/usuario/${data.id_usuario}`, {      
+        matricula: data.matricula, 
+        senha: data.senha,
+        email: data.email,
+        unidade: data.unidade,
+        cargo: data.cargo,
     }, {
         headers: {
             'Authorization': `Bearer ${JSON.parse(accessToken)}`
@@ -36,14 +36,13 @@ export async function updateManutencao(data) {
     return result;
 }
 
-export async function createManutencao(data) {
+export async function createUsuario(data) {
     const accessToken = sessionStorage.getItem('token');
-    const result = await api.post('/manutencao', {
-        numero_nota: data.numero_nota,
-        descricao: data.descricao,
-        preco: data.preco,
-        data: data.data_nota,
-        id_viatura: data.id_viatura,
+    const result = await api.post('/usuario', {
+        matricula: data.matricula,
+        email: data.email,
+        unidade: data.unidade,
+        cargo: data.cargo,
     }, {
         headers: {
             'Authorization': `Bearer ${JSON.parse(accessToken)}`

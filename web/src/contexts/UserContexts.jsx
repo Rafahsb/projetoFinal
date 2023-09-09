@@ -30,38 +30,28 @@ export function UserContextProvider({ children }) {
         }
     }
 
+    async function logged() {
+        console.log("aseas", accessToken);
+    }
+
     async function logout() {
+        console.log("teste");
         sessionStorage.removeItem("token");
         navigate("/");
     }
 
-    async function registerUser(data) {
-        try {
-            const user = await api.post("/register", data);
-            sessionStorage.setItem(
-                "token",
-                JSON.stringify(user.data.accessToken)
-            );
-            setAccessToken(user.data.accessToken);
-            navigate("/painel");
-        } catch (e) {
-            setError({
-                title: "Houve um erro no cadastro!",
-                message: e.response.data.error,
-            });
-        }
-    }
+    
 
     return (
         <UserContext.Provider
             value={{
                 accessToken,
                 login,
-                registerUser,
                 error,
                 setError,
                 loading,
                 logout,
+                logged,
             }}
         >
             {children}

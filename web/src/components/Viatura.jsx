@@ -53,7 +53,7 @@ export function Viatura(props) {
             </td>
             <Modal size="lg" show={isUpdated} onHide={() => setIsUpdated(false)}>
                             <Modal.Header>
-                                <Modal.Title>Cadastrar nova viatura</Modal.Title>
+                                <Modal.Title>Editar viatura</Modal.Title>
                             </Modal.Header>
                             <Form
                                 noValidate

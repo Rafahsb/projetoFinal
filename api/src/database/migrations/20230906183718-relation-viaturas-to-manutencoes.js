@@ -6,7 +6,6 @@ module.exports = {
     await queryInterface.addColumn("manutencoes", "id_viatura", {
       type: Sequelize.INTEGER,
       allowNull: false,
-      primaryKey: true,
       references: { model: "viaturas", key: "id_viatura" },
       onUpdate: "CASCADE",
     });
