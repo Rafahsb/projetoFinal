@@ -10,6 +10,16 @@ export async function getViaturas() {
     return result;
 }
 
+export async function getBuscarViaturas(filtro) {
+    const accessToken = sessionStorage.getItem('token');
+    const result = await api.get(`/viaturasBusca/${filtro}`, {
+        headers: {
+            'Authorization': `Bearer ${JSON.parse(accessToken)}`
+        }
+    });
+    return result;
+}
+
 export async function deleteViatura(id) {
     const accessToken = sessionStorage.getItem('token');
     const result = await api.delete(`/viatura/${id}`, {

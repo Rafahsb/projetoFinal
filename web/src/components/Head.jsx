@@ -15,7 +15,8 @@ import { Input } from "./Input";
 import { useNavigate } from "react-router-dom";
 
 export function Head() {
-    
+    const navigate = useNavigate();
+
     const {
         handleSubmit,
         register,
@@ -25,6 +26,9 @@ export function Head() {
     const { logout, logged } = useContext(UserContext);
     const [isUpdated, setIsUpdated] = useState(false);
     
+    const alterarRota = (() => {
+        navigate('/painel');
+    }) 
 
     return (
         <>
@@ -32,7 +36,7 @@ export function Head() {
                 <Container fluid>
                     <Navbar.Brand className="d-flex align-items-center ">
                         <HomeOutlinedIcon className="text-primary me-3 fs-2"></HomeOutlinedIcon>
-                        <h3 className="d-flex">
+                        <h3 className="d-flex" style={{cursor: 'pointer'}} onClick={alterarRota}>
                             Via <div className="text-primary">Gestão</div>
                         </h3>
                     </Navbar.Brand>

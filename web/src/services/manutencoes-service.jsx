@@ -10,6 +10,16 @@ export async function getManutencoes() {
     return result;
 }
 
+export async function getBuscarManutencoes(filtro) {
+    const accessToken = sessionStorage.getItem('token');
+    const result = await api.get(`/manutencoesBusca/${filtro}`, {
+        headers: {
+            'Authorization': `Bearer ${JSON.parse(accessToken)}`
+        }
+    });
+    return result;
+}
+
 export async function getTotalManutencoes() {
     const accessToken = sessionStorage.getItem('token');
     const result = await api.get('/totalManutencoes', {

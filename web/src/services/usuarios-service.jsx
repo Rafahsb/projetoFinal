@@ -10,6 +10,16 @@ export async function getTotalUsuarios() {
     return result;
 }
 
+export async function getBuscarUsuarios(filtro) {
+    const accessToken = sessionStorage.getItem('token');
+    const result = await api.get(`/usuariosBusca/${filtro}`, {
+        headers: {
+            'Authorization': `Bearer ${JSON.parse(accessToken)}`
+        }
+    });
+    return result;
+}
+
 export async function getUsuarios() {
     const accessToken = sessionStorage.getItem('token');
     const result = await api.get('/usuarios', {

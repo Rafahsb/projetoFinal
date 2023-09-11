@@ -1,4 +1,5 @@
 const { UsuariosModel } = require("../model/usuarios-model");
+const { Op } = require('sequelize');
 const jwt = require("jsonwebtoken");
 const bcrypt = require('bcrypt');
 
@@ -90,6 +91,47 @@ class UsuarioController {
     }
   }
 
+  async buscarUsuarios(request, response) {
+    console.log(request.params);
+    let busca;
+    const { filtro } = request.params || null;
+    try {
+      if (filtro != null) {
+        busca = await UsuariosModel.findAll({
+          where: {
+            [Op.or]: [
+              { matricula: { [Op.like]: `%${filtro}%` } },
+              { email: { [Op.like]: `%${filtro}%` } },
+              { unidade: { [Op.like]: `%${filtro}%` } },
+              { cargo: { [Op.like]: `%${filtro}%` } },
+            ],
+          },
+          attributes: ['matricula',
+          'email',
+          'unidade',
+          'cargo',
+          'id_usuario']
+        });
+      } else {
+        busca = await UsuariosModel.findAll({
+          attributes: ['matricula',
+          'email',
+          'unidade',
+          'cargo',
+          'id_usuario']
+        });
+      }
+      
+      return response.status(200).json({
+        Usuarios: busca,
+      });
+    } catch (error) {
+      return response.status(400).json({
+        message: `Erro: ${error}`,
+      });
+    }
+  }
+
   async pesquisarTotalUsuarios(request, response) {
     try {
       const total = await UsuariosModel.count()
@@ -105,7 +147,13 @@ class UsuarioController {
 
   async pesquisarUsuarios(request, response) {
     try {
-      const filtro = await UsuariosModel.findAll({});
+      const filtro = await UsuariosModel.findAll({
+        attributes: ['matricula',
+          'email',
+          'unidade',
+          'cargo',
+        'id_usuario']
+      });
 
       return response.status(200).json({
         Usuarios: filtro,

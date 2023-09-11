@@ -20,7 +20,8 @@ import {
     getManutencoes,
     createManutencao,
     updateManutencao,
-    deleteManutencao
+    deleteManutencao,
+    getBuscarManutencoes
 } from "../services/manutencoes-service";
 import { Manutencao } from "../components/Manutencao";
 import { BsCheckLg } from "react-icons/bs";
@@ -31,17 +32,24 @@ import {
 } from "../services/viaturas-service";
 
 export function Manutencoes() {
-    const [manutencoes, setManutencoes] = useState([]);
+    var manutencoes;
+    const [manutencoesAtt, setManutencoesAtt] = useState([]);
+
     const [viaturas, setViaturas] = useState([]);
+    const [inputValue, setInputValue] = useState("");
+
     let currentPage = 0;
     const [currentPages, setCurrentPages] = useState(0);
 
     const [totalPages, setTotalPages] = useState(0);
     const [active, setActive] = useState(0);
     const [manutencoesList, setManutencoesList] = useState([]);
-    
-    const itemsPerPage = 5 
-   
+
+    const itemsPerPage = 3;
+    const [maxPagesLimit, setMaxPagesLimit] = useState(5);
+    const [minPagesLimit, setMinPagesLimit] = useState(0);
+
+
 
 
     const [isCreated, setIsCreated] = useState(false);
@@ -58,6 +66,19 @@ export function Manutencoes() {
     }, []);
 
 
+    async function filterManutencoes(params) {
+        try {
+            const result = await getBuscarManutencoes(params)
+            manutencoes = result.data.Manutencoes 
+            setManutencoesAtt(manutencoes);
+            setTotalPages(Math.ceil(manutencoes.length / itemsPerPage));
+            paginate(manutencoes)
+        } catch (error) {
+            navigate("/manutencoes");
+            console.error(error);
+        }
+    }
+
     async function findViaturas() {
         try {
             const result = await getViaturas()
@@ -72,9 +93,10 @@ export function Manutencoes() {
     async function findManutencoes() {
         try {
             const result = await getManutencoes()
-            setManutencoes(result.data.Manutencoes)
-            setTotalPages(Math.ceil(result.data.Manutencoes.length / itemsPerPage));
-            paginate(result.data.Manutencoes)
+            manutencoes = result.data.Manutencoes
+            setManutencoesAtt(manutencoes);
+            setTotalPages(Math.ceil(manutencoes.length / itemsPerPage));
+            paginate(manutencoes)
         
         } catch (error) {
             console.error(error);
@@ -122,31 +144,55 @@ export function Manutencoes() {
     function paginate(inicial) {
         const startIndex = currentPage * itemsPerPage;
         const endIndex = startIndex + itemsPerPage;
-        if(manutencoes.length === 0) {
-            const subset = inicial.slice(startIndex, endIndex);
-            setManutencoesList(subset);
-        } else { 
-            const subset = manutencoes.slice(startIndex, endIndex);
-            setManutencoesList(subset);
-        }
+        console.log("inicial", inicial);
+        const subset = inicial.slice(startIndex, endIndex);
+        setManutencoesList(subset);
+        
+        // if(manutencoes.length === 0) {
+        //     const subset = inicial.slice(startIndex, endIndex);
+        //     setManutencoesList(subset);
+        // } else { 
+        //     const subset = manutencoes.slice(startIndex, endIndex);
+        //     setManutencoesList(subset);
+        // }
 
     }
 
     function PaginationFront() {
-
+        
         let items = [];
+        
+        if(totalPages > 5) {
 
-        for (let number = 0; number <= totalPages - 1; number++) {
-            items.push(
-            <Pagination.Item key={number} active={number === active} onClick={() => {
-                currentPage = number;
-                setCurrentPages(number)
-                setActive(number);
-                paginate();
-            }}>
-                {number + 1 }
-            </Pagination.Item>,
-            );
+            for (let numeroPagina = minPagesLimit; numeroPagina <= maxPagesLimit - 1; numeroPagina++) {
+                items.push(
+                <Pagination.Item key={numeroPagina} active={numeroPagina === active} onClick={() => {
+                    currentPage = numeroPagina;
+                    setCurrentPages(numeroPagina)
+                    setActive(numeroPagina);
+                    paginate(manutencoesAtt);
+                    setMaxPagesLimit(numeroPagina > totalPages - 3 ? totalPages : numeroPagina < 3 ? 5 : currentPage + 3);
+                    setMinPagesLimit((numeroPagina > 3  && numeroPagina <  totalPages - 3) ? currentPage - 2 : numeroPagina < 3 ? 0 : numeroPagina > totalPages - 3 ? totalPages - 5 : currentPage - 2)
+                }}>
+                    {numeroPagina + 1 }
+                </Pagination.Item>,
+                );
+            }
+        } else {
+            for (let numeroPagina = minPagesLimit; numeroPagina <= totalPages - 1; numeroPagina++) {
+                items.push(
+                <Pagination.Item key={numeroPagina} active={numeroPagina === active} onClick={() => {
+                    currentPage = numeroPagina;
+                    setCurrentPages(numeroPagina)
+                    setActive(numeroPagina);
+                    paginate(manutencoesAtt);
+                    setMaxPagesLimit(numeroPagina > totalPages - 3 ? totalPages : numeroPagina < 3 ? 5 : currentPage + 3);
+                    setMinPagesLimit((numeroPagina > 3  && numeroPagina <  totalPages - 3) ? currentPage - 2 : numeroPagina < 3 ? 0 : numeroPagina > totalPages - 3 ? totalPages - 5 : currentPage - 2)
+                }}>
+                    {numeroPagina + 1 }
+                </Pagination.Item>,
+                );
+            }
         }
         
         return (
@@ -154,25 +200,19 @@ export function Manutencoes() {
                 <Pagination.First onClick={() => {
                 currentPage = 0;
                 setActive(0);
-                paginate();
+                paginate(manutencoesAtt);
+                setMaxPagesLimit(5);
+                setMinPagesLimit(0);
             }} />
-                <Pagination.Prev onClick={() => {
-                currentPage = currentPages === 0 ? 0 : currentPages - 1;
-                setCurrentPages(currentPage)
-                setActive(currentPage);
-                paginate();
-            }}/>
+               
                 {items}
-                <Pagination.Next onClick={() => {
-                currentPage = currentPages < totalPages - 1 ? currentPages + 1 : totalPages - 1 ;
-                setCurrentPages(currentPage)
-                setActive(currentPage);
-                paginate();
-            }}/>
+               
                 <Pagination.Last onClick={() => {
                 currentPage = totalPages - 1 ;
                 setActive(totalPages - 1);
-                paginate();
+                paginate(manutencoesAtt);
+                setMaxPagesLimit(totalPages);
+                setMinPagesLimit(totalPages - 5);
             }}/>
             </Pagination>
         );
@@ -198,9 +238,16 @@ export function Manutencoes() {
                                     <Form.Control
                                     placeholder="Buscar"
                                     aria-label="Buscar"
+                                    error={errors.buscar}
+                                    value={inputValue}
+                                    onChange={(e) => setInputValue(e.target.value)}
+                                    name="buscar"
+                                    validations={register("filtro", {
+                                        pattern: {},
+                                    })}
                                     />
-                                    <Button variant="primary" id="button-addon2">
-                                    Pesquisar
+                                    <Button onClick={() => filterManutencoes(inputValue)} variant="primary" id="button-addon2">
+                                        Pesquisar
                                     </Button>
                                 </InputGroup>
                             </Col>

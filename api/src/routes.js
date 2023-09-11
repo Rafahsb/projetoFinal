@@ -16,6 +16,7 @@ routes.post("/login", userController.sigin);
 routes.get("/perfil",authMiddleware,userController.editarPerfil)
 // Viatura
 routes.post("/viatura", authMiddleware, viaturaController.criarViatura);
+routes.get("/viaturasBusca/:filtro?", authMiddleware, viaturaController.buscarViaturas);
 routes.get("/viaturas", authMiddleware, viaturaController.pesquisarViaturas);
 routes.get("/totalViaturas", authMiddleware, viaturaController.pesquisarTotalViaturas);
 routes.put("/viatura/:id", authMiddleware, viaturaController.atualizarViatura);
@@ -23,12 +24,14 @@ routes.delete("/viatura/:id", authMiddleware, viaturaController.deletarViatura);
 
 // Manutencoes
 routes.post("/manutencao", authMiddleware, manutencoesController.criarManutencao);
+routes.get("/manutencoesBusca/:filtro?", authMiddleware, manutencoesController.buscarManutencoes);
 routes.get("/manutencoes", authMiddleware, manutencoesController.pesquisarManutencoes);
 routes.get("/totalManutencoes", authMiddleware, manutencoesController.pesquisarTotalManutencoes);
 routes.put("/manutencao/:id", authMiddleware, manutencoesController.atualizarManutencao);
 routes.delete("/manutencao/:id", authMiddleware, manutencoesController.deletarManutencao);
 
 routes.post("/usuario", authMiddleware, usuarioController.criarUsuario);
+routes.get("/usuariosBusca/:filtro?", authMiddleware, usuarioController.buscarUsuarios);
 routes.get("/usuarios", authMiddleware, usuarioController.pesquisarUsuarios);
 routes.get("/totalUsuarios", authMiddleware, usuarioController.pesquisarTotalUsuarios);
 routes.put("/usuario/:id", authMiddleware, usuarioController.atualizarUsuario);

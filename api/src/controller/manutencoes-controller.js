@@ -4,6 +4,7 @@ const { ViaturasModel } = require("../model/viaturas-model");
 const { Validates } = require('../utils/validates');
 const { format } = require("date-fns");
 const { QueryTypes } = require('sequelize');
+const { Op } = require('sequelize');
 
 class ManutencoesController {
   async criarManutencao(request, response) {
@@ -85,6 +86,42 @@ class ManutencoesController {
       });
     }
   }
+
+  async buscarManutencoes(request, response) {
+    console.log(request.params);
+    let busca;
+    const { filtro } = request.params || null;
+
+    try {
+      if (filtro != null) {
+        busca = await ManutencoesModel.findAll({
+          where: {
+            [Op.or]: [
+              { numero_nota: { [Op.like]: `%${filtro}%` } },
+              { descricao: { [Op.like]: `%${filtro}%` } },
+              { preco: parseFloat(filtro) },
+            ],
+          },
+        });
+      } else {
+        busca = await ManutencoesModel.findAll({});
+      }
+      
+      busca.forEach((manutencao) => {
+        manutencao.dataValues.data_nota = Validates.formatDate(manutencao.dataValues.data_nota);
+        // manutencao.dataValues.data_nota = format(new Date(manutencao.dataValues.data_nota), "dd/MM/yyyy")
+      });
+
+      return response.status(200).json({
+        Manutencoes: busca,
+      });
+    } catch (error) {
+      return response.status(400).json({
+        message: `Erro: ${error}`,
+      });
+    }
+  }
+
   async pesquisarTotalManutencoes(request, response) {
     try {
       const total = await ManutencoesModel.count()

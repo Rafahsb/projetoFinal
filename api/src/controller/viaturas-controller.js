@@ -1,5 +1,5 @@
 const { HttpHelper } = require('../utils/http-helper');
-
+const { Op } = require('sequelize');
 const { ViaturasModel } = require("../model/viaturas-model");
 
 class ViaturaController {
@@ -51,6 +51,39 @@ class ViaturaController {
 
       return response.status(202).json({
         message: "Viatura deletada com sucesso!",
+      });
+    } catch (error) {
+      return response.status(400).json({
+        message: `Erro: ${error}`,
+      });
+    }
+  }
+
+  async buscarViaturas(request, response) {
+    let busca;
+    const { filtro } = request.params || null;
+  
+    try {
+      if (filtro != null) {
+        busca = await ViaturasModel.findAll({
+          where: {
+            [Op.or]: [
+              { marca: { [Op.like]: `%${filtro}%` } },
+              { modelo: { [Op.like]: `%${filtro}%` } },
+              { chassi: { [Op.like]: `%${filtro}%` } },
+              { cor: { [Op.like]: `%${filtro}%` } },
+              { orgao_vinculado: { [Op.like]: `%${filtro}%` } },
+              { batalhao: { [Op.like]: `%${filtro}%` } },
+              { piloto: { [Op.like]: `%${filtro}%` } },
+            ],
+          },
+        });
+      } else {
+        busca = await ViaturasModel.findAll({});
+      }
+      
+      return response.status(200).json({
+        Viaturas: busca,
       });
     } catch (error) {
       return response.status(400).json({

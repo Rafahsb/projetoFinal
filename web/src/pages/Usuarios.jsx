@@ -20,7 +20,8 @@ import {
     getUsuarios,
     createUsuario,
     updateUsuario,
-    deleteUsuario
+    deleteUsuario,
+    getBuscarUsuarios,
 } from "../services/usuarios-service";
 import { Usuario } from "../components/Usuario";
 import { BsCheckLg } from "react-icons/bs";
@@ -28,7 +29,7 @@ import { BsCheckLg } from "react-icons/bs";
 
 export function Usuarios() {
     const [usuarios, setUsuarios] = useState([]);
-
+    const [inputValue, setInputValue] = useState('');
     const [isCreated, setIsCreated] = useState(false);
     const {
         handleSubmit,
@@ -42,6 +43,15 @@ export function Usuarios() {
         // eslint-disable-next-line
     }, []);
 
+    
+    async function filterUsuarios(params) {
+        try {
+            const result = await getBuscarUsuarios(params)
+            setUsuarios(result.data.Usuarios);
+        } catch (error) {
+            console.error(error);
+        }
+    }
 
     async function findUsuarios() {
         try {
@@ -103,15 +113,24 @@ export function Usuarios() {
                         </Row>
                         <Row className="mt-4">
                             <Col xs={12} sm={7}>
+                                
                                 <InputGroup size="lg">
                                     <Form.Control
                                     placeholder="Buscar"
                                     aria-label="Buscar"
+                                    error={errors.buscar}
+                                    value={inputValue}
+                                    onChange={(e) => setInputValue(e.target.value)}
+                                    name="buscar"
+                                    validations={register("filtro", {
+                                        pattern: {},
+                                    })}
                                     />
-                                    <Button variant="primary" id="button-addon2">
-                                    Pesquisar
+                                    <Button onClick={() => filterUsuarios(inputValue)} variant="primary" id="button-addon2">
+                                        Pesquisar
                                     </Button>
                                 </InputGroup>
+                                    
                             </Col>
                             <Col sm={5}>
                                 <Row className="d-flex justify-content-end">

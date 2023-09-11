@@ -20,13 +20,15 @@ import {
     getViaturas,
     createViatura,
     updateViatura,
-    deleteViatura
+    deleteViatura,
+    getBuscarViaturas
 } from "../services/viaturas-service";
 import { Viatura } from "../components/Viatura";
 import { BsCheckLg } from "react-icons/bs";
 
 export function Viaturas() {
     const [viaturas, setViaturas] = useState([]);
+    const [inputValue, setInputValue] = useState('');
     const [isCreated, setIsCreated] = useState(false);
     const {
         handleSubmit,
@@ -40,6 +42,14 @@ export function Viaturas() {
         // eslint-disable-next-line
     }, []);
 
+    async function filterViaturas(params) {
+        try {
+            const result = await getBuscarViaturas(params)
+            setViaturas(result.data.Viaturas);
+        } catch (error) {
+            console.error(error);
+        }
+    }
 
     async function findViaturas() {
         try {
@@ -106,13 +116,20 @@ export function Viaturas() {
                         </Row>
                         <Row className="mt-4">
                             <Col xs={12} sm={7}>
-                                <InputGroup size="lg">
+                            <InputGroup size="lg">
                                     <Form.Control
                                     placeholder="Buscar"
                                     aria-label="Buscar"
+                                    error={errors.buscar}
+                                    value={inputValue}
+                                    onChange={(e) => setInputValue(e.target.value)}
+                                    name="buscar"
+                                    validations={register("filtro", {
+                                        pattern: {},
+                                    })}
                                     />
-                                    <Button variant="primary" id="button-addon2">
-                                    Pesquisar
+                                    <Button onClick={() => filterViaturas(inputValue)} variant="primary" id="button-addon2">
+                                        Pesquisar
                                     </Button>
                                 </InputGroup>
                             </Col>
