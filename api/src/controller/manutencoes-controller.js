@@ -3,6 +3,7 @@ const { ManutencoesModel } = require("../model/manutencoes-model");
 const { ViaturasModel } = require("../model/viaturas-model");
 const { Validates } = require('../utils/validates');
 const { format } = require("date-fns");
+const { QueryTypes } = require('sequelize');
 
 class ManutencoesController {
   async criarManutencao(request, response) {
@@ -27,9 +28,7 @@ class ManutencoesController {
   }
 
   async deletarManutencao(request, response) {
-    console.log(request);
     const { id } = request.params;
-    console.log('id', id);
     try {
       await ManutencoesModel.destroy({
         where: {
@@ -79,6 +78,18 @@ class ManutencoesController {
 
       return response.status(200).json({
         Manutencoes: filtro,
+      });
+    } catch (error) {
+      return response.status(400).json({
+        message: `Erro: ${error}`,
+      });
+    }
+  }
+  async pesquisarTotalManutencoes(request, response) {
+    try {
+      const total = await ManutencoesModel.count()
+      return response.status(200).json({
+        Total: total,
       });
     } catch (error) {
       return response.status(400).json({

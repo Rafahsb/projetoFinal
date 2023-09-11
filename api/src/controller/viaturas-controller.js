@@ -59,6 +59,19 @@ class ViaturaController {
     }
   }
 
+  async pesquisarTotalViaturas(request, response) {
+    try {
+      const total = await ViaturasModel.count()
+      return response.status(200).json({
+        Total: total,
+      });
+    } catch (error) {
+      return response.status(400).json({
+        message: `Erro: ${error}`,
+      });
+    }
+  }
+
   async pesquisarViatura(request, response) {
     const { id } = request.body;
 

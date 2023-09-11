@@ -20,6 +20,16 @@ export async function deleteViatura(id) {
     return result;
 }
 
+export async function getTotalViaturas() {
+    const accessToken = sessionStorage.getItem('token');
+    const result = await api.get('/totalViaturas', {
+        headers: {
+            'Authorization': `Bearer ${JSON.parse(accessToken)}`
+        }
+    });
+    return result;
+}
+
 export async function updateViatura(data) {
     const accessToken = sessionStorage.getItem('token');
     const result = await api.put(`/viatura/${data.id_viatura}`, {

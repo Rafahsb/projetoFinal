@@ -1,5 +1,15 @@
 import { api } from "./api";
 
+export async function getTotalUsuarios() {
+    const accessToken = sessionStorage.getItem('token');
+    const result = await api.get('/totalUsuarios', {
+        headers: {
+            'Authorization': `Bearer ${JSON.parse(accessToken)}`
+        }
+    });
+    return result;
+}
+
 export async function getUsuarios() {
     const accessToken = sessionStorage.getItem('token');
     const result = await api.get('/usuarios', {

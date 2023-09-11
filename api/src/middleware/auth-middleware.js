@@ -2,16 +2,13 @@ const jwt = require('jsonwebtoken');
 
 function authMiddleware(request, response, next) {
     try {
-        debugger
         const token = request.headers.authorization;
-
         if (token) {
             const accessToken = token.split(' ')[1];
             jwt.verify(
                 accessToken,
                 process.env.TOKEN_SECRET,
                 (error, user) => {
-                    console.log("user",user);
                     if (error) {
                         return response.status(401).json({
                             error: 'Usuário não autorizado!'
@@ -22,6 +19,7 @@ function authMiddleware(request, response, next) {
                 }
             );
         } else {
+             
             return response.status(401).json({
                 error: 'Usuário não autorizado!'
             });

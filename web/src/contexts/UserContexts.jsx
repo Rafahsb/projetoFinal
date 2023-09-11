@@ -35,7 +35,6 @@ export function UserContextProvider({ children }) {
     }
 
     async function logout() {
-        console.log("teste");
         sessionStorage.removeItem("token");
         navigate("/");
     }

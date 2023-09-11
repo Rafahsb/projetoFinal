@@ -24,6 +24,7 @@ import {
 } from "../services/manutencoes-service";
 import { Manutencao } from "../components/Manutencao";
 import { BsCheckLg } from "react-icons/bs";
+import Pagination from 'react-bootstrap/Pagination';
 
 import {
     getViaturas,
@@ -32,6 +33,16 @@ import {
 export function Manutencoes() {
     const [manutencoes, setManutencoes] = useState([]);
     const [viaturas, setViaturas] = useState([]);
+    let currentPage = 0;
+    const [currentPages, setCurrentPages] = useState(0);
+
+    const [totalPages, setTotalPages] = useState(0);
+    const [active, setActive] = useState(0);
+    const [manutencoesList, setManutencoesList] = useState([]);
+    
+    const itemsPerPage = 5 
+   
+
 
     const [isCreated, setIsCreated] = useState(false);
     const {
@@ -50,7 +61,8 @@ export function Manutencoes() {
     async function findViaturas() {
         try {
             const result = await getViaturas()
-            setViaturas(result.data.Viaturas);
+            setViaturas(result.data.Viaturas)
+                 
         } catch (error) {
             console.error(error);
             navigate("/manutencoes");
@@ -60,7 +72,10 @@ export function Manutencoes() {
     async function findManutencoes() {
         try {
             const result = await getManutencoes()
-            setManutencoes(result.data.Manutencoes);
+            setManutencoes(result.data.Manutencoes)
+            setTotalPages(Math.ceil(result.data.Manutencoes.length / itemsPerPage));
+            paginate(result.data.Manutencoes)
+        
         } catch (error) {
             console.error(error);
             navigate("/manutencoes");
@@ -101,6 +116,68 @@ export function Manutencoes() {
             console.error(error);
         }
     }
+
+    
+
+    function paginate(inicial) {
+        const startIndex = currentPage * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+        if(manutencoes.length === 0) {
+            const subset = inicial.slice(startIndex, endIndex);
+            setManutencoesList(subset);
+        } else { 
+            const subset = manutencoes.slice(startIndex, endIndex);
+            setManutencoesList(subset);
+        }
+
+    }
+
+    function PaginationFront() {
+
+        let items = [];
+
+        for (let number = 0; number <= totalPages - 1; number++) {
+            items.push(
+            <Pagination.Item key={number} active={number === active} onClick={() => {
+                currentPage = number;
+                setCurrentPages(number)
+                setActive(number);
+                paginate();
+            }}>
+                {number + 1 }
+            </Pagination.Item>,
+            );
+        }
+        
+        return (
+            <Pagination className='d-flex justify-content-center'>
+                <Pagination.First onClick={() => {
+                currentPage = 0;
+                setActive(0);
+                paginate();
+            }} />
+                <Pagination.Prev onClick={() => {
+                currentPage = currentPages === 0 ? 0 : currentPages - 1;
+                setCurrentPages(currentPage)
+                setActive(currentPage);
+                paginate();
+            }}/>
+                {items}
+                <Pagination.Next onClick={() => {
+                currentPage = currentPages < totalPages - 1 ? currentPages + 1 : totalPages - 1 ;
+                setCurrentPages(currentPage)
+                setActive(currentPage);
+                paginate();
+            }}/>
+                <Pagination.Last onClick={() => {
+                currentPage = totalPages - 1 ;
+                setActive(totalPages - 1);
+                paginate();
+            }}/>
+            </Pagination>
+        );
+    }
+
 
     return (
         <>
@@ -160,7 +237,7 @@ export function Manutencoes() {
                                         </thead>
                                         <tbody>
                                             
-                                            {manutencoes.map((manutencao, index) => (
+                                            {manutencoesList.map((manutencao, index) => (
                                                 <tr key={index}>
                                                     <Manutencao
                                                         manutencao={manutencao}
@@ -173,7 +250,7 @@ export function Manutencoes() {
                                             ))}
                                         </tbody>
                                     </Table>
-                                
+                                    <PaginationFront></PaginationFront>
                             </Card>
                         </Row>
                         

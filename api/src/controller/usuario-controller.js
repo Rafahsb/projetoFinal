@@ -75,10 +75,10 @@ class UsuarioController {
           error: "Senha incorreta!",
         });
       }
-
+ 
       // Gera e retorna o access token
       const accessToken = jwt.sign(
-        { id: userExists.id },
+        { id: userExists.id_usuario },
         process.env.TOKEN_SECRET,
         { expiresIn: "300m" }
       );
@@ -90,12 +90,56 @@ class UsuarioController {
     }
   }
 
+  async pesquisarTotalUsuarios(request, response) {
+    try {
+      const total = await UsuariosModel.count()
+      return response.status(200).json({
+        Total: total,
+      });
+    } catch (error) {
+      return response.status(400).json({
+        message: `Erro: ${error}`,
+      });
+    }
+  }
+
   async pesquisarUsuarios(request, response) {
     try {
       const filtro = await UsuariosModel.findAll({});
 
       return response.status(200).json({
         Usuarios: filtro,
+      });
+    } catch (error) {
+      return response.status(400).json({
+        message: `Erro: ${error}`,
+      });
+    }
+  }
+
+  async editarPerfil(request, response) {
+    const { id } = request.params;
+    const { matricula, senha, email, unidade, cargo } = request.body;
+
+    try {
+      await UsuariosModel.update(
+        {
+          id_usuario: id,
+          matricula,
+          senha,
+          email,
+          unidade,
+          cargo,
+        },
+        {
+          where: {
+            id_usuario: id,
+          },
+        }
+      );
+
+      return response.status(200).json({
+        massage: `O usuário foi atualizado com sucesso`,
       });
     } catch (error) {
       return response.status(400).json({

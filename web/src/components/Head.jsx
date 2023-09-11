@@ -28,7 +28,7 @@ export function Head() {
 
     return (
         <>
-            <Navbar className="bg-body-tertiary p-0">
+            <Navbar className="bg-body-tertiary p-0 shadow">
                 <Container fluid>
                     <Navbar.Brand className="d-flex align-items-center ">
                         <HomeOutlinedIcon className="text-primary me-3 fs-2"></HomeOutlinedIcon>
