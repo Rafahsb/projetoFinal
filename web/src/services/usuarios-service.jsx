@@ -1,5 +1,7 @@
 import { api } from "./api";
 
+
+
 export async function getTotalUsuarios() {
     const accessToken = sessionStorage.getItem('token');
     const result = await api.get('/totalUsuarios', {
@@ -23,6 +25,16 @@ export async function getBuscarUsuarios(filtro) {
 export async function getUsuarios() {
     const accessToken = sessionStorage.getItem('token');
     const result = await api.get('/usuarios', {
+        headers: {
+            'Authorization': `Bearer ${JSON.parse(accessToken)}`
+        }
+    });
+    return result;
+}
+
+export async function getUsuario(id) {
+    const accessToken = sessionStorage.getItem('token');
+    const result = await api.get(`/usuario/${id}`, {
         headers: {
             'Authorization': `Bearer ${JSON.parse(accessToken)}`
         }

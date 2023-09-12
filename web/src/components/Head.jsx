@@ -1,10 +1,10 @@
 import Navbar from "react-bootstrap/Navbar";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import HomeOutlinedIcon from "@mui/icons-material/Menu";
 import Perfil from "../avatar.png";
 import Image from "react-bootstrap/Image";
 import Dropdown from "react-bootstrap/Dropdown";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { Container } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { UserContext } from "../contexts/UserContexts";
@@ -13,22 +13,47 @@ import { Button, Card, Form, Modal, Row } from "react-bootstrap";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { Input } from "./Input";
 import { useNavigate } from "react-router-dom";
+import {
+    getUsuario
+} from "../services/usuarios-service";
 
 export function Head() {
     const navigate = useNavigate();
 
+    useEffect(() => {
+        Logado();
+        // eslint-disable-next-line
+    }, []);
+   
     const {
         handleSubmit,
         register,
         formState: { errors },
     } = useForm();
-
-    const { logout, logged } = useContext(UserContext);
+    const [usuario, setUsuario] = useState({
+        matricula: '',
+        email: '',
+        unidade: '',
+        cargo: ''
+    });
+    const { id, logout, logged } = useContext(UserContext);
     const [isUpdated, setIsUpdated] = useState(false);
     
     const alterarRota = (() => {
         navigate('/painel');
     }) 
+    
+    async function Logado() {
+        try {
+            const result = await getUsuario(id)
+            console.log(result)
+            setUsuario(result.data.Usuario);
+            
+        } catch (error) {
+            console.error(error);
+            Navigate("/painel");
+        }
+    }
 
     return (
         <>
@@ -47,7 +72,9 @@ export function Head() {
                             </Dropdown.Toggle>
 
                             <Dropdown.Menu>
-                                <Dropdown.Item onClick={ () => setIsUpdated(true) }>Perfil</Dropdown.Item>
+                                <Dropdown.Item onClick={ () => {
+                                    setIsUpdated(true);
+                                    }}>Perfil</Dropdown.Item>
                                 <Dropdown.Item onClick={logout}>
                                     <div >Logout</div>
                                 </Dropdown.Item>
@@ -65,12 +92,15 @@ export function Head() {
                         noValidate
                         // onSubmit={handleSubmit(editUsuario)}
                         validated={!!errors}
-                    >
+                    >  
                         <Modal.Body>
                             <Row className="mb-4">
                                 <Input
                                 size={'sm'} 
-                                // defaultValue={props.usuario.matricula}
+                                defaultValue={usuario.matricula}
+                                // onChange={(e) => {
+                                //     setUsuario({...usuario, matricula: e.target.value})
+                                // }}
                                 type="text"
                                 label="Matricula:*"
                                 placeholder="Informe o nº da matricula:"
@@ -89,7 +119,7 @@ export function Head() {
                             <Row className="mb-4">
                                 <Input
                                 size={'sm'} 
-                                // defaultValue={props.usuario.email}
+                                defaultValue={usuario.email}
                                 type="email"
                                 label="E-mail:*"
                                 placeholder="Informe o email:"
@@ -108,7 +138,7 @@ export function Head() {
                             <Row className="mb-4">
                                 <Input
                                 size={'sm'} 
-                                // defaultValue={props.usuario.unidade}
+                                defaultValue={usuario.unidade}
                                 type="text"
                                 label="Unidade:*"
                                 placeholder="Informe a unidade:"
@@ -127,7 +157,7 @@ export function Head() {
                             <Row className="mb-4">
                                 <Input
                                 size={'sm'} 
-                                // defaultValue={props.usuario.cargo}
+                                defaultValue={usuario.cargo}
                                 type="text"
                                 label="Cargo:*"
                                 placeholder="Informe o cargo:"

@@ -72,6 +72,10 @@ export function Manutencoes() {
             manutencoes = result.data.Manutencoes 
             setManutencoesAtt(manutencoes);
             setTotalPages(Math.ceil(manutencoes.length / itemsPerPage));
+            currentPage = 0;
+            setActive(0);
+            setMaxPagesLimit(5)
+            setMinPagesLimit(0)
             paginate(manutencoes)
         } catch (error) {
             navigate("/manutencoes");
@@ -97,6 +101,7 @@ export function Manutencoes() {
             setManutencoesAtt(manutencoes);
             setTotalPages(Math.ceil(manutencoes.length / itemsPerPage));
             paginate(manutencoes)
+
         
         } catch (error) {
             console.error(error);
@@ -203,17 +208,16 @@ export function Manutencoes() {
                 paginate(manutencoesAtt);
                 setMaxPagesLimit(5);
                 setMinPagesLimit(0);
-            }} />
+                 }} />
                
                 {items}
-               
                 <Pagination.Last onClick={() => {
                 currentPage = totalPages - 1 ;
                 setActive(totalPages - 1);
                 paginate(manutencoesAtt);
                 setMaxPagesLimit(totalPages);
-                setMinPagesLimit(totalPages - 5);
-            }}/>
+                setMinPagesLimit(totalPages > 5 ? totalPages - 5 : 0);
+                }}/>
             </Pagination>
         );
     }

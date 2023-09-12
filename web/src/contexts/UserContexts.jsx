@@ -7,6 +7,7 @@ export function UserContextProvider({ children }) {
     const [accessToken, setAccessToken] = useState(null);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [id, setId] = useState(null);
 
     const navigate = useNavigate();
 
@@ -14,6 +15,7 @@ export function UserContextProvider({ children }) {
         try {
             setLoading(true);
             const result = await api.post("/login", data);
+            setId(result.data.id);
             sessionStorage.setItem(
                 "token",
                 JSON.stringify(result.data.accessToken)
@@ -51,6 +53,7 @@ export function UserContextProvider({ children }) {
                 loading,
                 logout,
                 logged,
+                id
             }}
         >
             {children}
