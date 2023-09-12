@@ -32,9 +32,9 @@ export async function getUsuarios() {
     return result;
 }
 
-export async function getUsuario(id) {
+export async function getUsuario() {
     const accessToken = sessionStorage.getItem('token');
-    const result = await api.get(`/usuario/${id}`, {
+    const result = await api.get(`/usuario/${accessToken}`, {
         headers: {
             'Authorization': `Bearer ${JSON.parse(accessToken)}`
         }

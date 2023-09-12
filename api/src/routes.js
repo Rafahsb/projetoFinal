@@ -33,7 +33,7 @@ routes.delete("/manutencao/:id", authMiddleware, manutencoesController.deletarMa
 routes.post("/usuario", authMiddleware, usuarioController.criarUsuario);
 routes.get("/usuariosBusca/:filtro?", authMiddleware, usuarioController.buscarUsuarios);
 routes.get("/usuarios", authMiddleware, usuarioController.pesquisarUsuarios);
-routes.get("/usuario/:id", authMiddleware, usuarioController.pesquisarUsuario);
+routes.get("/usuario/:token", authMiddleware, usuarioController.pesquisarUsuario);
 routes.get("/totalUsuarios", authMiddleware, usuarioController.pesquisarTotalUsuarios);
 routes.put("/usuario/:id", authMiddleware, usuarioController.atualizarUsuario);
 routes.delete("/usuario/:id", authMiddleware, usuarioController.deletarUsuario);

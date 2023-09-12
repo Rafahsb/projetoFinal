@@ -94,7 +94,7 @@ class UsuarioController {
 
   async buscarUsuarios(request, response) {
     let busca;
-    const { filtro } = request.params || null;
+    const { filtro } =  request.params || null;
     try {
       if (filtro != null) {
         busca = await UsuariosModel.findAll({
@@ -166,7 +166,10 @@ class UsuarioController {
   }
 
   async pesquisarUsuario(request, response) {
-    const { id } = request.params;
+    console.log("request: " + request.params);
+    const { token } = request.params;
+    const dadosUsuario = jwt.verify(token.replace(/"/g, ''), process.env.TOKEN_SECRET);
+
     try {
       const filtro = await UsuariosModel.findOne({
         attributes: ['matricula',
@@ -174,7 +177,7 @@ class UsuarioController {
           'unidade',
           'cargo',
           'id_usuario'],
-        where: { id_usuario: id },
+        where: { id_usuario:  dadosUsuario.id },
       });
 
       return response.status(200).json({
