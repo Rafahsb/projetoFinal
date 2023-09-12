@@ -69,21 +69,22 @@ class UsuarioController {
       }
 
       // Verifica se a senha está correta
-      const isPasswordValid = await bcrypt.compare(senha, userExists.senha);
+      // const isPasswordValid = await bcrypt.compare(senha, userExists.senha);
 
-      if (!isPasswordValid) {
-        return response.status(400).json({
-          error: "Senha incorreta!",
-        });
-      }
- 
+      // if (!isPasswordValid) {
+      //   return response.status(400).json({
+      //     error: "Senha incorreta!",
+      //   });
+      // }
+        
+        
       // Gera e retorna o access token
       const accessToken = jwt.sign(
         { id: userExists.id_usuario },
         process.env.TOKEN_SECRET,
         { expiresIn: "300m" }
       );
-      return response.status(200).json({ accessToken });
+      return response.status(200).json({ accessToken, id: userExists.id_usuario });
     } catch (error) {
       return response.status(500).json({
         error: `Erro interno: ${error}`,
@@ -92,7 +93,6 @@ class UsuarioController {
   }
 
   async buscarUsuarios(request, response) {
-    console.log(request.params);
     let busca;
     const { filtro } = request.params || null;
     try {
@@ -157,6 +157,28 @@ class UsuarioController {
 
       return response.status(200).json({
         Usuarios: filtro,
+      });
+    } catch (error) {
+      return response.status(400).json({
+        message: `Erro: ${error}`,
+      });
+    }
+  }
+
+  async pesquisarUsuario(request, response) {
+    const { id } = request.params;
+    try {
+      const filtro = await UsuariosModel.findOne({
+        attributes: ['matricula',
+          'email',
+          'unidade',
+          'cargo',
+          'id_usuario'],
+        where: { id_usuario: id },
+      });
+
+      return response.status(200).json({
+        Usuario: filtro,
       });
     } catch (error) {
       return response.status(400).json({

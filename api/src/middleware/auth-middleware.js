@@ -14,7 +14,7 @@ function authMiddleware(request, response, next) {
                             error: 'Usuário não autorizado!'
                         });
                     }
-                    request.userId = user.id;
+                    request.params.userId = user.id;
                     next();
                 }
             );
