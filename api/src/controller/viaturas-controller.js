@@ -1,5 +1,5 @@
-const { HttpHelper } = require('../utils/http-helper');
-const { Op } = require('sequelize');
+const { HttpHelper } = require("../utils/http-helper");
+const { Op } = require("sequelize");
 const { ViaturasModel } = require("../model/viaturas-model");
 
 class ViaturaController {
@@ -62,7 +62,7 @@ class ViaturaController {
   async buscarViaturas(request, response) {
     let busca;
     const { filtro } = request.params || null;
-  
+
     try {
       if (filtro != null) {
         busca = await ViaturasModel.findAll({
@@ -81,7 +81,7 @@ class ViaturaController {
       } else {
         busca = await ViaturasModel.findAll({});
       }
-      
+
       return response.status(200).json({
         Viaturas: busca,
       });
@@ -94,7 +94,7 @@ class ViaturaController {
 
   async pesquisarTotalViaturas(request, response) {
     try {
-      const total = await ViaturasModel.count()
+      const total = await ViaturasModel.count();
       return response.status(200).json({
         Total: total,
       });
@@ -156,11 +156,11 @@ class ViaturaController {
         batalhao,
         piloto,
       } = request.body;
-      if (!id) return httpHelper.badRequest('Parâmetros inválidos!');
-      
-      const viaturaExists = await ViaturasModel.findOne({id_viatura:id});
-      
-      if(!viaturaExists) return httpHelper.notFound('Viatura não encontrada!');
+      if (!id) return httpHelper.badRequest("Parâmetros inválidos!");
+
+      const viaturaExists = await ViaturasModel.findOne({ id_viatura: id });
+
+      if (!viaturaExists) return httpHelper.notFound("Viatura não encontrada!");
 
       await ViaturasModel.update(
         {
@@ -184,8 +184,8 @@ class ViaturaController {
       );
 
       return httpHelper.ok({
-        message: 'Viatura atualizada com sucesso!'
-    });
+        message: "Viatura atualizada com sucesso!",
+      });
     } catch (error) {
       return httpHelper.internalError(error);
     }

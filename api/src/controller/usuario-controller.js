@@ -1,7 +1,9 @@
 const { UsuariosModel } = require("../model/usuarios-model");
-const { Op } = require('sequelize');
+const { Op } = require("sequelize");
 const jwt = require("jsonwebtoken");
-const bcrypt = require('bcrypt');
+const bcrypt = require("bcrypt");
+
+const itensPorPagina = 5;
 
 class UsuarioController {
   async criarUsuario(request, response) {
@@ -16,10 +18,7 @@ class UsuarioController {
           error: "Usuario já existe!",
         });
       }
-      const passwordHashed = await bcrypt.hash(
-        '123',
-        Number(process.env.SALT)
-    );
+      const passwordHashed = await bcrypt.hash("123", Number(process.env.SALT));
       const createUser = await UsuariosModel.create({
         matricula,
         senha: passwordHashed,
@@ -68,23 +67,23 @@ class UsuarioController {
         });
       }
 
-      // Verifica se a senha está correta
-      // const isPasswordValid = await bcrypt.compare(senha, userExists.senha);
+      const isPasswordValid = await bcrypt.compare(senha, userExists.senha);
 
-      // if (!isPasswordValid) {
-      //   return response.status(400).json({
-      //     error: "Senha incorreta!",
-      //   });
-      // }
-        
-        
+      if (!isPasswordValid) {
+        return response.status(400).json({
+          error: "Senha incorreta!",
+        });
+      }
+
       // Gera e retorna o access token
       const accessToken = jwt.sign(
         { id: userExists.id_usuario },
         process.env.TOKEN_SECRET,
         { expiresIn: "300m" }
       );
-      return response.status(200).json({ accessToken, id: userExists.id_usuario });
+      return response
+        .status(200)
+        .json({ accessToken, id: userExists.id_usuario });
     } catch (error) {
       return response.status(500).json({
         error: `Erro interno: ${error}`,
@@ -94,7 +93,7 @@ class UsuarioController {
 
   async buscarUsuarios(request, response) {
     let busca;
-    const { filtro } =  request.params || null;
+    const { filtro } = request.params || null;
     try {
       if (filtro != null) {
         busca = await UsuariosModel.findAll({
@@ -106,22 +105,14 @@ class UsuarioController {
               { cargo: { [Op.like]: `%${filtro}%` } },
             ],
           },
-          attributes: ['matricula',
-          'email',
-          'unidade',
-          'cargo',
-          'id_usuario']
+          attributes: ["matricula", "email", "unidade", "cargo", "id_usuario"],
         });
       } else {
         busca = await UsuariosModel.findAll({
-          attributes: ['matricula',
-          'email',
-          'unidade',
-          'cargo',
-          'id_usuario']
+          attributes: ["matricula", "email", "unidade", "cargo", "id_usuario"],
         });
       }
-      
+
       return response.status(200).json({
         Usuarios: busca,
       });
@@ -134,7 +125,7 @@ class UsuarioController {
 
   async pesquisarTotalUsuarios(request, response) {
     try {
-      const total = await UsuariosModel.count()
+      const total = await UsuariosModel.count();
       return response.status(200).json({
         Total: total,
       });
@@ -146,17 +137,74 @@ class UsuarioController {
   }
 
   async pesquisarUsuarios(request, response) {
+    const { page } = request.params;
+
+    const offset = (page - 1) * itensPorPagina;
+
+    const totalElements = await UsuariosModel.count();
+
+    const totalPages = Math.ceil(totalElements / itensPorPagina);
+
     try {
       const filtro = await UsuariosModel.findAll({
-        attributes: ['matricula',
-          'email',
-          'unidade',
-          'cargo',
-        'id_usuario']
+        offset,
+        limit: itensPorPagina,
+        attributes: ["matricula", "email", "unidade", "cargo", "id_usuario"],
       });
 
       return response.status(200).json({
         Usuarios: filtro,
+        totalpages: totalPages,
+      });
+    } catch (error) {
+      return response.status(400).json({
+        message: `Erro: ${error}`,
+      });
+    }
+  }
+
+  async alterarSenha(request, response) {
+    const { id } = request.params;
+    const { senha, nova_senha, confirmar_nova_senha } = request.body;
+
+    try {
+      const userExists = await UsuariosModel.findOne({
+        where: { id_usuario: id },
+      });
+
+      const isPasswordValid = await bcrypt.compare(senha, userExists.senha);
+
+      if (!isPasswordValid) {
+        return response.status(400).json({
+          error: "Senha incorreta!",
+        });
+      }
+
+      if (confirmar_nova_senha !== nova_senha) {
+        return response.status(400).json({
+          error:
+            "A nova senha informada não bate com a confirmação da nova senha!",
+        });
+      }
+
+      const passwordHashed = await bcrypt.hash(
+        nova_senha,
+        Number(process.env.SALT)
+      );
+
+      await UsuariosModel.update(
+        {
+          senha: passwordHashed,
+        },
+        {
+          where: {
+            id_usuario: id,
+          },
+        }
+      );
+
+      return response.status(200).json({
+        Message: "Senha alterada com sucesso",
       });
     } catch (error) {
       return response.status(400).json({
@@ -166,18 +214,16 @@ class UsuarioController {
   }
 
   async pesquisarUsuario(request, response) {
-    console.log("request: " + request.params);
     const { token } = request.params;
-    const dadosUsuario = jwt.verify(token.replace(/"/g, ''), process.env.TOKEN_SECRET);
+    const dadosUsuario = jwt.verify(
+      token.replace(/"/g, ""),
+      process.env.TOKEN_SECRET
+    );
 
     try {
       const filtro = await UsuariosModel.findOne({
-        attributes: ['matricula',
-          'email',
-          'unidade',
-          'cargo',
-          'id_usuario'],
-        where: { id_usuario:  dadosUsuario.id },
+        attributes: ["matricula", "email", "unidade", "cargo", "id_usuario"],
+        where: { id_usuario: dadosUsuario.id },
       });
 
       return response.status(200).json({
@@ -192,14 +238,13 @@ class UsuarioController {
 
   async editarPerfil(request, response) {
     const { id } = request.params;
-    const { matricula, senha, email, unidade, cargo } = request.body;
+    const { matricula, email, unidade, cargo } = request.body;
 
     try {
       await UsuariosModel.update(
         {
           id_usuario: id,
           matricula,
-          senha,
           email,
           unidade,
           cargo,
@@ -230,7 +275,6 @@ class UsuarioController {
         {
           id_usuario: id,
           matricula,
-          senha,
           email,
           unidade,
           cargo,
