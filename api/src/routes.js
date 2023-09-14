@@ -6,6 +6,7 @@ const { ViaturaController } = require("./controller/viaturas-controller");
 const {
   ManutencoesController,
 } = require("./controller/manutencoes-controller");
+const { PainelController } = require("./controller/painel-controller");
 
 const routes = Router();
 
@@ -13,9 +14,13 @@ const userController = new UsuarioController();
 const viaturaController = new ViaturaController();
 const manutencoesController = new ManutencoesController();
 const usuarioController = new UsuarioController();
-routes.post("/login", userController.sigin);
+const painelController = new PainelController();
 
+
+routes.post("/login", userController.sigin);
 routes.get("/perfil", authMiddleware, userController.editarPerfil);
+
+
 // Viatura
 routes.post("/viatura", authMiddleware, viaturaController.criarViatura);
 routes.get(
@@ -64,6 +69,10 @@ routes.delete(
   manutencoesController.deletarManutencao
 );
 
+
+// Usuarios
+
+
 routes.post("/usuario", authMiddleware, usuarioController.criarUsuario);
 routes.get(
   "/usuariosBusca/:filtro?",
@@ -89,6 +98,12 @@ routes.put("/usuario/:id", authMiddleware, usuarioController.atualizarUsuario);
 routes.put("/senha/:id", authMiddleware, usuarioController.alterarSenha);
 routes.delete("/usuario/:id", authMiddleware, usuarioController.deletarUsuario);
 
-// Usuarios
+// Painel
+
+routes.get(
+  "/dashboard",
+  authMiddleware,
+  painelController.Dashboard
+);
 
 module.exports = { routes };

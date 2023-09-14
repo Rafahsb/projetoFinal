@@ -322,6 +322,9 @@ export function Manutencoes() {
                                         <th>Descricao</th>
                                         <th>Preço</th>
                                         <th>Data</th>
+                                        <th>Marca</th>
+                                        <th>Modelo</th>
+                                        <th>Chassi</th>
                                         <th>Ações</th>
                                     </tr>
                                 </thead>

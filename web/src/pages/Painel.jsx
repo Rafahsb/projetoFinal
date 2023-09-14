@@ -3,6 +3,9 @@ import { Navigation } from "../components/Navigation";
 import Container from "react-bootstrap/Container";
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import { BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+
+
 
 import {
     getTotalManutencoes
@@ -16,6 +19,10 @@ import {
     getTotalUsuarios
 } from "../services/usuarios-service";
 
+import {
+    getDataDashboard
+} from "../services/painel-service";
+
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Navigate } from "react-router-dom";
@@ -23,9 +30,40 @@ import { Card } from "react-bootstrap";
 import { Input } from "../components/Input";
 
 export function Painel() {
+    const data = [
+        {
+          name: 'Page A',
+          Veiculo: 4000,
+        },
+        {
+          name: 'Page B',
+          Veiculo: 3000,
+        },
+        {
+          name: 'Page C',
+          Veiculo: 2000,
+        },
+        {
+          name: 'Page D',
+          Veiculo: 2780,
+        },
+        {
+          name: 'Page E',
+          Veiculo: 1890,
+        },
+        {
+          name: 'Page F',
+          Veiculo: 2390,
+        },
+        {
+          name: 'Page G',
+          Veiculo: 3490,
+        },
+      ];
     const [totalManutencoes, setTotalManutencoes] = useState([]);
     const [totalViaturas, setTotalViaturas] = useState({});
     const [totalUsuarios, setTotalUsuarios] = useState({});
+    const [listDashboard, setListDashboard] = useState({});
 
     const {
         handleSubmit,
@@ -37,8 +75,24 @@ export function Painel() {
         findTotalManutencoes();
         findTotalViaturas();
         findTotalUsuarios();
+        findDataDashboard();
         // eslint-disable-next-line
     }, []);
+    
+    async function findDataDashboard() {
+        try {
+            const result = await getDataDashboard()
+
+            const formattedData = result.data.dashboard.map(item => ({
+                name: `${item.marca} - ${item.modelo} - ${item.chassi}`,
+                Total: (item.sum),
+              }));
+            setListDashboard(formattedData)
+        } catch (error) {
+            console.error(error);
+            Navigate("/painel");
+        }
+    }
 
     async function findTotalManutencoes() {
         try {
@@ -69,6 +123,8 @@ export function Painel() {
             Navigate("/painel");
         }
     }
+
+    
 
     return (
         <>
@@ -119,7 +175,7 @@ export function Painel() {
                                     </Card>
                                 </Col>
                             </Row>
-                            <Row className="d-flex justify-content-end">   
+                            <Row className="d-flex justify-content-end mb-3">   
                                 <Col xs={4} sm={5} md={4} lg={3} xl={2}>
                                     <Input
                                     size={'sm'} 
@@ -137,8 +193,33 @@ export function Painel() {
                                     })}
                                     />      
                                 </Col>           
-                                
                             </Row>
+                            <Row style={{height: "500px"}}>
+                                <Col xs={12} className="p-0">
+                                    <ResponsiveContainer width="100%" height="100%">
+                                        <BarChart
+                                        width={500}
+                                        height={300}
+                                        data={listDashboard}
+                                        margin={{
+                                            top: 5,
+                                            right: 30,
+                                            left: 20,
+                                            bottom: 5,
+                                        }}
+                                        >
+                                        <CartesianGrid strokeDasharray="3 3" />
+                                        <XAxis dataKey="name" />
+                                        <YAxis />
+                                        <Tooltip />
+                                        <Legend />
+                                        <Bar dataKey="Total" fill="#82ca9d" />
+                                        </BarChart>
+                                    </ResponsiveContainer>
+                                </Col>
+                            </Row>
+                                    
+                                
                         </div>  
                     </Col>
                 </Row>

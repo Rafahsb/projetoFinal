@@ -8,6 +8,8 @@ const { Op } = require('sequelize');
 const { HttpHelper } = require("../utils/http-helper");
 
 class ManutencoesController {
+
+
   async criarManutencao(request, response) {
     const httpHelper = new HttpHelper(response)
     const { numero_nota, descricao, preco, data, id_viatura } = request.body;
@@ -21,7 +23,7 @@ class ManutencoesController {
       });
       return httpHelper.created({message: "Manutencoes cadastrada com sucesso!"})
     } catch (error) {
-      return httpHelper.internalError(error);;
+      return httpHelper.internalError(error);
     }
   }
 
@@ -60,11 +62,14 @@ class ManutencoesController {
   async pesquisarManutencoes(request, response) {
     const httpHelper = new HttpHelper(response)
     try {
-      const filtro = await ManutencoesModel.findAll({});
+      const filtro = await ManutencoesModel.sequelize.query("SELECT * FROM viaturas INNER JOIN manutencoes ON manutencoes.id_viatura = viaturas.id_viatura;", {
+        type: Sequelize.QueryTypes.SELECT,
+      })
+      // const filtro = await ManutencoesModel.findAll({});
 
-
+      console.log(filtro);
       filtro.forEach((manutencao) => {
-        manutencao.dataValues.data_nota = Validates.formatDate(manutencao.dataValues.data_nota);
+        manutencao.data_nota = Validates.formatDate(manutencao.data_nota);
         // manutencao.dataValues.data_nota = format(new Date(manutencao.dataValues.data_nota), "dd/MM/yyyy")
       });
 

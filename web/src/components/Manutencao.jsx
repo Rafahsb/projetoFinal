@@ -43,6 +43,9 @@ export function Manutencao(props) {
             <td>{props.manutencao.descricao}</td>
             <td>{props.manutencao.preco}</td>
             <td>{props.manutencao.data_nota}</td>
+            <td>{props.manutencao.marca}</td>
+            <td>{props.manutencao.modelo}</td>
+            <td>{props.manutencao.chassi}</td>
             <td>
                 <Dropdown>
                     <Dropdown.Toggle variant="primary" id="dropdown-basic">
