@@ -31,7 +31,7 @@ class ViaturaController {
         piloto,
       });
 
-      return response.status(201).json({
+      return httpHelper.created({
         message: "Viatura cadastrada com sucesso!",
         variant: "success",
       });
@@ -41,6 +41,7 @@ class ViaturaController {
   }
 
   async deletarViatura(request, response) {
+    const httpHelper = new HttpHelper(response);
     const { id } = request.params;
     try {
       await ViaturasModel.destroy({
@@ -49,18 +50,14 @@ class ViaturaController {
         },
       });
 
-      return response.status(202).json({
-        message: "Viatura deletada com sucesso!",
-        variant: "success",
-      });
+      return httpHelper.noContent();
     } catch (error) {
-      return response.status(400).json({
-        message: `Erro: ${error}`,
-      });
+      return httpHelper.internalError(error);
     }
   }
 
   async buscarViaturas(request, response) {
+    const httpHelper = new HttpHelper(response);
     let busca;
     const { filtro } = request.params || null;
 
@@ -82,31 +79,25 @@ class ViaturaController {
       } else {
         busca = await ViaturasModel.findAll({});
       }
-
-      return response.status(200).json({
-        Viaturas: busca,
-      });
+      Z;
+      return httpHelper.ok({ Viaturas: busca });
     } catch (error) {
-      return response.status(400).json({
-        message: `Erro: ${error}`,
-      });
+      return httpHelper.internalError(error);
     }
   }
 
   async pesquisarTotalViaturas(request, response) {
+    const httpHelper = new HttpHelper(response);
     try {
       const total = await ViaturasModel.count();
-      return response.status(200).json({
-        Total: total,
-      });
+      return httpHelper.ok({ Total: total });
     } catch (error) {
-      return response.status(400).json({
-        message: `Erro: ${error}`,
-      });
+      return httpHelper.internalError(error);
     }
   }
 
   async pesquisarViatura(request, response) {
+    const httpHelper = new HttpHelper(response);
     const { id } = request.body;
 
     try {
@@ -115,26 +106,18 @@ class ViaturaController {
           id_viatura: id,
         },
       });
-
-      return response.status(200).json({
-        Viaturas: filtro,
-      });
+      return httpHelper.ok({ Viatura: filtro });
     } catch (error) {
-      return response.status(400).json({
-        message: `Erro: ${error}`,
-      });
+      return httpHelper.internalError(error);
     }
   }
 
   async pesquisarViaturas(request, response) {
     const httpHelper = new HttpHelper(response);
-
     try {
       const filtro = await ViaturasModel.findAll({});
 
-      return response.status(200).json({
-        Viaturas: filtro,
-      });
+      return httpHelper.ok({ Viaturas: filtro });
     } catch (error) {
       return httpHelper.internalError(error);
     }

@@ -2,11 +2,13 @@ const { UsuariosModel } = require("../model/usuarios-model");
 const { Op } = require("sequelize");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+const { HttpHelper } = require("../utils/http-helper");
 
 const itensPorPagina = 5;
 
 class UsuarioController {
   async criarUsuario(request, response) {
+    const httpHelper = new HttpHelper(response)
     const { matricula, email, unidade, cargo } = request.body;
     try {
       const userExists = await UsuariosModel.findOne({
@@ -14,9 +16,7 @@ class UsuarioController {
       });
 
       if (userExists) {
-        return response.status(400).json({
-          error: "Usuario já existe!",
-        });
+        return httpHelper.badRequest( "Usuario já existe!")
       }
       const passwordHashed = await bcrypt.hash("123", Number(process.env.SALT));
       const createUser = await UsuariosModel.create({
@@ -34,26 +34,25 @@ class UsuarioController {
         { expiresIn: "300m" }
       );
 
-      return response.status(201).json({
+      return httpHelper.created({
         message: "Usuario criado com sucesso!",
         accessToken,
-      });
+      })
+
     } catch (error) {
-      return response.status(400).json({
-        message: `Erro: ${error}`,
-      });
+      return httpHelper.internalError(error);
     }
   }
 
   async sigin(request, response) {
+    const httpHelper = new HttpHelper(response)
     try {
       const { matricula, senha } = request.body;
 
       // Validar parâmetros
       if (!matricula || !senha) {
-        return response.status(400).json({
-          error: "Nome e senha são obrigatórios!",
-        });
+        return httpHelper.badRequest("Nome e senha são obrigatórios!");
+        
       }
 
       // Verifica se usuário existe
@@ -62,9 +61,7 @@ class UsuarioController {
       });
 
       if (!userExists) {
-        return response.status(400).json({
-          error: "Usuario não existe!",
-        });
+        return httpHelper.badRequest("Usuario não existe!");
       }
 
       const isPasswordValid = await bcrypt.compare(senha, userExists.senha);
@@ -81,17 +78,16 @@ class UsuarioController {
         process.env.TOKEN_SECRET,
         { expiresIn: "300m" }
       );
-      return response
-        .status(200)
-        .json({ accessToken, id: userExists.id_usuario });
+
+      return httpHelper.ok({accessToken, id: userExists.id_usuario})
+  
     } catch (error) {
-      return response.status(500).json({
-        error: `Erro interno: ${error}`,
-      });
+      return httpHelper.internalError(error);
     }
   }
 
   async buscarUsuarios(request, response) {
+    const httpHelper = new HttpHelper(response)
     let busca;
     const { filtro } = request.params || null;
     try {
@@ -113,30 +109,27 @@ class UsuarioController {
         });
       }
 
-      return response.status(200).json({
-        Usuarios: busca,
-      });
+      return httpHelper.ok({ Usuarios: busca })
+      
     } catch (error) {
-      return response.status(400).json({
-        message: `Erro: ${error}`,
-      });
+      return httpHelper.internalError(error);
     }
   }
 
   async pesquisarTotalUsuarios(request, response) {
+    const httpHelper = new HttpHelper(response)
     try {
       const total = await UsuariosModel.count();
-      return response.status(200).json({
-        Total: total,
-      });
+
+      return httpHelper.ok({ Total: total, })
+    
     } catch (error) {
-      return response.status(400).json({
-        message: `Erro: ${error}`,
-      });
+      return httpHelper.internalError(error);
     }
   }
 
   async pesquisarUsuarios(request, response) {
+    const httpHelper = new HttpHelper(response)
     const { page } = request.params;
 
     const offset = (page - 1) * itensPorPagina;
@@ -152,18 +145,18 @@ class UsuarioController {
         attributes: ["matricula", "email", "unidade", "cargo", "id_usuario"],
       });
 
-      return response.status(200).json({
+      return httpHelper.ok({
         Usuarios: filtro,
-        totalpages: totalPages,
-      });
+        totalpages: totalPages
+      })
+     
     } catch (error) {
-      return response.status(400).json({
-        message: `Erro: ${error}`,
-      });
+      return httpHelper.internalError(error);
     }
   }
 
   async alterarSenha(request, response) {
+    const httpHelper = new HttpHelper(response)
     const { id } = request.params;
     const { senha, nova_senha, confirmar_nova_senha } = request.body;
 
@@ -175,16 +168,11 @@ class UsuarioController {
       const isPasswordValid = await bcrypt.compare(senha, userExists.senha);
 
       if (!isPasswordValid) {
-        return response.status(400).json({
-          error: "Senha incorreta!",
-        });
+        return httpHelper.badRequest("Senha incorreta!")
       }
 
       if (confirmar_nova_senha !== nova_senha) {
-        return response.status(400).json({
-          error:
-            "A nova senha informada não bate com a confirmação da nova senha!",
-        });
+        return httpHelper.badRequest("A nova senha informada não bate com a confirmação da nova senha!")
       }
 
       const passwordHashed = await bcrypt.hash(
@@ -203,17 +191,15 @@ class UsuarioController {
         }
       );
 
-      return response.status(200).json({
-        Message: "Senha alterada com sucesso",
-      });
+      return httpHelper.ok({message: "Senha alterada com sucesso",})
+  
     } catch (error) {
-      return response.status(400).json({
-        message: `Erro: ${error}`,
-      });
+      return httpHelper.internalError(error);
     }
   }
 
   async pesquisarUsuario(request, response) {
+    const httpHelper = new HttpHelper(response)
     const { token } = request.params;
     const dadosUsuario = jwt.verify(
       token.replace(/"/g, ""),
@@ -226,17 +212,15 @@ class UsuarioController {
         where: { id_usuario: dadosUsuario.id },
       });
 
-      return response.status(200).json({
-        Usuario: filtro,
-      });
+      return httpHelper.ok({Usuario: filtro,})
+     
     } catch (error) {
-      return response.status(400).json({
-        message: `Erro: ${error}`,
-      });
+      return httpHelper.internalError(error);
     }
   }
 
   async editarPerfil(request, response) {
+    const httpHelper = new HttpHelper(response)
     const { id } = request.params;
     const { matricula, email, unidade, cargo } = request.body;
 
@@ -255,18 +239,16 @@ class UsuarioController {
           },
         }
       );
-
-      return response.status(200).json({
-        massage: `O usuário foi atualizado com sucesso`,
-      });
+      
+      return httpHelper.ok({ message: `O usuário foi atualizado com sucesso` });
+      
     } catch (error) {
-      return response.status(400).json({
-        message: `Erro: ${error}`,
-      });
+      return httpHelper.internalError(error);
     }
   }
 
   async atualizarUsuario(request, response) {
+    const httpHelper = new HttpHelper(response)
     const { id } = request.params;
     const { matricula, senha, email, unidade, cargo } = request.body;
 
@@ -286,17 +268,15 @@ class UsuarioController {
         }
       );
 
-      return response.status(200).json({
-        massage: `O usuário foi atualizado com sucesso`,
-      });
+      return httpHelper.ok({ message: `O usuário foi atualizado com sucesso` })
+      
     } catch (error) {
-      return response.status(400).json({
-        message: `Erro: ${error}`,
-      });
+      return httpHelper.internalError(error);
     }
   }
 
   async deletarUsuario(request, response) {
+    const httpHelper = new HttpHelper(response)
     const { id } = request.params;
     try {
       await UsuariosModel.destroy({
@@ -305,13 +285,10 @@ class UsuarioController {
         },
       });
 
-      return response.status(202).json({
-        message: "Usuário deletado com sucesso!",
-      });
+      return httpHelper.noContent();
+     
     } catch (error) {
-      return response.status(400).json({
-        message: `Erro: ${error}`,
-      });
+      return httpHelper.internalError(error);
     }
   }
 }

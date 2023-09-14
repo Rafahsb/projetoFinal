@@ -5,9 +5,13 @@ const { Validates } = require('../utils/validates');
 const { format } = require("date-fns");
 const { QueryTypes } = require('sequelize');
 const { Op } = require('sequelize');
+const { HttpHelper } = require("../utils/http-helper");
 
 class ManutencoesController {
+
+
   async criarManutencao(request, response) {
+    const httpHelper = new HttpHelper(response)
     const { numero_nota, descricao, preco, data, id_viatura } = request.body;
     try {
       await ManutencoesModel.create({
@@ -17,18 +21,14 @@ class ManutencoesController {
         data_nota: data,
         id_viatura,
       });
-
-      return response.status(201).json({
-        message: "Manutencoes cadastrada com sucesso!",
-      });
+      return httpHelper.created({message: "Manutencoes cadastrada com sucesso!"})
     } catch (error) {
-      return response.status(400).json({
-        message: `Erro: ${error}`,
-      });
+      return httpHelper.internalError(error);
     }
   }
 
   async deletarManutencao(request, response) {
+    const httpHelper = new HttpHelper(response)
     const { id } = request.params;
     try {
       await ManutencoesModel.destroy({
@@ -37,17 +37,14 @@ class ManutencoesController {
         },
       });
 
-      return response.status(202).json({
-        message: "Manutencoes deletada com sucesso!",
-      });
+      return httpHelper.noContent();
     } catch (error) {
-      return response.status(400).json({
-        message: `Erro: ${error}`,
-      });
+      return httpHelper.internalError(error);
     }
   }
 
   async pesquisarManutencao(request, response) {
+    const httpHelper = new HttpHelper(response)
     const { id } = request.body;
 
     try {
@@ -56,39 +53,35 @@ class ManutencoesController {
           id_manutencao: id,
         },
       });
-
-      return response.status(200).json({
-        Manutencoes: filtro,
-      });
+      return httpHelper.ok({ Manutencao: filtro });
     } catch (error) {
-      return response.status(400).json({
-        message: `Erro: ${error}`,
-      });
+      return httpHelper.internalError(error);
     }
   }
 
   async pesquisarManutencoes(request, response) {
+    const httpHelper = new HttpHelper(response)
     try {
-      const filtro = await ManutencoesModel.findAll({});
+      const filtro = await ManutencoesModel.sequelize.query("SELECT * FROM viaturas INNER JOIN manutencoes ON manutencoes.id_viatura = viaturas.id_viatura;", {
+        type: Sequelize.QueryTypes.SELECT,
+      })
+      // const filtro = await ManutencoesModel.findAll({});
 
-
+      console.log(filtro);
       filtro.forEach((manutencao) => {
-        manutencao.dataValues.data_nota = Validates.formatDate(manutencao.dataValues.data_nota);
+        manutencao.data_nota = Validates.formatDate(manutencao.data_nota);
         // manutencao.dataValues.data_nota = format(new Date(manutencao.dataValues.data_nota), "dd/MM/yyyy")
       });
 
-      return response.status(200).json({
-        Manutencoes: filtro,
-      });
+      return httpHelper.ok({ Manutencoes: filtro });
+
     } catch (error) {
-      return response.status(400).json({
-        message: `Erro: ${error}`,
-      });
+      return httpHelper.internalError(error);
     }
   }
 
   async buscarManutencoes(request, response) {
-    console.log(request.params);
+    const httpHelper = new HttpHelper(response)
     let busca;
     const { filtro } = request.params || null;
 
@@ -112,30 +105,27 @@ class ManutencoesController {
         // manutencao.dataValues.data_nota = format(new Date(manutencao.dataValues.data_nota), "dd/MM/yyyy")
       });
 
-      return response.status(200).json({
-        Manutencoes: busca,
-      });
+      return httpHelper.ok({ Manutencoes: busca });
+    
     } catch (error) {
-      return response.status(400).json({
-        message: `Erro: ${error}`,
-      });
+      return httpHelper.internalError(error);
     }
   }
 
   async pesquisarTotalManutencoes(request, response) {
+    const httpHelper = new HttpHelper(response)
     try {
       const total = await ManutencoesModel.count()
-      return response.status(200).json({
-        Total: total,
-      });
+      
+      return httpHelper.ok({ Total: total, });
+      
     } catch (error) {
-      return response.status(400).json({
-        message: `Erro: ${error}`,
-      });
+      return httpHelper.internalError(error);
     }
   }
 
   async atualizarManutencao(request, response) {
+    const httpHelper = new HttpHelper(response)
     const { id } = request.params;
     const { numero_nota, descricao, preco, data_nota, id_viatura } = request.body;
 
@@ -154,14 +144,11 @@ class ManutencoesController {
           },
         }
       );
+        
+      return httpHelper.ok({ message: `A Manutencoes foi atualizada com sucesso`, });
 
-      return response.status(200).json({
-        massage: `A Manutencoes foi atualizada com sucesso`,
-      });
     } catch (error) {
-      return response.status(400).json({
-        message: `Erro: ${error}`,
-      });
+      return httpHelper.internalError(error);
     }
   }
 }

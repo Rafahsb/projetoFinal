@@ -1,4 +1,3 @@
-import { atom, useAtom } from "jotai";
 import { Head } from "../components/Head";
 import { Navigation } from "../components/Navigation";
 import { useNavigate } from "react-router-dom";
@@ -25,14 +24,12 @@ import { BsCheckLg } from "react-icons/bs";
 import Pagination from "react-bootstrap/Pagination";
 
 import { getViaturas } from "../services/viaturas-service";
-const countAtom = atom([]);
 
 export function Manutencoes() {
-    const [viaturas, setViaturas] = useAtom(countAtom);
     var manutencoes;
     const [manutencoesAtt, setManutencoesAtt] = useState([]);
 
-    // const [viaturas, setViaturas] = useState([]);
+    const [viaturas, setViaturas] = useState([]);
     const [inputValue, setInputValue] = useState("");
 
     let currentPage = 0;
@@ -325,6 +322,9 @@ export function Manutencoes() {
                                         <th>Descricao</th>
                                         <th>Preço</th>
                                         <th>Data</th>
+                                        <th>Marca</th>
+                                        <th>Modelo</th>
+                                        <th>Chassi</th>
                                         <th>Ações</th>
                                     </tr>
                                 </thead>
