@@ -1,8 +1,5 @@
-import { Navigations } from './routes';
-
+import { Navigations } from "./routes";
 
 export default function App() {
-    return (
-            <Navigations />
-    )
+    return <Navigations className="p-5" />;
 }

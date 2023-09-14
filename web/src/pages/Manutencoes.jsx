@@ -1,3 +1,4 @@
+import { atom, useAtom } from "jotai";
 import { Head } from "../components/Head";
 import { Navigation } from "../components/Navigation";
 import { useNavigate } from "react-router-dom";
@@ -9,7 +10,6 @@ import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
-import Container from "react-bootstrap/Container";
 import { Modal, Card } from "react-bootstrap";
 import Table from "react-bootstrap/Table";
 
@@ -25,12 +25,14 @@ import { BsCheckLg } from "react-icons/bs";
 import Pagination from "react-bootstrap/Pagination";
 
 import { getViaturas } from "../services/viaturas-service";
+const countAtom = atom([]);
 
 export function Manutencoes() {
+    const [viaturas, setViaturas] = useAtom(countAtom);
     var manutencoes;
     const [manutencoesAtt, setManutencoesAtt] = useState([]);
 
-    const [viaturas, setViaturas] = useState([]);
+    // const [viaturas, setViaturas] = useState([]);
     const [inputValue, setInputValue] = useState("");
 
     let currentPage = 0;
@@ -54,6 +56,7 @@ export function Manutencoes() {
 
     useEffect(() => {
         findManutencoes();
+        // findViaturas();
         // eslint-disable-next-line
     }, []);
 

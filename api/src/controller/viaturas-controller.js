@@ -4,6 +4,7 @@ const { ViaturasModel } = require("../model/viaturas-model");
 
 class ViaturaController {
   async criarViatura(request, response) {
+    const httpHelper = new HttpHelper(response);
     const {
       marca,
       modelo,
@@ -32,11 +33,10 @@ class ViaturaController {
 
       return response.status(201).json({
         message: "Viatura cadastrada com sucesso!",
+        variant: "success",
       });
     } catch (error) {
-      return response.status(400).json({
-        message: `Erro: ${error}`,
-      });
+      return httpHelper.internalError(error);
     }
   }
 
@@ -51,6 +51,7 @@ class ViaturaController {
 
       return response.status(202).json({
         message: "Viatura deletada com sucesso!",
+        variant: "success",
       });
     } catch (error) {
       return response.status(400).json({
@@ -126,6 +127,8 @@ class ViaturaController {
   }
 
   async pesquisarViaturas(request, response) {
+    const httpHelper = new HttpHelper(response);
+
     try {
       const filtro = await ViaturasModel.findAll({});
 
@@ -133,9 +136,7 @@ class ViaturaController {
         Viaturas: filtro,
       });
     } catch (error) {
-      return response.status(400).json({
-        message: `Erro: ${error}`,
-      });
+      return httpHelper.internalError(error);
     }
   }
 
@@ -157,7 +158,12 @@ class ViaturaController {
         piloto,
       } = request.body;
       if (!id) return httpHelper.badRequest("Parâmetros inválidos!");
-
+      if (portas > 5) {
+        return httpHelper.badRequest({
+          message: "A quantidades de portas não pode ser maior que 4.",
+          variant: "danger",
+        });
+      }
       const viaturaExists = await ViaturasModel.findOne({ id_viatura: id });
 
       if (!viaturaExists) return httpHelper.notFound("Viatura não encontrada!");
@@ -185,6 +191,7 @@ class ViaturaController {
 
       return httpHelper.ok({
         message: "Viatura atualizada com sucesso!",
+        variant: "success",
       });
     } catch (error) {
       return httpHelper.internalError(error);
