@@ -25,23 +25,18 @@ import Pagination from "react-bootstrap/Pagination";
 
 import { getViaturas } from "../services/viaturas-service";
 
-export function Manutencoes() {
-    var manutencoes;
-    const [manutencoesAtt, setManutencoesAtt] = useState([]);
+import PaginationComponent from "../components/PaginationComponent";
 
+export function Manutencoes() {
     const [viaturas, setViaturas] = useState([]);
     const [inputValue, setInputValue] = useState("");
 
-    let currentPage = 0;
-    const [currentPages, setCurrentPages] = useState(0);
+    const [currentPage, setCurrentPage] = useState(1);
+    let paginaAtual = 1;
+    const [totalPages, setTotalPages] = useState();
 
-    const [totalPages, setTotalPages] = useState(0);
     const [active, setActive] = useState(0);
     const [manutencoesList, setManutencoesList] = useState([]);
-
-    const itemsPerPage = 3;
-    const [maxPagesLimit, setMaxPagesLimit] = useState(5);
-    const [minPagesLimit, setMinPagesLimit] = useState(0);
 
     const [isCreated, setIsCreated] = useState(false);
     const {
@@ -52,24 +47,19 @@ export function Manutencoes() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        findManutencoes();
+        filterManutencoes();
         // findViaturas();
         // eslint-disable-next-line
     }, []);
 
     async function filterManutencoes(params) {
+        const filter = { filtro: params, page: paginaAtual };
         try {
-            const result = await getBuscarManutencoes(params);
-            manutencoes = result.data.Manutencoes;
-            setManutencoesAtt(manutencoes);
-            setTotalPages(Math.ceil(manutencoes.length / itemsPerPage));
-            currentPage = 0;
-            setActive(0);
-            setMaxPagesLimit(5);
-            setMinPagesLimit(0);
-            paginate(manutencoes);
+            const result = await getBuscarManutencoes(filter);
+            setManutencoesList(result.data.Manutencoes);
+            setTotalPages(result.data.TotalPages);
+            PaginationComponent();
         } catch (error) {
-            navigate("/manutencoes");
             console.error(error);
         }
     }
@@ -87,10 +77,7 @@ export function Manutencoes() {
     async function findManutencoes() {
         try {
             const result = await getManutencoes();
-            manutencoes = result.data.Manutencoes;
-            setManutencoesAtt(manutencoes);
-            setTotalPages(Math.ceil(manutencoes.length / itemsPerPage));
-            paginate(manutencoes);
+            setManutencoesList(result.data.Manutencoes);
         } catch (error) {
             console.error(error);
             navigate("/manutencoes");
@@ -132,126 +119,15 @@ export function Manutencoes() {
         }
     }
 
-    function paginate(inicial) {
-        const startIndex = currentPage * itemsPerPage;
-        const endIndex = startIndex + itemsPerPage;
-        const subset = inicial.slice(startIndex, endIndex);
-        setManutencoesList(subset);
-
-        // if(manutencoes.length === 0) {
-        //     const subset = inicial.slice(startIndex, endIndex);
-        //     setManutencoesList(subset);
-        // } else {
-        //     const subset = manutencoes.slice(startIndex, endIndex);
-        //     setManutencoesList(subset);
-        // }
-    }
-
-    function PaginationFront() {
-        let items = [];
-
-        if (totalPages > 5) {
-            for (
-                let numeroPagina = minPagesLimit;
-                numeroPagina <= maxPagesLimit - 1;
-                numeroPagina++
-            ) {
-                items.push(
-                    <Pagination.Item
-                        key={numeroPagina}
-                        active={numeroPagina === active}
-                        onClick={() => {
-                            currentPage = numeroPagina;
-                            setCurrentPages(numeroPagina);
-                            setActive(numeroPagina);
-                            paginate(manutencoesAtt);
-                            setMaxPagesLimit(
-                                numeroPagina > totalPages - 3
-                                    ? totalPages
-                                    : numeroPagina < 3
-                                    ? 5
-                                    : currentPage + 3
-                            );
-                            setMinPagesLimit(
-                                numeroPagina > 3 &&
-                                    numeroPagina < totalPages - 3
-                                    ? currentPage - 2
-                                    : numeroPagina < 3
-                                    ? 0
-                                    : numeroPagina > totalPages - 3
-                                    ? totalPages - 5
-                                    : currentPage - 2
-                            );
-                        }}
-                    >
-                        {numeroPagina + 1}
-                    </Pagination.Item>
-                );
-            }
-        } else {
-            for (
-                let numeroPagina = minPagesLimit;
-                numeroPagina <= totalPages - 1;
-                numeroPagina++
-            ) {
-                items.push(
-                    <Pagination.Item
-                        key={numeroPagina}
-                        active={numeroPagina === active}
-                        onClick={() => {
-                            currentPage = numeroPagina;
-                            setCurrentPages(numeroPagina);
-                            setActive(numeroPagina);
-                            paginate(manutencoesAtt);
-                            setMaxPagesLimit(
-                                numeroPagina > totalPages - 3
-                                    ? totalPages
-                                    : numeroPagina < 3
-                                    ? 5
-                                    : currentPage + 3
-                            );
-                            setMinPagesLimit(
-                                numeroPagina > 3 &&
-                                    numeroPagina < totalPages - 3
-                                    ? currentPage - 2
-                                    : numeroPagina < 3
-                                    ? 0
-                                    : numeroPagina > totalPages - 3
-                                    ? totalPages - 5
-                                    : currentPage - 2
-                            );
-                        }}
-                    >
-                        {numeroPagina + 1}
-                    </Pagination.Item>
-                );
-            }
+    async function goToPage(pageNumber) {
+        if (pageNumber >= 1 && pageNumber <= totalPages) {
+            paginaAtual = pageNumber;
+            setCurrentPage(pageNumber);
+            const filter = { filtro: inputValue, page: paginaAtual };
+            const result = await getBuscarManutencoes(filter);
+            setManutencoesList(result.data.Manutencoes);
+            setTotalPages(result.data.TotalPages);
         }
-
-        return (
-            <Pagination className="d-flex justify-content-center">
-                <Pagination.First
-                    onClick={() => {
-                        currentPage = 0;
-                        setActive(0);
-                        paginate(manutencoesAtt);
-                        setMaxPagesLimit(5);
-                        setMinPagesLimit(0);
-                    }}
-                />
-
-                {items}
-                <Pagination.Last
-                    onClick={() => {
-                        currentPage = totalPages - 1;
-                        setActive(totalPages - 1);
-                        paginate(manutencoesAtt);
-                        setMaxPagesLimit(totalPages);
-                        setMinPagesLimit(totalPages > 5 ? totalPages - 5 : 0);
-                    }}
-                />
-            </Pagination>
-        );
     }
 
     return (
@@ -348,7 +224,11 @@ export function Manutencoes() {
                                     )}
                                 </tbody>
                             </Table>
-                            <PaginationFront></PaginationFront>
+                            <PaginationComponent
+                                currentPage={currentPage}
+                                totalPages={totalPages}
+                                onPageChange={goToPage}
+                            />
                         </Card>
                     </Row>
 

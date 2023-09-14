@@ -1,5 +1,5 @@
 import { Navigations } from "./routes";
 
 export default function App() {
-    return <Navigations className="p-5" />;
+    return <Navigations />;
 }

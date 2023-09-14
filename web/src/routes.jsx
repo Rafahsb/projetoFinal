@@ -33,7 +33,7 @@ export function Navigations() {
                         path="/viaturas"
                         element={
                             <PrivateRoute>
-                                <Viaturas/>
+                                <Viaturas />
                             </PrivateRoute>
                         }
                     />
@@ -41,7 +41,7 @@ export function Navigations() {
                         path="/manutencoes"
                         element={
                             <PrivateRoute>
-                                <Manutencoes/>
+                                <Manutencoes />
                             </PrivateRoute>
                         }
                     />
@@ -49,14 +49,10 @@ export function Navigations() {
                         path="/usuarios"
                         element={
                             <PrivateRoute>
-                                <Usuarios/>
+                                <Usuarios />
                             </PrivateRoute>
                         }
                     />
-                    
-                    
-                                
-                                
                 </Routes>
             </UserContextProvider>
         </BrowserRouter>

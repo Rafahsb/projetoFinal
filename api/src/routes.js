@@ -16,18 +16,12 @@ const manutencoesController = new ManutencoesController();
 const usuarioController = new UsuarioController();
 const painelController = new PainelController();
 
-
 routes.post("/login", userController.sigin);
 routes.get("/perfil", authMiddleware, userController.editarPerfil);
 
-
 // Viatura
 routes.post("/viatura", authMiddleware, viaturaController.criarViatura);
-routes.get(
-  "/viaturasBusca/:filtro?",
-  authMiddleware,
-  viaturaController.buscarViaturas
-);
+routes.get("/viaturasBusca", authMiddleware, viaturaController.buscarViaturas);
 routes.get("/viaturas", authMiddleware, viaturaController.pesquisarViaturas);
 routes.get(
   "/totalViaturas",
@@ -44,7 +38,7 @@ routes.post(
   manutencoesController.criarManutencao
 );
 routes.get(
-  "/manutencoesBusca/:filtro?",
+  "/manutencoesBusca",
   authMiddleware,
   manutencoesController.buscarManutencoes
 );
@@ -69,9 +63,7 @@ routes.delete(
   manutencoesController.deletarManutencao
 );
 
-
 // Usuarios
-
 
 routes.post("/usuario", authMiddleware, usuarioController.criarUsuario);
 routes.get(
@@ -100,10 +92,6 @@ routes.delete("/usuario/:id", authMiddleware, usuarioController.deletarUsuario);
 
 // Painel
 
-routes.get(
-  "/dashboard",
-  authMiddleware,
-  painelController.Dashboard
-);
+routes.get("/dashboard", authMiddleware, painelController.Dashboard);
 
 module.exports = { routes };

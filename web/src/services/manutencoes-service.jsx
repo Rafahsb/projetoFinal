@@ -10,13 +10,16 @@ export async function getManutencoes() {
     return result;
 }
 
-export async function getBuscarManutencoes(filtro) {
+export async function getBuscarManutencoes(params) {
     const accessToken = sessionStorage.getItem("token");
-    const result = await api.get(`/manutencoesBusca/${filtro}`, {
-        headers: {
-            Authorization: `Bearer ${JSON.parse(accessToken)}`,
-        },
-    });
+    const result = await api.get(
+        `/manutencoesBusca/?filtro=${params.filtro}&page=${params.page}`,
+        {
+            headers: {
+                Authorization: `Bearer ${JSON.parse(accessToken)}`,
+            },
+        }
+    );
     return result;
 }
 

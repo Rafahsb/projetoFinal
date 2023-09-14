@@ -10,13 +10,16 @@ export async function getViaturas() {
     return result;
 }
 
-export async function getBuscarViaturas(filtro) {
+export async function getBuscarViaturas(params) {
     const accessToken = sessionStorage.getItem("token");
-    const result = await api.get(`/viaturasBusca/${filtro}`, {
-        headers: {
-            Authorization: `Bearer ${JSON.parse(accessToken)}`,
-        },
-    });
+    const result = await api.get(
+        `/viaturasBusca/?filtro=${params.filtro}&page=${params.page}`,
+        {
+            headers: {
+                Authorization: `Bearer ${JSON.parse(accessToken)}`,
+            },
+        }
+    );
     return result;
 }
 

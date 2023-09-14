@@ -1,6 +1,7 @@
 const { HttpHelper } = require("../utils/http-helper");
 const { Op } = require("sequelize");
 const { ViaturasModel } = require("../model/viaturas-model");
+const { paginationWhere } = require("../utils/paginationWhere");
 
 class ViaturaController {
   async criarViatura(request, response) {
@@ -58,29 +59,26 @@ class ViaturaController {
 
   async buscarViaturas(request, response) {
     const httpHelper = new HttpHelper(response);
-    let busca;
-    const { filtro } = request.params || null;
+    let busca = {};
+    const { filtro, page } = request.query || null;
 
     try {
-      if (filtro != null) {
-        busca = await ViaturasModel.findAll({
-          where: {
-            [Op.or]: [
-              { marca: { [Op.like]: `%${filtro}%` } },
-              { modelo: { [Op.like]: `%${filtro}%` } },
-              { chassi: { [Op.like]: `%${filtro}%` } },
-              { cor: { [Op.like]: `%${filtro}%` } },
-              { orgao_vinculado: { [Op.like]: `%${filtro}%` } },
-              { batalhao: { [Op.like]: `%${filtro}%` } },
-              { piloto: { [Op.like]: `%${filtro}%` } },
-            ],
-          },
+      if (filtro != "undefined") {
+        busca = await paginationWhere(ViaturasModel, page, {
+          [Op.or]: [
+            { marca: { [Op.like]: `%${filtro}%` } },
+            { modelo: { [Op.like]: `%${filtro}%` } },
+            { chassi: { [Op.like]: `%${filtro}%` } },
+            { cor: { [Op.like]: `%${filtro}%` } },
+            { orgao_vinculado: { [Op.like]: `%${filtro}%` } },
+            { batalhao: { [Op.like]: `%${filtro}%` } },
+            { piloto: { [Op.like]: `%${filtro}%` } },
+          ],
         });
       } else {
-        busca = await ViaturasModel.findAll({});
+        busca = await paginationWhere(ViaturasModel, page);
       }
-      Z;
-      return httpHelper.ok({ Viaturas: busca });
+      return httpHelper.ok({ Viaturas: busca.data, TotalPages: busca.pages });
     } catch (error) {
       return httpHelper.internalError(error);
     }
@@ -106,6 +104,7 @@ class ViaturaController {
           id_viatura: id,
         },
       });
+
       return httpHelper.ok({ Viatura: filtro });
     } catch (error) {
       return httpHelper.internalError(error);

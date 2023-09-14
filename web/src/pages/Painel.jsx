@@ -126,7 +126,7 @@ export function Painel() {
 
     return (
         <>
-            <Head></Head>
+            <Head styles={{ overflow: "hidden" }}></Head>
             <Row className="vh-100">
                 <Col sm={3} md={2}>
                     <Navigation></Navigation>

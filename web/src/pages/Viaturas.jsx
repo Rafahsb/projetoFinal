@@ -22,6 +22,7 @@ import {
 } from "../services/viaturas-service";
 import { Viatura } from "../components/Viatura";
 import Notification from "../components/Notification";
+import PaginationComponent from "../components/PaginationComponent";
 
 export function Viaturas() {
     const [active, setActive] = useState(false);
@@ -29,6 +30,11 @@ export function Viaturas() {
     const [viaturas, setViaturas] = useState([]);
     const [inputValue, setInputValue] = useState("");
     const [isCreated, setIsCreated] = useState(false);
+    const [currentPage, setCurrentPage] = useState(1);
+    let paginaAtual = 1;
+    const [itemsPerPage, setItemsPerPage] = useState(1);
+    const [totalPages, setTotalPages] = useState();
+
     const {
         handleSubmit,
         register,
@@ -37,14 +43,28 @@ export function Viaturas() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        findViaturas();
+        filterViaturas();
         // eslint-disable-next-line
     }, []);
 
-    async function filterViaturas(params) {
-        try {
-            const result = await getBuscarViaturas(params);
+    async function goToPage(pageNumber) {
+        if (pageNumber >= 1 && pageNumber <= totalPages) {
+            paginaAtual = pageNumber;
+            setCurrentPage(pageNumber);
+            const filter = { filtro: inputValue, page: paginaAtual };
+            const result = await getBuscarViaturas(filter);
             setViaturas(result.data.Viaturas);
+            setTotalPages(result.data.TotalPages);
+        }
+    }
+
+    async function filterViaturas(params) {
+        const filter = { filtro: params, page: paginaAtual };
+        try {
+            const result = await getBuscarViaturas(filter);
+            setViaturas(result.data.Viaturas);
+            setTotalPages(result.data.TotalPages);
+            PaginationComponent();
         } catch (error) {
             console.error(error);
         }
@@ -212,6 +232,11 @@ export function Viaturas() {
                                     ))}
                                 </tbody>
                             </Table>
+                            <PaginationComponent
+                                currentPage={currentPage}
+                                totalPages={totalPages}
+                                onPageChange={goToPage}
+                            />
                         </Card>
                     </Row>
 

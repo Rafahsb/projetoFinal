@@ -1,6 +1,7 @@
 import { FloatingLabel, Form } from "react-bootstrap";
 
 export function Input(props) {
+    console.log(props);
     return (
         <Form.Group className={props.className}>
             <FloatingLabel label={props.label}>
