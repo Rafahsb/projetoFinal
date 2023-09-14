@@ -11,6 +11,10 @@ class HttpHelper {
         return this.response.status(200).json(data);
     }
 
+    noContent(data) {
+        return this.response.status(204).json(data);
+    }
+
     badRequest(message) {
         return this.response.status(400).json({
             error: message
