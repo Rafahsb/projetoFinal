@@ -63,7 +63,7 @@ class ViaturaController {
     const { filtro, page } = request.query || null;
 
     try {
-      if (filtro != "undefined") {
+      if (filtro != "undefined" && filtro != "") {
         busca = await paginationWhere(ViaturasModel, page, {
           [Op.or]: [
             { marca: { [Op.like]: `%${filtro}%` } },

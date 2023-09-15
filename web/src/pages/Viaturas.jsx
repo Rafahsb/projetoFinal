@@ -179,7 +179,10 @@ export function Viaturas() {
                                     })}
                                 />
                                 <Button
-                                    onClick={() => filterViaturas(inputValue)}
+                                    onClick={() => {
+                                        filterViaturas(inputValue)
+                                        setCurrentPage(1);
+                                    }}
                                     variant="primary"
                                     id="button-addon2"
                                 >
@@ -205,7 +208,7 @@ export function Viaturas() {
                     </Row>
                     <Row className="m-0 mt-3">
                         <Card className="p-3 my-3 shadow">
-                            <Table hover>
+                            <Table responsive={"sm"} hover>
                                 <thead>
                                     <tr>
                                         <th>Marca</th>

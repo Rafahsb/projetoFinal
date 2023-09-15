@@ -4,7 +4,7 @@ const { ViaturasModel } = require("../model/viaturas-model");
 const { Validates } = require("../utils/validates");
 const { format } = require("date-fns");
 const { QueryTypes } = require("sequelize");
-const { Op } = require("sequelize");
+const { Op } = require('sequelize');
 const { HttpHelper } = require("../utils/http-helper");
 const { paginationWhere } = require("../utils/paginationWhere");
 
@@ -85,20 +85,17 @@ class ManutencoesController {
 
   async buscarManutencoes(request, response) {
     const httpHelper = new HttpHelper(response);
-    let busca;
+    let busca = {};
 
     const { filtro, page } = request.query || null;
-
+    
     try {
-      if (filtro != "undefined") {
+      if (filtro != "undefined" && filtro != "") {
         busca = await paginationWhere(ManutencoesModel, page, {
-          where: {
-            [Op.or]: [
-              { numero_nota: { [Op.like]: `%${filtro}%` } },
-              { descricao: { [Op.like]: `%${filtro}%` } },
-              { preco: parseFloat(filtro) },
-            ],
-          },
+          [Op.or]: [
+            { numero_nota: { [Op.like]: `%${filtro}%` } },
+            { descricao: { [Op.like]: `%${filtro}%` } },
+          ],
         });
       } else {
         busca = await paginationWhere(ManutencoesModel, page);
@@ -107,10 +104,6 @@ class ManutencoesController {
       busca.data.forEach((manutencao) => {
         manutencao.dataValues.data_nota = Validates.formatDate(
           manutencao.dataValues.data_nota
-        );
-        manutencao.dataValues.data_nota = format(
-          new Date(manutencao.dataValues.data_nota),
-          "dd/MM/yyyy"
         );
       });
 
@@ -123,6 +116,8 @@ class ManutencoesController {
     }
   }
 
+
+  
   async pesquisarTotalManutencoes(request, response) {
     const httpHelper = new HttpHelper(response);
     try {

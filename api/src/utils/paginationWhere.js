@@ -6,7 +6,7 @@ async function paginationWhere(model, page, where) {
   const offset = (page - 1) * limit;
   //busca os dados com limite e offset
   const data = await model.findAll({ limit, offset, where });
-  const total = await model.findAll({ where });
+  console.log(data);
   //busca o total de registros
   const count = await model.count({ where: where });
   //calcula o total de páginas

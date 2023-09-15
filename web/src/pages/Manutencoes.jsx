@@ -52,6 +52,17 @@ export function Manutencoes() {
         // eslint-disable-next-line
     }, []);
 
+    async function goToPage(pageNumber) {
+        if (pageNumber >= 1 && pageNumber <= totalPages) {
+            paginaAtual = pageNumber;
+            setCurrentPage(pageNumber);
+            const filter = { filtro: inputValue, page: paginaAtual };
+            const result = await getBuscarManutencoes(filter);
+            setManutencoesList(result.data.Manutencoes);
+            setTotalPages(result.data.TotalPages);
+        }
+    }
+
     async function filterManutencoes(params) {
         const filter = { filtro: params, page: paginaAtual };
         try {
@@ -119,16 +130,7 @@ export function Manutencoes() {
         }
     }
 
-    async function goToPage(pageNumber) {
-        if (pageNumber >= 1 && pageNumber <= totalPages) {
-            paginaAtual = pageNumber;
-            setCurrentPage(pageNumber);
-            const filter = { filtro: inputValue, page: paginaAtual };
-            const result = await getBuscarManutencoes(filter);
-            setManutencoesList(result.data.Manutencoes);
-            setTotalPages(result.data.TotalPages);
-        }
-    }
+    
 
     return (
         <>
@@ -191,7 +193,7 @@ export function Manutencoes() {
                     </Row>
                     <Row className="m-0 mt-3">
                         <Card className="p-3 my-3 shadow">
-                            <Table hover>
+                            <Table responsive hover>
                                 <thead>
                                     <tr>
                                         <th>Nº da nota</th>

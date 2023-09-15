@@ -195,7 +195,7 @@ export function Usuarios() {
                     </Row>
                     <Row className="m-0 mt-3">
                         <Card className="p-3 my-3 shadow">
-                            <Table responsive="md" hover>
+                            <Table responsive hover>
                                 <thead>
                                     <tr>
                                         <th>Matrícula</th>
