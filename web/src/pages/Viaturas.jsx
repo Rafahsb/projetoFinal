@@ -179,7 +179,10 @@ export function Viaturas() {
                                     })}
                                 />
                                 <Button
-                                    onClick={() => filterViaturas(inputValue)}
+                                    onClick={() => {
+                                        filterViaturas(inputValue);
+                                        setCurrentPage(1);
+                                    }}
                                     variant="primary"
                                     id="button-addon2"
                                 >

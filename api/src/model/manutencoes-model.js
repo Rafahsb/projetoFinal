@@ -26,7 +26,7 @@ class ManutencoesModel extends Model {
           allowNull: false,
         },
         id_viatura: { 
-          type: DataTypes.TEXT,
+          type: DataTypes.INTEGER,
           allowNull: false,
         }
       },
