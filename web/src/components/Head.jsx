@@ -80,20 +80,20 @@ export function Head() {
 
     return (
         <>
-            <Navbar className="bg-body-tertiary p-0 shadow">
+            <Navbar className="bg-body-tertiary p-0 shadow px-sm-5">
                 <Container fluid>
                     <Navbar.Brand className="d-flex align-items-center ">
                         <HomeOutlinedIcon className="text-primary me-3 fs-2"></HomeOutlinedIcon>
-                        <h3
-                            className="d-flex"
+                        <h4
+                            className="d-flex m-0"
                             style={{ cursor: "pointer" }}
                             onClick={alterarRota}
                         >
                             Via <div className="text-primary">Gestão</div>
-                        </h3>
+                        </h4>
                     </Navbar.Brand>
                     <Navbar.Brand className="d-flex align-items-center">
-                        <Dropdown>
+                        <Dropdown align={{ sm: "start" }}>
                             <Dropdown.Toggle
                                 variant="light"
                                 id="dropdown-basic"

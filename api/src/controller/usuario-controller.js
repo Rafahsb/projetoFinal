@@ -3,12 +3,13 @@ const { Op } = require("sequelize");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const { HttpHelper } = require("../utils/http-helper");
+const { paginationWhere } = require("../utils/paginationWhere");
 
 const itensPorPagina = 5;
 
 class UsuarioController {
   async criarUsuario(request, response) {
-    const httpHelper = new HttpHelper(response)
+    const httpHelper = new HttpHelper(response);
     const { matricula, email, unidade, cargo } = request.body;
     try {
       const userExists = await UsuariosModel.findOne({
@@ -16,7 +17,7 @@ class UsuarioController {
       });
 
       if (userExists) {
-        return httpHelper.badRequest( "Usuario já existe!")
+        return httpHelper.badRequest("Usuario já existe!");
       }
       const passwordHashed = await bcrypt.hash("123", Number(process.env.SALT));
       const createUser = await UsuariosModel.create({
@@ -37,22 +38,20 @@ class UsuarioController {
       return httpHelper.created({
         message: "Usuario criado com sucesso!",
         accessToken,
-      })
-
+      });
     } catch (error) {
       return httpHelper.internalError(error);
     }
   }
 
   async sigin(request, response) {
-    const httpHelper = new HttpHelper(response)
+    const httpHelper = new HttpHelper(response);
     try {
       const { matricula, senha } = request.body;
 
       // Validar parâmetros
       if (!matricula || !senha) {
         return httpHelper.badRequest("Nome e senha são obrigatórios!");
-        
       }
 
       // Verifica se usuário existe
@@ -79,57 +78,50 @@ class UsuarioController {
         { expiresIn: "300m" }
       );
 
-      return httpHelper.ok({accessToken, id: userExists.id_usuario})
-  
+      return httpHelper.ok({ accessToken, id: userExists.id_usuario });
     } catch (error) {
       return httpHelper.internalError(error);
     }
   }
 
   async buscarUsuarios(request, response) {
-    const httpHelper = new HttpHelper(response)
+    const httpHelper = new HttpHelper(response);
     let busca;
-    const { filtro } = request.params || null;
+    const { filtro, page } = request.query || null;
+
     try {
-      if (filtro != null) {
-        busca = await UsuariosModel.findAll({
-          where: {
-            [Op.or]: [
-              { matricula: { [Op.like]: `%${filtro}%` } },
-              { email: { [Op.like]: `%${filtro}%` } },
-              { unidade: { [Op.like]: `%${filtro}%` } },
-              { cargo: { [Op.like]: `%${filtro}%` } },
-            ],
-          },
-          attributes: ["matricula", "email", "unidade", "cargo", "id_usuario"],
+      if (filtro != "undefined") {
+        busca = await paginationWhere(UsuariosModel, page, {
+          [Op.or]: [
+            { matricula: { [Op.like]: `%${filtro}%` } },
+            { email: { [Op.like]: `%${filtro}%` } },
+            { unidade: { [Op.like]: `%${filtro}%` } },
+            { cargo: { [Op.like]: `%${filtro}%` } },
+          ],
         });
       } else {
-        busca = await UsuariosModel.findAll({
-          attributes: ["matricula", "email", "unidade", "cargo", "id_usuario"],
-        });
+        busca = await paginationWhere(UsuariosModel, page);
       }
 
-      return httpHelper.ok({ Usuarios: busca })
-      
+      return httpHelper.ok({ Usuarios: busca.data, TotalPages: busca.pages });
     } catch (error) {
       return httpHelper.internalError(error);
     }
   }
 
   async pesquisarTotalUsuarios(request, response) {
-    const httpHelper = new HttpHelper(response)
+    const httpHelper = new HttpHelper(response);
     try {
       const total = await UsuariosModel.count();
 
-      return httpHelper.ok({ Total: total, })
-    
+      return httpHelper.ok({ Total: total });
     } catch (error) {
       return httpHelper.internalError(error);
     }
   }
 
   async pesquisarUsuarios(request, response) {
-    const httpHelper = new HttpHelper(response)
+    const httpHelper = new HttpHelper(response);
     const { page } = request.params;
 
     const offset = (page - 1) * itensPorPagina;
@@ -147,16 +139,15 @@ class UsuarioController {
 
       return httpHelper.ok({
         Usuarios: filtro,
-        totalpages: totalPages
-      })
-     
+        totalpages: totalPages,
+      });
     } catch (error) {
       return httpHelper.internalError(error);
     }
   }
 
   async alterarSenha(request, response) {
-    const httpHelper = new HttpHelper(response)
+    const httpHelper = new HttpHelper(response);
     const { id } = request.params;
     const { senha, nova_senha, confirmar_nova_senha } = request.body;
 
@@ -168,11 +159,13 @@ class UsuarioController {
       const isPasswordValid = await bcrypt.compare(senha, userExists.senha);
 
       if (!isPasswordValid) {
-        return httpHelper.badRequest("Senha incorreta!")
+        return httpHelper.badRequest("Senha incorreta!");
       }
 
       if (confirmar_nova_senha !== nova_senha) {
-        return httpHelper.badRequest("A nova senha informada não bate com a confirmação da nova senha!")
+        return httpHelper.badRequest(
+          "A nova senha informada não bate com a confirmação da nova senha!"
+        );
       }
 
       const passwordHashed = await bcrypt.hash(
@@ -191,15 +184,14 @@ class UsuarioController {
         }
       );
 
-      return httpHelper.ok({message: "Senha alterada com sucesso",})
-  
+      return httpHelper.ok({ message: "Senha alterada com sucesso" });
     } catch (error) {
       return httpHelper.internalError(error);
     }
   }
 
   async pesquisarUsuario(request, response) {
-    const httpHelper = new HttpHelper(response)
+    const httpHelper = new HttpHelper(response);
     const { token } = request.params;
     const dadosUsuario = jwt.verify(
       token.replace(/"/g, ""),
@@ -212,15 +204,14 @@ class UsuarioController {
         where: { id_usuario: dadosUsuario.id },
       });
 
-      return httpHelper.ok({Usuario: filtro,})
-     
+      return httpHelper.ok({ Usuario: filtro });
     } catch (error) {
       return httpHelper.internalError(error);
     }
   }
 
   async editarPerfil(request, response) {
-    const httpHelper = new HttpHelper(response)
+    const httpHelper = new HttpHelper(response);
     const { id } = request.params;
     const { matricula, email, unidade, cargo } = request.body;
 
@@ -239,16 +230,15 @@ class UsuarioController {
           },
         }
       );
-      
+
       return httpHelper.ok({ message: `O usuário foi atualizado com sucesso` });
-      
     } catch (error) {
       return httpHelper.internalError(error);
     }
   }
 
   async atualizarUsuario(request, response) {
-    const httpHelper = new HttpHelper(response)
+    const httpHelper = new HttpHelper(response);
     const { id } = request.params;
     const { matricula, senha, email, unidade, cargo } = request.body;
 
@@ -268,15 +258,14 @@ class UsuarioController {
         }
       );
 
-      return httpHelper.ok({ message: `O usuário foi atualizado com sucesso` })
-      
+      return httpHelper.ok({ message: `O usuário foi atualizado com sucesso` });
     } catch (error) {
       return httpHelper.internalError(error);
     }
   }
 
   async deletarUsuario(request, response) {
-    const httpHelper = new HttpHelper(response)
+    const httpHelper = new HttpHelper(response);
     const { id } = request.params;
     try {
       await UsuariosModel.destroy({
@@ -286,7 +275,6 @@ class UsuarioController {
       });
 
       return httpHelper.noContent();
-     
     } catch (error) {
       return httpHelper.internalError(error);
     }

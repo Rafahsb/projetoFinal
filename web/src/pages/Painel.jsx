@@ -127,112 +127,116 @@ export function Painel() {
     return (
         <>
             <Head styles={{ overflow: "hidden" }}></Head>
-            <Row className="vh-100">
-                <Col sm={3} md={2}>
+            <Row className="gx-0">
+                <Col sm={3} md={2} className="border-end">
                     <Navigation></Navigation>
                 </Col>
-                <Col sm={7} md={8}>
-                    <div>
-                        <Row>
-                            <Col>
-                                <p className="h3 mt-4">Paineis Gerenciais</p>
-                            </Col>
-                        </Row>
-                        <Row className="d-flex justify-content-end my-4">
-                            <Col lg={4} md={5} xs={6}>
-                                <Card className="p-4 shadow">
-                                    <Row>
-                                        <Col
-                                            className="d-flex align-items-center justify-content-center"
-                                            xs={5}
-                                        >
-                                            <p className="fs-1 m-0 fw-bold">
-                                                {" "}
-                                                {totalViaturas.Total}
-                                            </p>
-                                        </Col>
-                                        <Col>
-                                            <div className="vr h-100"></div>
-                                        </Col>
-                                        <Col
-                                            className="d-flex align-items-center justify-content-center"
-                                            xs={5}
-                                        >
-                                            <p className="m-0">Viaturas</p>
-                                        </Col>
-                                    </Row>
-                                </Card>
-                            </Col>
-                            <Col lg={4} md={5} xs={6}>
-                                <Card className="p-4  shadow">
-                                    <Row>
-                                        <Col
-                                            className="d-flex align-items-center justify-content-center"
-                                            xs={5}
-                                        >
-                                            <p className="fs-1 m-0 fw-bold ">
-                                                {" "}
-                                                {totalUsuarios.Total}
-                                            </p>
-                                        </Col>
-                                        <Col>
-                                            <div className="vr h-100"></div>
-                                        </Col>
-                                        <Col
-                                            className="d-flex align-items-center justify-content-center"
-                                            xs={5}
-                                        >
-                                            <p className="m-0">Usuários</p>
-                                        </Col>
-                                    </Row>
-                                </Card>
-                            </Col>
-                        </Row>
-                        <Row className="d-flex justify-content-end mb-3">
-                            <Col xs={4} sm={5} md={4} lg={3} xl={2}>
-                                <Input
-                                    size={"sm"}
-                                    type="date"
-                                    label="Data:*"
-                                    placeholder="Informe a data da realização do serviço:"
-                                    required={true}
-                                    name="data"
-                                    error={errors.data}
-                                    validations={register("data_dashboard", {
-                                        required: {
-                                            value: true,
-                                            message:
-                                                "A data é um campo obrigatório",
-                                        },
-                                    })}
-                                />
-                            </Col>
-                        </Row>
-                        <Row style={{ height: "500px" }}>
-                            <Col xs={12} className="p-0">
-                                <ResponsiveContainer width="100%" height="100%">
-                                    <BarChart
-                                        width={500}
-                                        height={300}
-                                        data={listDashboard}
-                                        margin={{
-                                            top: 5,
-                                            right: 30,
-                                            left: 20,
-                                            bottom: 5,
-                                        }}
+                <Col sm={7} md={8} className="p-3">
+                    <Row>
+                        <Col>
+                            <p className="h3 mt-4">Paineis Gerenciais</p>
+                        </Col>
+                    </Row>
+                    <Row className="d-flex justify-content-end my-4">
+                        <Col
+                            lg={4}
+                            md={5}
+                            sm={6}
+                            xs={12}
+                            className="mb-3 mb-sm-0"
+                        >
+                            <Card className="p-4 shadow">
+                                <Row>
+                                    <Col
+                                        className="d-flex align-items-center justify-content-center"
+                                        xs={5}
                                     >
-                                        <CartesianGrid strokeDasharray="3 3" />
-                                        <XAxis dataKey="name" />
-                                        <YAxis />
-                                        <Tooltip />
-                                        <Legend />
-                                        <Bar dataKey="Total" fill="#82ca9d" />
-                                    </BarChart>
-                                </ResponsiveContainer>
-                            </Col>
-                        </Row>
-                    </div>
+                                        <p className="fs-1 m-0 fw-bold">
+                                            {" "}
+                                            {totalViaturas.Total}
+                                        </p>
+                                    </Col>
+                                    <Col>
+                                        <div className="vr h-100"></div>
+                                    </Col>
+                                    <Col
+                                        className="d-flex align-items-center justify-content-center"
+                                        xs={5}
+                                    >
+                                        <p className="m-0">Viaturas</p>
+                                    </Col>
+                                </Row>
+                            </Card>
+                        </Col>
+                        <Col lg={4} md={5} sm={6} xs={12}>
+                            <Card className="p-4  shadow">
+                                <Row>
+                                    <Col
+                                        className="d-flex align-items-center justify-content-center"
+                                        xs={5}
+                                    >
+                                        <p className="fs-1 m-0 fw-bold ">
+                                            {" "}
+                                            {totalUsuarios.Total}
+                                        </p>
+                                    </Col>
+                                    <Col>
+                                        <div className="vr h-100"></div>
+                                    </Col>
+                                    <Col
+                                        className="d-flex align-items-center justify-content-center"
+                                        xs={5}
+                                    >
+                                        <p className="m-0">Usuários</p>
+                                    </Col>
+                                </Row>
+                            </Card>
+                        </Col>
+                    </Row>
+                    <Row className="d-flex justify-content-end mb-3">
+                        <Col xs={4} sm={5} md={4} lg={3} xl={2}>
+                            <Input
+                                size={"sm"}
+                                type="date"
+                                label="Data:*"
+                                placeholder="Informe a data da realização do serviço:"
+                                required={true}
+                                name="data"
+                                error={errors.data}
+                                validations={register("data_dashboard", {
+                                    required: {
+                                        value: true,
+                                        message:
+                                            "A data é um campo obrigatório",
+                                    },
+                                })}
+                            />
+                        </Col>
+                    </Row>
+                    <Row style={{ height: "500px" }}>
+                        <Col xs={12} className="p-0">
+                            <ResponsiveContainer width="100%" height="100%">
+                                <BarChart
+                                    width={500}
+                                    height={300}
+                                    data={listDashboard}
+                                    margin={{
+                                        top: 5,
+                                        right: 30,
+                                        left: 20,
+                                        bottom: 5,
+                                    }}
+                                >
+                                    <CartesianGrid strokeDasharray="3 3" />
+                                    <XAxis dataKey="name" />
+                                    <YAxis />
+                                    <Tooltip />
+                                    <Legend />
+                                    <Bar dataKey="Total" fill="#82ca9d" />
+                                </BarChart>
+                            </ResponsiveContainer>
+                        </Col>
+                    </Row>
                 </Col>
             </Row>
         </>

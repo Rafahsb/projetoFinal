@@ -28,13 +28,16 @@ export async function getTotalUsuarios() {
     return result;
 }
 
-export async function getBuscarUsuarios(filtro) {
+export async function getBuscarUsuarios(params) {
     const accessToken = sessionStorage.getItem("token");
-    const result = await api.get(`/usuariosBusca/${filtro}`, {
-        headers: {
-            Authorization: `Bearer ${JSON.parse(accessToken)}`,
-        },
-    });
+    const result = await api.get(
+        `/usuariosBusca/?filtro=${params.filtro}&page=${params.page}`,
+        {
+            headers: {
+                Authorization: `Bearer ${JSON.parse(accessToken)}`,
+            },
+        }
+    );
     return result;
 }
 

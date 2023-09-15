@@ -152,18 +152,18 @@ export function Viaturas() {
                 </Alert>
             )} */}
             <Head></Head>
-            <Row className="">
-                <Col sm={3} md={2}>
+            <Row className="gx-0">
+                <Col sm={3} md={2} className="border-end">
                     <Navigation></Navigation>
                 </Col>
-                <Col sm={7} md={8}>
+                <Col sm={7} md={8} className="p-3">
                     <Row>
                         <Col>
                             <p className="h3 mt-4">Viaturas</p>
                         </Col>
                     </Row>
                     <Row className="mt-4">
-                        <Col xs={12} sm={7}>
+                        <Col xs={12} sm={7} className="mb-3 mb-sm-3">
                             <InputGroup size="lg">
                                 <Form.Control
                                     placeholder="Buscar"
@@ -205,7 +205,7 @@ export function Viaturas() {
                     </Row>
                     <Row className="m-0 mt-3">
                         <Card className="p-3 my-3 shadow">
-                            <Table hover>
+                            <Table responsive hover>
                                 <thead>
                                     <tr>
                                         <th>Marca</th>

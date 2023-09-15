@@ -66,11 +66,7 @@ routes.delete(
 // Usuarios
 
 routes.post("/usuario", authMiddleware, usuarioController.criarUsuario);
-routes.get(
-  "/usuariosBusca/:filtro?",
-  authMiddleware,
-  usuarioController.buscarUsuarios
-);
+routes.get("/usuariosBusca", authMiddleware, usuarioController.buscarUsuarios);
 routes.get(
   "/usuarios/:page?",
   authMiddleware,

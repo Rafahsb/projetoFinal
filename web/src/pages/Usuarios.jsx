@@ -22,9 +22,11 @@ import {
 } from "../services/usuarios-service";
 import { Usuario } from "../components/Usuario";
 import { BsCheckLg } from "react-icons/bs";
+import PaginationComponent from "../components/PaginationComponent";
 
 export function Usuarios() {
     let page = 1;
+    let paginaAtual = 1;
     const [totalPages, setTotalPages] = useState(1);
     const [currentPage, setCurrentPage] = useState(1);
     const [usuarios, setUsuarios] = useState([]);
@@ -43,10 +45,24 @@ export function Usuarios() {
         // eslint-disable-next-line
     }, []);
 
-    async function filterUsuarios(params) {
-        try {
-            const result = await getBuscarUsuarios(params);
+    async function goToPage(pageNumber) {
+        if (pageNumber >= 1 && pageNumber <= totalPages) {
+            paginaAtual = pageNumber;
+            setCurrentPage(pageNumber);
+            const filter = { filtro: inputValue, page: paginaAtual };
+            const result = await getBuscarUsuarios(filter);
             setUsuarios(result.data.Usuarios);
+            setTotalPages(result.data.TotalPages);
+        }
+    }
+
+    async function filterUsuarios(params) {
+        const filter = { filtro: params, page: paginaAtual };
+        try {
+            const result = await getBuscarUsuarios(filter);
+            setUsuarios(result.data.Usuarios);
+            setTotalPages(result.data.TotalPages);
+            PaginationComponent();
         } catch (error) {
             console.error(error);
         }
@@ -98,52 +114,14 @@ export function Usuarios() {
         }
     }
 
-    function PaginationUser() {
-        const itens = [];
-        for (let numeroPagina = 1; numeroPagina <= totalPages; numeroPagina++) {
-            itens.push(
-                <Pagination.Item
-                    key={numeroPagina}
-                    active={numeroPagina === active}
-                    onClick={() => {
-                        setCurrentPage(numeroPagina);
-                        setActive(numeroPagina);
-                        page = numeroPagina;
-                        findUsuarios();
-                        // setMaxPagesLimit(
-                        //     numeroPagina > totalPages - 3
-                        //         ? totalPages
-                        //         : numeroPagina < 3
-                        //         ? 5
-                        //         : currentPage + 3
-                        // );
-                        // setMinPagesLimit(
-                        //     numeroPagina > 3 &&
-                        //         numeroPagina < totalPages - 3
-                        //         ? currentPage - 2
-                        //         : numeroPagina < 3
-                        //         ? 0
-                        //         : numeroPagina > totalPages - 3
-                        //         ? totalPages - 5
-                        //         : currentPage - 2
-                        // );
-                    }}
-                >
-                    {numeroPagina}
-                </Pagination.Item>
-            );
-        }
-        return itens;
-    }
-
     return (
         <>
             <Head></Head>
-            <Row className="">
-                <Col sm={3} md={2}>
+            <Row className="gx-0">
+                <Col sm={3} md={2} className="border-end">
                     <Navigation></Navigation>
                 </Col>
-                <Col sm={7} md={8}>
+                <Col sm={7} md={8} className="p-3">
                     <Row>
                         <Col>
                             <p className="h3 mt-4">Usuários</p>
@@ -151,7 +129,7 @@ export function Usuarios() {
                     </Row>
                     <Row className="mt-4">
                         <Col xs={12} sm={7}>
-                            <InputGroup size="lg">
+                            <InputGroup size="lg" className="mb-3 mb-sm-3">
                                 <Form.Control
                                     placeholder="Buscar"
                                     aria-label="Buscar"
@@ -195,7 +173,7 @@ export function Usuarios() {
                     </Row>
                     <Row className="m-0 mt-3">
                         <Card className="p-3 my-3 shadow">
-                            <Table responsive="md" hover>
+                            <Table responsive hover>
                                 <thead>
                                     <tr>
                                         <th>Matrícula</th>
@@ -221,26 +199,11 @@ export function Usuarios() {
                                     ))}
                                 </tbody>
                             </Table>
-                            <Pagination className="d-flex justify-content-center">
-                                <Pagination.First
-                                    onClick={() => {
-                                        setCurrentPage(1);
-                                        setActive(1);
-                                        page = 1;
-                                        findUsuarios();
-                                    }}
-                                />
-                                <PaginationUser></PaginationUser>
-
-                                <Pagination.Last
-                                    onClick={() => {
-                                        setCurrentPage(totalPages);
-                                        setActive(totalPages);
-                                        page = totalPages;
-                                        findUsuarios();
-                                    }}
-                                />
-                            </Pagination>
+                            <PaginationComponent
+                                currentPage={currentPage}
+                                totalPages={totalPages}
+                                onPageChange={goToPage}
+                            />
                         </Card>
                     </Row>
 

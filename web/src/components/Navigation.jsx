@@ -1,17 +1,107 @@
-import Nav from 'react-bootstrap/Nav';
-
+import Col from "react-bootstrap/Col";
+import Nav from "react-bootstrap/Nav";
+import Row from "react-bootstrap/Row";
+import Tab from "react-bootstrap/Tab";
+import React, { useEffect, useState } from "react";
 export function Navigation() {
-    return (
-       
-       
-        <Nav defaultActiveKey="/painel" className="flex-column  border-end vh-100">
-            <Nav.Link href="/painel" className='mt-4'>Painel</Nav.Link>
-            <Nav.Link href="/viaturas" eventKey="link-1">Viaturas</Nav.Link>
-            <Nav.Link href="/manutencoes" eventKey="link-2">Manutenções</Nav.Link>
-            <Nav.Link href="/usuarios" eventKey="">Usuários</Nav.Link>
-        </Nav>
+    const [currentPath, setCurrentPath] = useState(window.location.pathname);
 
-        
-        
+    useEffect(() => {
+        const handleRouteChange = () => {
+            setCurrentPath(window.location.pathname);
+        };
+
+        // Adicione um ouvinte para detectar alterações de rota
+        window.addEventListener("popstate", handleRouteChange);
+
+        return () => {
+            // Remova o ouvinte quando o componente for desmontado
+            window.removeEventListener("popstate", handleRouteChange);
+        };
+    }, []);
+
+    return (
+        <Tab.Container id="left-tabs-example" defaultActiveKey="first">
+            <Row className="vh-sm-100 p-0 mt-4 w-100 ms-0 justify-content-center">
+                <Col sm={9}>
+                    <Nav
+                        variant="pills"
+                        className="flex-column align-items-center text-center"
+                    >
+                        <Nav.Item className="w-100">
+                            <Nav.Link
+                                href="/painel"
+                                className={
+                                    currentPath === "/painel" ? "active" : ""
+                                }
+                            >
+                                Painel
+                            </Nav.Link>
+                        </Nav.Item>
+                        <Nav.Item className="w-100">
+                            <Nav.Link
+                                href="/viaturas"
+                                className={
+                                    currentPath === "/viaturas" ? "active" : ""
+                                }
+                            >
+                                Viaturas
+                            </Nav.Link>
+                        </Nav.Item>
+                        <Nav.Item className="w-100">
+                            <Nav.Link
+                                href="/manutencoes"
+                                className={
+                                    currentPath === "/manutencoes"
+                                        ? "active"
+                                        : ""
+                                }
+                            >
+                                Manutenções
+                            </Nav.Link>
+                        </Nav.Item>
+                        <Nav.Item className="w-100">
+                            <Nav.Link
+                                href="/usuarios"
+                                className={
+                                    currentPath === "/usuarios" ? "active" : ""
+                                }
+                            >
+                                Usuários
+                            </Nav.Link>
+                        </Nav.Item>
+                    </Nav>
+                </Col>
+            </Row>
+        </Tab.Container>
+        // <Nav className="flex-column align-items-center align-items-sm-start border-end vh-sm-100  ">
+        //     <Nav.Link
+        //         href="/painel"
+        //         className={currentPath === "/painel" ? "active" : ""}
+        //     >
+        //         Painel
+        //     </Nav.Link>
+        //     <Nav.Link
+        //         href="/viaturas"
+        //         eventKey="link-1"
+        //         className={currentPath === "/viaturas" ? "active" : ""}
+        //     >
+        //         Viaturas
+        //     </Nav.Link>
+        //     <Nav.Link
+        //         href="/manutencoes"
+        //         eventKey="link-2"
+        //         className={currentPath === "/manutencoes" ? "active" : ""}
+        //     >
+        //         Manutenções
+        //     </Nav.Link>
+        //     <Nav.Link
+        //         href="/usuarios"
+        //         eventKey=""
+        //         className={currentPath === "/usuarios" ? "active" : ""}
+        //     >
+        //         Usuários
+        //     </Nav.Link>
+        // </Nav>
     );
 }
