@@ -10,8 +10,9 @@ class ManutencoesModel extends Model {
           autoIncrement: true,
         },
         numero_nota: {
-          type: DataTypes.TEXT,
+          type: DataTypes.CHAR(9),
           allowNull: false,
+          unique: true,
         },
         descricao: {
           type: DataTypes.TEXT,
@@ -22,7 +23,7 @@ class ManutencoesModel extends Model {
           allowNull: false,
         },
         data_nota: {
-          type: DataTypes.SMALLINT,
+          type: DataTypes.DATE,
           allowNull: false,
         },
         id_viatura: { 

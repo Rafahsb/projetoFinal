@@ -18,8 +18,9 @@ class ViaturasModel extends Model {
           allowNull: false,
         },
         chassi: {
-          type: DataTypes.TEXT,
+          type: DataTypes.CHAR(17),
           allowNull: false,
+          unique: true,
         },
         portas: {
           type: DataTypes.SMALLINT,

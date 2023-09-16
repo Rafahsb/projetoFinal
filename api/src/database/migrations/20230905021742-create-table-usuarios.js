@@ -10,6 +10,11 @@ module.exports = {
         autoIncrement: true,
       },
       matricula: {
+        type: Sequelize.CHAR(9),
+        allowNull: false,
+        unique: true,
+      },
+      nome: {
         type: Sequelize.TEXT,
         allowNull: false,
       },

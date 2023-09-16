@@ -41,7 +41,7 @@ export function Usuarios() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        findUsuarios();
+        filterUsuarios();
         // eslint-disable-next-line
     }, []);
 
@@ -62,7 +62,6 @@ export function Usuarios() {
             const result = await getBuscarUsuarios(filter);
             setUsuarios(result.data.Usuarios);
             setTotalPages(result.data.TotalPages);
-            PaginationComponent();
         } catch (error) {
             console.error(error);
         }
@@ -103,6 +102,7 @@ export function Usuarios() {
             await updateUsuario({
                 id_usuario: data.id,
                 matricula: data.matricula,
+                nome: data.nome,
                 senha: data.senha,
                 email: data.email,
                 unidade: data.unidade,
@@ -124,7 +124,7 @@ export function Usuarios() {
                 <Col sm={7} md={8} className="p-3">
                     <Row>
                         <Col>
-                            <p className="h3 mt-4">Usuários</p>
+                            <p className="h3 mt-4">Listar usuários</p>
                         </Col>
                     </Row>
                     <Row className="mt-4">
@@ -177,6 +177,7 @@ export function Usuarios() {
                                 <thead>
                                     <tr>
                                         <th>Matrícula</th>
+                                        <th>Nome</th>
                                         <th>E-mail</th>
                                         <th>Unidade</th>
                                         <th>Cargo</th>
@@ -235,6 +236,25 @@ export function Usuarios() {
                                                 value: true,
                                                 message:
                                                     "O número da matricula é um campo obrigatório",
+                                            },
+                                        })}
+                                    />
+                                </Row>
+
+                                <Row className="mb-4">
+                                    <Input
+                                        size={"sm"}
+                                        type="text"
+                                        label="Nome:*"
+                                        placeholder="Informe o nome do servidor:"
+                                        required={true}
+                                        name="nome"
+                                        error={errors.nome}
+                                        validations={register("nome", {
+                                            required: {
+                                                value: true,
+                                                message:
+                                                    "O nome é um campo obrigatório",
                                             },
                                         })}
                                     />

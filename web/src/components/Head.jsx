@@ -28,7 +28,7 @@ export function Head() {
         formState: { errors },
     } = useForm();
     const [usuario, setUsuario] = useState({});
-    const { user, setUser, logout, logged } = useContext(UserContext);
+    const { user, setUser, logout } = useContext(UserContext);
     const [isUpdated, setIsUpdated] = useState(false);
     const [isUpdated2, setIsUpdated2] = useState(false);
     const [key, setKey] = useState("dados");

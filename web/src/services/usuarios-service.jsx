@@ -97,6 +97,7 @@ export async function createUsuario(data) {
         "/usuario",
         {
             matricula: data.matricula,
+            nome: data.nome,
             email: data.email,
             unidade: data.unidade,
             cargo: data.cargo,

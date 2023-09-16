@@ -10,8 +10,9 @@ module.exports = {
         autoIncrement: true,
       },
       numero_nota: {
-        type: Sequelize.TEXT,
+        type: Sequelize.CHAR(9),
         allowNull: false,
+        unique: true,
       },
       descricao: {
         type: Sequelize.TEXT,

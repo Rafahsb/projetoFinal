@@ -31,10 +31,6 @@ export function UserContextProvider({ children }) {
         }
     }
 
-    async function logged() {
-        console.log("aseas", accessToken);
-    }
-
     async function logout() {
         sessionStorage.removeItem("token");
         navigate("/");
@@ -51,7 +47,6 @@ export function UserContextProvider({ children }) {
                 setError,
                 loading,
                 logout,
-                logged,
                 user,
                 setUser
             }}

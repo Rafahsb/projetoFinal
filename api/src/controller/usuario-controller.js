@@ -10,7 +10,7 @@ const itensPorPagina = 5;
 class UsuarioController {
   async criarUsuario(request, response) {
     const httpHelper = new HttpHelper(response);
-    const { matricula, email, unidade, cargo } = request.body;
+    const { matricula, nome, email, unidade, cargo } = request.body;
     try {
       const userExists = await UsuariosModel.findOne({
         where: { matricula },
@@ -22,6 +22,7 @@ class UsuarioController {
       const passwordHashed = await bcrypt.hash("123", Number(process.env.SALT));
       const createUser = await UsuariosModel.create({
         matricula,
+        nome,
         senha: passwordHashed,
         email,
         unidade,
@@ -94,6 +95,7 @@ class UsuarioController {
         busca = await paginationWhere(UsuariosModel, page, {
           [Op.or]: [
             { matricula: { [Op.like]: `%${filtro}%` } },
+            { nome: { [Op.like]: `%${filtro}%` } },
             { email: { [Op.like]: `%${filtro}%` } },
             { unidade: { [Op.like]: `%${filtro}%` } },
             { cargo: { [Op.like]: `%${filtro}%` } },
@@ -134,7 +136,7 @@ class UsuarioController {
       const filtro = await UsuariosModel.findAll({
         offset,
         limit: itensPorPagina,
-        attributes: ["matricula", "email", "unidade", "cargo", "id_usuario"],
+        attributes: ["matricula", "nome","email", "unidade", "cargo", "id_usuario"],
       });
 
       return httpHelper.ok({
@@ -213,12 +215,13 @@ class UsuarioController {
   async editarPerfil(request, response) {
     const httpHelper = new HttpHelper(response);
     const { id } = request.params;
-    const { matricula, email, unidade, cargo } = request.body;
+    const { matricula, nome, email, unidade, cargo } = request.body;
 
     try {
       await UsuariosModel.update(
         {
           id_usuario: id,
+          nome,
           matricula,
           email,
           unidade,
@@ -240,12 +243,13 @@ class UsuarioController {
   async atualizarUsuario(request, response) {
     const httpHelper = new HttpHelper(response);
     const { id } = request.params;
-    const { matricula, senha, email, unidade, cargo } = request.body;
+    const { matricula, nome, senha, email, unidade, cargo } = request.body;
 
     try {
       await UsuariosModel.update(
         {
           id_usuario: id,
+          nome,
           matricula,
           email,
           unidade,

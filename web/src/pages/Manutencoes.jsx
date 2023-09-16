@@ -69,7 +69,6 @@ export function Manutencoes() {
             const result = await getBuscarManutencoes(filter);
             setManutencoesList(result.data.Manutencoes);
             setTotalPages(result.data.TotalPages);
-            PaginationComponent();
         } catch (error) {
             console.error(error);
         }
@@ -142,7 +141,7 @@ export function Manutencoes() {
                 <Col sm={7} md={8} className="p-3">
                     <Row>
                         <Col>
-                            <p className="h3 mt-4">Manutenções</p>
+                            <p className="h3 mt-4">Listar manutenções</p>
                         </Col>
                     </Row>
                     <Row className="mt-4">
@@ -193,11 +192,11 @@ export function Manutencoes() {
                     </Row>
                     <Row className="m-0 mt-3">
                         <Card className="p-3 my-3 shadow">
-                            <Table responsive hover>
+                            <Table responsive >
                                 <thead>
                                     <tr>
                                         <th>Nº da nota</th>
-                                        <th>Descricao</th>
+                                        <th>Descrição</th>
                                         <th>Preço</th>
                                         <th>Data</th>
                                         <th>Marca</th>

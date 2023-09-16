@@ -9,7 +9,6 @@ import Col from "react-bootstrap/Col";
 
 import { getViaturas } from "../services/viaturas-service";
 export function Manutencao(props) {
-    console.log("props:", props);
     const {
         handleSubmit,
         register,
@@ -44,7 +43,7 @@ export function Manutencao(props) {
     return (
         <>
             <td>{props.manutencao.numero_nota}</td>
-            <td>{props.manutencao.descricao}</td>
+            <td style={{overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth:"150px"}}>{props.manutencao.descricao}</td>
             <td>{props.manutencao.preco}</td>
             <td>{props.manutencao.data_nota}</td>
             <td>{props.manutencao.marca}</td>

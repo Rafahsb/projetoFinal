@@ -25,8 +25,9 @@ export function Usuario(props) {
     return (
         <>
             <td>{props.usuario.matricula}</td>
-            <td>{props.usuario.email}</td>
-            <td>{props.usuario.unidade}</td>
+            <td style={{overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth:"150px"}}>{props.usuario.nome}</td>
+            <td style={{overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth:"150px"}}>{props.usuario.email}</td>
+            <td style={{overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth:"150px"}}>{props.usuario.unidade}</td>
             <td>{props.usuario.cargo}</td>
             <td>
                 <Dropdown>
@@ -77,6 +78,26 @@ export function Usuario(props) {
                                             },
                                         })}
                                         />  
+                                    </Row>
+
+                                    <Row className="mb-4">
+                                        <Input
+                                            size={"sm"}
+                                            defaultValue={props.usuario.nome}
+                                            type="text"
+                                            label="Nome:*"
+                                            placeholder="Informe o nome do servidor:"
+                                            required={true}
+                                            name="nome"
+                                            error={errors.nome}
+                                            validations={register("nome", {
+                                                required: {
+                                                    value: true,
+                                                    message:
+                                                        "O nome é um campo obrigatório",
+                                                },
+                                            })}
+                                        />
                                     </Row>
 
                                     <Row className="mb-4">

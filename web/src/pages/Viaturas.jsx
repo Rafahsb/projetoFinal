@@ -64,7 +64,6 @@ export function Viaturas() {
             const result = await getBuscarViaturas(filter);
             setViaturas(result.data.Viaturas);
             setTotalPages(result.data.TotalPages);
-            PaginationComponent();
         } catch (error) {
             console.error(error);
         }
@@ -159,7 +158,7 @@ export function Viaturas() {
                 <Col sm={7} md={8} className="p-3">
                     <Row>
                         <Col>
-                            <p className="h3 mt-4">Viaturas</p>
+                            <p className="h3 mt-4">Listar viaturas</p>
                         </Col>
                     </Row>
                     <Row className="mt-4">

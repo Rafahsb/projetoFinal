@@ -18,8 +18,9 @@ module.exports = {
         allowNull: false,
       },
       chassi: {
-        type: Sequelize.TEXT,
+        type: Sequelize.CHAR(17),
         allowNull: false,
+        unique: true,
       },
       portas: {
         type: Sequelize.SMALLINT,

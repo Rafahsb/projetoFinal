@@ -10,6 +10,11 @@ class UsuariosModel extends Model {
           autoIncrement: true,
         },
         matricula: {
+          type: DataTypes.CHAR(9),
+          allowNull: false,
+          unique: true,
+        },
+        nome: {
           type: DataTypes.TEXT,
           allowNull: false,
         },
