@@ -215,7 +215,10 @@ export function Painel() {
                     </Row>
                     <Row>
                         <Col xs={12} className="">
-                            <Card style={{ height: "600px" }} className="p-2 ">
+                            <Card
+                                style={{ height: "600px" }}
+                                className="p-2 shadow"
+                            >
                                 <p className="h4 my-3 text-center">
                                     Gastos em manutenções / Viatura
                                 </p>
