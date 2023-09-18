@@ -12,13 +12,24 @@ class UsuarioController {
     const httpHelper = new HttpHelper(response);
     const { matricula, nome, email, unidade, cargo } = request.body;
     try {
+      if (!matricula || !nome || !email || !unidade || !cargo) {
+        return httpHelper.badRequest({
+          message: "Ops! faltou preencher algum campo!",
+          variant: "danger",
+        });
+      }
+
       const userExists = await UsuariosModel.findOne({
         where: { matricula },
       });
 
       if (userExists) {
-        return httpHelper.badRequest("Usuario já existe!");
+        return httpHelper.badRequest({
+          message: "Já existe um usuário com a matrícula cadastrada!",
+          variant: "danger",
+        });
       }
+
       const passwordHashed = await bcrypt.hash("123", Number(process.env.SALT));
       const createUser = await UsuariosModel.create({
         matricula,
@@ -137,7 +148,14 @@ class UsuarioController {
       const filtro = await UsuariosModel.findAll({
         offset,
         limit: itensPorPagina,
-        attributes: ["matricula", "nome","email", "unidade", "cargo", "id_usuario"],
+        attributes: [
+          "matricula",
+          "nome",
+          "email",
+          "unidade",
+          "cargo",
+          "id_usuario",
+        ],
       });
 
       return httpHelper.ok({
@@ -187,7 +205,10 @@ class UsuarioController {
         }
       );
 
-      return httpHelper.ok({ message: "Senha alterada com sucesso", variant: "success" });
+      return httpHelper.ok({
+        message: "Senha alterada com sucesso",
+        variant: "success",
+      });
     } catch (error) {
       return httpHelper.internalError(error);
     }
@@ -235,7 +256,10 @@ class UsuarioController {
         }
       );
 
-      return httpHelper.ok({ message: `O usuário foi atualizado com sucesso`, variant: "success" });
+      return httpHelper.ok({
+        message: `O usuário foi atualizado com sucesso`,
+        variant: "success",
+      });
     } catch (error) {
       return httpHelper.internalError(error);
     }
@@ -263,7 +287,10 @@ class UsuarioController {
         }
       );
 
-      return httpHelper.ok({ message: `O usuário foi atualizado com sucesso`, variant: "success", });
+      return httpHelper.ok({
+        message: `O usuário foi atualizado com sucesso`,
+        variant: "success",
+      });
     } catch (error) {
       return httpHelper.internalError(error);
     }

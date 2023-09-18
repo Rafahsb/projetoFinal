@@ -20,8 +20,6 @@ import {
     getBuscarManutencoes,
 } from "../services/manutencoes-service";
 import { Manutencao } from "../components/Manutencao";
-import { BsCheckLg } from "react-icons/bs";
-import Pagination from "react-bootstrap/Pagination";
 
 import { getViaturas } from "../services/viaturas-service";
 import Notification from "../components/Notification";
@@ -35,7 +33,7 @@ export function Manutencoes() {
     let paginaAtual = 1;
     const [totalPages, setTotalPages] = useState();
 
-    const [active, setActive] = useState(0);
+    const [active, setActive] = useState(false);
     const [manutencoesList, setManutencoesList] = useState([]);
 
     const [isCreated, setIsCreated] = useState(false);
@@ -97,7 +95,7 @@ export function Manutencoes() {
     async function addManutencao(data) {
         try {
             const result = await createManutencao(data);
-            
+
             setIsCreated(false);
             setCurrentPage(1);
             await filterManutencoes();
@@ -105,7 +103,7 @@ export function Manutencoes() {
             setApiMessage(result.data);
             setActive(true);
         } catch (error) {
-            setApiMessage(error.response.data);
+            setApiMessage(error.response.data.error);
             setActive(true);
         }
     }
@@ -113,14 +111,17 @@ export function Manutencoes() {
     async function removeManutencao(id) {
         try {
             await deleteManutencao(id);
-           
-            setCurrentPage(1); 
+
+            setCurrentPage(1);
             await filterManutencoes();
 
-            setApiMessage({message: "Manutenção deletada com sucesso!", variant: "success"});
+            setApiMessage({
+                message: "Manutenção deletada com sucesso!",
+                variant: "success",
+            });
             setActive(true);
         } catch (error) {
-            setApiMessage(error.response.data);
+            setApiMessage(error.response.data.error);
             setActive(true);
         }
     }
@@ -132,7 +133,7 @@ export function Manutencoes() {
                 numero_nota: data.numero_nota,
                 descricao: data.descricao,
                 preco: data.preco,
-                data: data.data_nota,
+                data: data.data,
                 id_viatura: data.id_viatura,
             });
 
@@ -143,16 +144,13 @@ export function Manutencoes() {
             setActive(true);
         } catch (error) {
             console.log(error);
-            setApiMessage(error.response.data);
+            setApiMessage(error.response.data.error);
             setActive(true);
         }
     }
 
-    
-
     return (
         <>
-
             {active && (
                 <Notification
                     variant={apiMessage.variant}
@@ -189,12 +187,10 @@ export function Manutencoes() {
                                     })}
                                 />
                                 <Button
-                                    onClick={() =>
-                                        {
-                                            filterManutencoes(inputValue);
-                                            setCurrentPage(1);
-                                        }
-                                    }
+                                    onClick={() => {
+                                        filterManutencoes(inputValue);
+                                        setCurrentPage(1);
+                                    }}
                                     variant="primary"
                                     id="button-addon2"
                                 >
@@ -223,7 +219,7 @@ export function Manutencoes() {
                     </Row>
                     <Row className="m-0 mt-3">
                         <Card className="p-3 my-3 shadow">
-                            <Table responsive >
+                            <Table responsive>
                                 <thead>
                                     <tr>
                                         <th>Nº da nota</th>
@@ -237,23 +233,19 @@ export function Manutencoes() {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {manutencoesList.map(
-                                        (manutencao) => (
-                                            <tr key={manutencao.id_manutencao}>
-                                                <Manutencao
-                                                    manutencao={manutencao}
-                                                    removeManutencao={async () =>
-                                                        await removeManutencao(
-                                                            manutencao.id_manutencao
-                                                        )
-                                                    }
-                                                    editManutencao={
-                                                        editManutencao
-                                                    }
-                                                />
-                                            </tr>
-                                        )
-                                    )}
+                                    {manutencoesList.map((manutencao) => (
+                                        <tr key={manutencao.id_manutencao}>
+                                            <Manutencao
+                                                manutencao={manutencao}
+                                                removeManutencao={async () =>
+                                                    await removeManutencao(
+                                                        manutencao.id_manutencao
+                                                    )
+                                                }
+                                                editManutencao={editManutencao}
+                                            />
+                                        </tr>
+                                    ))}
                                 </tbody>
                             </Table>
                             <PaginationComponent
@@ -347,9 +339,9 @@ export function Manutencoes() {
                                         label="Data:*"
                                         placeholder="Informe a data da realização do serviço:"
                                         required={true}
-                                        name="data"
+                                        name="datdataa_nota"
                                         error={errors.data}
-                                        validations={register("data_nota", {
+                                        validations={register("data", {
                                             required: {
                                                 value: true,
                                                 message:

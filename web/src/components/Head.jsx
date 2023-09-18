@@ -13,6 +13,8 @@ import { Button, Card, Form, Modal, Row } from "react-bootstrap";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { Input } from "./Input";
 import { useNavigate } from "react-router-dom";
+import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
+import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import {
     getUsuario,
     updateUsuario,
@@ -107,10 +109,15 @@ export function Head() {
                                         setIsUpdated(true);
                                     }}
                                 >
+                                    <PersonOutlineIcon className="me-2"></PersonOutlineIcon>
                                     Perfil
                                 </Dropdown.Item>
-                                <Dropdown.Item onClick={logout}>
-                                    <div>Logout</div>
+                                <Dropdown.Item
+                                    onClick={logout}
+                                    className="d-flex"
+                                >
+                                    <LogoutOutlinedIcon className="me-2"></LogoutOutlinedIcon>
+                                    <div> Logout</div>
                                 </Dropdown.Item>
                             </Dropdown.Menu>
                         </Dropdown>

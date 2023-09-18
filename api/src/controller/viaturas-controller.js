@@ -1,6 +1,7 @@
 const { HttpHelper } = require("../utils/http-helper");
 const { Op } = require("sequelize");
 const { ViaturasModel } = require("../model/viaturas-model");
+const { ManutencoesModel } = require("../model/manutencoes-model");
 const { paginationWhere } = require("../utils/paginationWhere");
 
 class ViaturaController {
@@ -19,39 +20,68 @@ class ViaturaController {
       piloto,
     } = request.body;
 
-    if(!marca || !modelo || !chassi || !portas || !bancos || !cor || !kilometragem || !orgao_vinculado || !batalhao || !piloto ) {
+    if (
+      !marca ||
+      !modelo ||
+      !chassi ||
+      !portas ||
+      !bancos ||
+      !cor ||
+      !kilometragem ||
+      !orgao_vinculado ||
+      !batalhao ||
+      !piloto
+    ) {
       return httpHelper.badRequest({
         message: "Ops! faltou preencher algum campo!",
         variant: "danger",
-      })
+      });
     }
 
-    if(bancos > 8) {
+    if (chassi.length != 17) {
+      return httpHelper.badRequest({
+        message: "O chassi deve conter exatamente 17 dígitos numéricos.",
+        variant: "danger",
+      });
+    }
+
+    if (bancos > 8) {
       return httpHelper.badRequest({
         message: "A quantidade de bancos não pode ser maior que 8",
         variant: "danger",
-      })
+      });
     }
 
-    if(portas > 6) {
+    if (portas > 6) {
       return httpHelper.badRequest({
         message: "A quantidade de portas não pode ser maior que 6",
         variant: "danger",
-      })
+      });
     }
 
-    if (kilometragem > 1000000 ) {
+    if (kilometragem > 1000000) {
       return httpHelper.badRequest({
         message: "A quilometragem não pode ser maior que 1 milhão",
         variant: "danger",
-      })
+      });
     }
 
-    if(piloto.length < 3) {
+    if (piloto.length < 3) {
       return httpHelper.badRequest({
         message: "O nome do piloto deve ter pelo menos 3 caracteres",
         variant: "danger",
-      })
+      });
+    }
+
+    const viaturaExists = await ViaturasModel.findOne({
+      where: { chassi },
+    });
+
+    if (viaturaExists) {
+      return httpHelper.badRequest({
+        message: "Já existe um veículo com o chassi informado!",
+        variant: "danger",
+      });
     }
 
     try {
@@ -81,6 +111,17 @@ class ViaturaController {
     const httpHelper = new HttpHelper(response);
     const { id } = request.params;
     try {
+      const viaturaManutExists = await ManutencoesModel.findOne({
+        where: { id_viatura: id },
+      });
+
+      if (viaturaManutExists) {
+        return httpHelper.badRequest({
+          message:
+            "Não é possível deletar uma viatura que possui ao menos uma manutenção",
+          variant: "danger",
+        });
+      }
       await ViaturasModel.destroy({
         where: {
           id_viatura: id,
@@ -175,39 +216,39 @@ class ViaturaController {
         batalhao,
         piloto,
       } = request.body;
-      
+
       if (!id) return httpHelper.badRequest("Parâmetros inválidos!");
-      
+
       const viaturaExists = await ViaturasModel.findOne({ id_viatura: id });
 
       if (!viaturaExists) return httpHelper.notFound("Viatura não encontrada!");
 
-      if(bancos > 8) {
+      if (bancos > 8) {
         return httpHelper.badRequest({
           message: "A quantidade de bancos não pode ser maior que 8",
           variant: "danger",
-        })
+        });
       }
-  
-      if(portas > 6) {
+
+      if (portas > 6) {
         return httpHelper.badRequest({
           message: "A quantidade de portas não pode ser maior que 6",
           variant: "danger",
-        })
+        });
       }
-  
-      if (kilometragem > 1000000 ) {
+
+      if (kilometragem > 1000000) {
         return httpHelper.badRequest({
           message: "A quilometragem não pode ser maior que 1 milhão",
           variant: "danger",
-        })
+        });
       }
-  
-      if(piloto.length < 3) {
+
+      if (piloto.length < 3) {
         return httpHelper.badRequest({
           message: "O nome do piloto deve ter pelo menos 3 caracteres",
           variant: "danger",
-        })
+        });
       }
 
       await ViaturasModel.update(

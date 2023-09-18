@@ -88,7 +88,8 @@ export function Viaturas() {
             setApiMessage(result.data);
             setActive(true);
         } catch (error) {
-            setApiMessage(error.response.data);
+            console.log(error);
+            setApiMessage(error.response.data.error);
             setActive(true);
         }
     }
@@ -99,11 +100,14 @@ export function Viaturas() {
 
             setCurrentPage(1);
             await filterViaturas();
-            
-            setApiMessage({message: "Viatura deletada com sucesso!", variant: "success"});
+
+            setApiMessage({
+                message: "Viatura deletada com sucesso!",
+                variant: "success",
+            });
             setActive(true);
         } catch (error) {
-            setApiMessage(error.response.data);
+            setApiMessage(error.response.data.error);
             setActive(true);
         }
     }
@@ -128,7 +132,7 @@ export function Viaturas() {
             setApiMessage(result.data);
             setActive(true);
         } catch (error) {
-            setApiMessage(error.response.data);
+            setApiMessage(error.response.data.error);
             setActive(true);
         }
     }
@@ -362,7 +366,8 @@ export function Viaturas() {
                                                 },
                                                 pattern: {
                                                     value: /^[0-9]{17}$/,
-                                                    message: "O chassi deve conter exatamente 17 dígitos numéricos.",
+                                                    message:
+                                                        "O chassi deve conter exatamente 17 dígitos numéricos.",
                                                 },
                                             })}
                                         />
@@ -386,7 +391,8 @@ export function Viaturas() {
                                                 },
                                                 max: {
                                                     value: 6,
-                                                    message: "A quantidade de portas não pode ser maior que 6",
+                                                    message:
+                                                        "A quantidade de portas não pode ser maior que 6",
                                                 },
                                             })}
                                         />
@@ -407,7 +413,8 @@ export function Viaturas() {
                                                 },
                                                 max: {
                                                     value: 8,
-                                                    message: "A quantidade de bancos não pode ser maior que 8",
+                                                    message:
+                                                        "A quantidade de bancos não pode ser maior que 8",
                                                 },
                                             })}
                                         />
@@ -433,7 +440,8 @@ export function Viaturas() {
                                                     },
                                                     max: {
                                                         value: 1000000,
-                                                        message: "A quilometragem não pode ser maior que 1 milhão",
+                                                        message:
+                                                            "A quilometragem não pode ser maior que 1 milhão",
                                                     },
                                                 }
                                             )}
@@ -455,7 +463,8 @@ export function Viaturas() {
                                                 },
                                                 minLength: {
                                                     value: 3,
-                                                    message: "O nome do piloto deve ter pelo menos 3 caracteres",
+                                                    message:
+                                                        "O nome do piloto deve ter pelo menos 3 caracteres",
                                                 },
                                             })}
                                         />

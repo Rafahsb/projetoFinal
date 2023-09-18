@@ -4,7 +4,7 @@ const { ViaturasModel } = require("../model/viaturas-model");
 const { Validates } = require("../utils/validates");
 const { format } = require("date-fns");
 const { QueryTypes } = require("sequelize");
-const { Op } = require('sequelize');
+const { Op } = require("sequelize");
 const { HttpHelper } = require("../utils/http-helper");
 const { paginationWhere } = require("../utils/paginationWhere");
 const { paginationWhereManut } = require("../utils/paginationWhereManut");
@@ -14,6 +14,52 @@ class ManutencoesController {
     const httpHelper = new HttpHelper(response);
     const { numero_nota, descricao, preco, data, id_viatura } = request.body;
     try {
+      if (!numero_nota || !descricao || !preco || !id_viatura) {
+        return httpHelper.badRequest({
+          message: "Ops! faltou preencher algum campo!",
+          variant: "danger",
+        });
+      }
+
+      if (numero_nota.length != 9) {
+        return httpHelper.badRequest({
+          message:
+            "O número da nota deve conter exatamente 9 dígitos numéricos.",
+          variant: "danger",
+        });
+      }
+
+      const notaExists = await ManutencoesModel.findOne({
+        where: { numero_nota },
+      });
+
+      if (notaExists) {
+        return httpHelper.badRequest({
+          message: "Já existe uma manutenção com o nota informada!",
+          variant: "danger",
+        });
+      }
+
+      const viaturaExists = await ViaturasModel.findOne({
+        where: { id_viatura },
+      });
+
+      if (!viaturaExists) {
+        return httpHelper.badRequest({
+          message: "A viatura informada não existe!",
+          variant: "danger",
+        });
+      }
+      const dataInformada = new Date(data);
+      const dataAtual = new Date();
+
+      if (dataInformada > dataAtual) {
+        return httpHelper.badRequest({
+          message: "Data inválida!",
+          variant: "danger",
+        });
+      }
+
       await ManutencoesModel.create({
         numero_nota,
         descricao,
@@ -21,8 +67,9 @@ class ManutencoesController {
         data_nota: data,
         id_viatura,
       });
+
       return httpHelper.created({
-        message: "Manutencoes cadastrada com sucesso!",
+        message: "Manutenção cadastrada com sucesso!",
         variant: "success",
       });
     } catch (error) {
@@ -88,18 +135,20 @@ class ManutencoesController {
     let busca = {};
 
     const { filtro, page } = request.query || null;
-    
+
     try {
       if (filtro != "undefined" && filtro != "") {
-        busca = await paginationWhereManut(ManutencoesModel, page, `manutencoes.numero_nota LIKE '%${filtro}%' OR manutencoes.descricao LIKE '%${filtro}%'`);
+        busca = await paginationWhereManut(
+          ManutencoesModel,
+          page,
+          `manutencoes.numero_nota LIKE '%${filtro}%' OR manutencoes.descricao LIKE '%${filtro}%'`
+        );
       } else {
         busca = await paginationWhereManut(ManutencoesModel, page);
       }
 
       busca.data.forEach((manutencao) => {
-          manutencao.data_nota = Validates.formatDate(
-          manutencao.data_nota
-        );
+        manutencao.data_nota = Validates.formatDate(manutencao.data_nota);
       });
 
       return httpHelper.ok({
@@ -111,8 +160,6 @@ class ManutencoesController {
     }
   }
 
-
-  
   async pesquisarTotalManutencoes(request, response) {
     const httpHelper = new HttpHelper(response);
     try {
@@ -127,16 +174,43 @@ class ManutencoesController {
   async atualizarManutencao(request, response) {
     const httpHelper = new HttpHelper(response);
     const { id } = request.params;
-    const { numero_nota, descricao, preco, data_nota, id_viatura } =
-      request.body;
+    const { numero_nota, descricao, preco, data, id_viatura } = request.body;
 
     try {
+      if (numero_nota.length != 9) {
+        return httpHelper.badRequest({
+          message:
+            "O número da nota deve conter exatamente 9 dígitos numéricos.",
+          variant: "danger",
+        });
+      }
+
+      const viaturaExists = await ViaturasModel.findOne({
+        where: { id_viatura },
+      });
+
+      if (!viaturaExists) {
+        return httpHelper.badRequest({
+          message: "A viatura informada não existe!",
+          variant: "danger",
+        });
+      }
+      const dataInformada = new Date(data);
+      const dataAtual = new Date();
+
+      if (dataInformada > dataAtual) {
+        return httpHelper.badRequest({
+          message: "Data inválida!",
+          variant: "danger",
+        });
+      }
+
       await ManutencoesModel.update(
         {
           numero_nota,
           descricao,
           preco,
-          data_nota,
+          data_nota: data,
           id_viatura,
         },
         {
@@ -147,7 +221,7 @@ class ManutencoesController {
       );
 
       return httpHelper.ok({
-        message: `A Manutencoes foi atualizada com sucesso`,
+        message: `A Manutenção foi atualizada com sucesso`,
         variant: "success",
       });
     } catch (error) {

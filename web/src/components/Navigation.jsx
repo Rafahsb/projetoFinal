@@ -2,7 +2,12 @@ import Col from "react-bootstrap/Col";
 import Nav from "react-bootstrap/Nav";
 import Row from "react-bootstrap/Row";
 import Tab from "react-bootstrap/Tab";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 import React, { useEffect, useState } from "react";
+import SpaceDashboardOutlinedIcon from "@mui/icons-material/SpaceDashboardOutlined";
+import DirectionsCarOutlinedIcon from "@mui/icons-material/DirectionsCarOutlined";
+import HandymanOutlinedIcon from "@mui/icons-material/HandymanOutlined";
+import PeopleAltOutlinedIcon from "@mui/icons-material/PeopleAltOutlined";
 export function Navigation() {
     const [currentPath, setCurrentPath] = useState(window.location.pathname);
 
@@ -23,7 +28,7 @@ export function Navigation() {
     return (
         <Tab.Container id="left-tabs-example" defaultActiveKey="first">
             <Row className="vh-sm-100 p-0 mt-4 w-100 ms-0 justify-content-center">
-                <Col sm={9}>
+                <Col sm={12}>
                     <Nav
                         variant="pills"
                         className="flex-column align-items-center text-center"
@@ -35,7 +40,10 @@ export function Navigation() {
                                     currentPath === "/painel" ? "active" : ""
                                 }
                             >
-                                Painel
+                                <div className="d-flex">
+                                    <SpaceDashboardOutlinedIcon className="me-2"></SpaceDashboardOutlinedIcon>
+                                    Painel
+                                </div>
                             </Nav.Link>
                         </Nav.Item>
                         <Nav.Item className="w-100">
@@ -45,7 +53,10 @@ export function Navigation() {
                                     currentPath === "/viaturas" ? "active" : ""
                                 }
                             >
-                                Viaturas
+                                <div className="d-flex">
+                                    <DirectionsCarOutlinedIcon className="me-2"></DirectionsCarOutlinedIcon>
+                                    Viaturas
+                                </div>
                             </Nav.Link>
                         </Nav.Item>
                         <Nav.Item className="w-100">
@@ -57,7 +68,10 @@ export function Navigation() {
                                         : ""
                                 }
                             >
-                                Manutenções
+                                <div className="d-flex">
+                                    <HandymanOutlinedIcon className="me-2"></HandymanOutlinedIcon>
+                                    Manutenções
+                                </div>
                             </Nav.Link>
                         </Nav.Item>
                         <Nav.Item className="w-100">
@@ -67,7 +81,10 @@ export function Navigation() {
                                     currentPath === "/usuarios" ? "active" : ""
                                 }
                             >
-                                Usuários
+                                <div className="d-flex">
+                                    <PeopleAltOutlinedIcon className="me-2"></PeopleAltOutlinedIcon>
+                                    Usuários
+                                </div>
                             </Nav.Link>
                         </Nav.Item>
                     </Nav>

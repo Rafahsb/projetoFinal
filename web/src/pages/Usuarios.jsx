@@ -34,7 +34,7 @@ export function Usuarios() {
     const [usuarios, setUsuarios] = useState([]);
     const [inputValue, setInputValue] = useState("");
     const [isCreated, setIsCreated] = useState(false);
-    const [active, setActive] = useState(1);
+    const [active, setActive] = useState(false);
     const {
         handleSubmit,
         register,
@@ -91,7 +91,7 @@ export function Usuarios() {
             setApiMessage(result.data);
             setActive(true);
         } catch (error) {
-            setApiMessage(error.response.data);
+            setApiMessage(error.response.data.error);
             setActive(true);
         }
     }
@@ -103,10 +103,13 @@ export function Usuarios() {
             setCurrentPage(1);
             await filterUsuarios();
 
-            setApiMessage({message: "Usuário deletado com sucesso!", variant: "success"});
+            setApiMessage({
+                message: "Usuário deletado com sucesso!",
+                variant: "success",
+            });
             setActive(true);
         } catch (error) {
-            setApiMessage(error.response.data);
+            setApiMessage(error.response.data.error);
             setActive(true);
         }
     }
@@ -129,7 +132,7 @@ export function Usuarios() {
             setApiMessage(result.data);
             setActive(true);
         } catch (error) {
-            setApiMessage(error.response.data);
+            setApiMessage(error.response.data.error);
             setActive(true);
         }
     }
@@ -172,12 +175,10 @@ export function Usuarios() {
                                     })}
                                 />
                                 <Button
-                                    onClick={() =>
-                                        {
-                                            setCurrentPage(1);
-                                            filterUsuarios(inputValue);
-                                        }
-                                    }
+                                    onClick={() => {
+                                        setCurrentPage(1);
+                                        filterUsuarios(inputValue);
+                                    }}
                                     variant="primary"
                                     id="button-addon2"
                                 >
@@ -270,6 +271,11 @@ export function Usuarios() {
                                                 message:
                                                     "O número da matricula é um campo obrigatório",
                                             },
+                                            pattern: {
+                                                value: /^\d{9}$/, // Padrão para exatamente 9 dígitos
+                                                message:
+                                                    "A matrícula deve ter exatamente 9 dígitos",
+                                            },
                                         })}
                                     />
                                 </Row>
@@ -289,6 +295,11 @@ export function Usuarios() {
                                                 message:
                                                     "O nome é um campo obrigatório",
                                             },
+                                            minLength: {
+                                                value: 3,
+                                                message:
+                                                    "O nome do usuário deve ter pelo menos 3 caracteres",
+                                            },
                                         })}
                                     />
                                 </Row>
@@ -296,7 +307,7 @@ export function Usuarios() {
                                 <Row className="mb-4">
                                     <Input
                                         size={"sm"}
-                                        type="email"
+                                        type="email" // Usar o tipo "email"
                                         label="E-mail:*"
                                         placeholder="Informe o email:"
                                         required={true}
@@ -307,6 +318,11 @@ export function Usuarios() {
                                                 value: true,
                                                 message:
                                                     "O e-mail é um campo obrigatório",
+                                            },
+                                            pattern: {
+                                                value: /^\S+@\S+\.\S+$/,
+                                                message:
+                                                    "Por favor, insira um endereço de e-mail válido",
                                             },
                                         })}
                                     />

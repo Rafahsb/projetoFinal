@@ -33,6 +33,7 @@ export function Manutencao(props) {
     }
 
     async function editManutencao(data) {
+        console.log("data: ", data);
         await props.editManutencao({
             ...data,
             id: props.manutencao.id_manutencao,
@@ -43,7 +44,16 @@ export function Manutencao(props) {
     return (
         <>
             <td>{props.manutencao.numero_nota}</td>
-            <td style={{overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth:"150px"}}>{props.manutencao.descricao}</td>
+            <td
+                style={{
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap",
+                    maxWidth: "150px",
+                }}
+            >
+                {props.manutencao.descricao}
+            </td>
             <td>{props.manutencao.preco}</td>
             <td>{props.manutencao.data_nota}</td>
             <td>{props.manutencao.marca}</td>
@@ -67,9 +77,7 @@ export function Manutencao(props) {
                         >
                             Editar
                         </Dropdown.Item>
-                        <Dropdown.Item
-                            onClick={props.removeManutencao}
-                        >
+                        <Dropdown.Item onClick={props.removeManutencao}>
                             Apagar
                         </Dropdown.Item>
                     </Dropdown.Menu>
@@ -160,9 +168,9 @@ export function Manutencao(props) {
                                 label="Data:*"
                                 placeholder="Informe a data da realização do serviço:"
                                 required={true}
-                                name="data_nota"
-                                error={errors.data_nota}
-                                validations={register("data_nota", {
+                                name="data"
+                                error={errors.data}
+                                validations={register("data", {
                                     required: {
                                         value: true,
                                         message:

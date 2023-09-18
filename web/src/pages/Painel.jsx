@@ -128,10 +128,10 @@ export function Painel() {
         <>
             <Head styles={{ overflow: "hidden" }}></Head>
             <Row className="gx-0">
-                <Col sm={3} md={2} className="border-end">
+                <Col sm={4} md={3} lg={2} className="border-end">
                     <Navigation></Navigation>
                 </Col>
-                <Col sm={7} md={8} className="p-3">
+                <Col sm={8} className="p-3">
                     <Row>
                         <Col>
                             <p className="h3 mt-4">Paineis Gerenciais</p>
@@ -213,10 +213,12 @@ export function Painel() {
                             />
                         </Col>
                     </Row>
-                    <Row >
+                    <Row>
                         <Col xs={12} className="">
-                            <Card style={{ height: "600px" }} className="p-2">
-                                <p className="h4 my-3 text-center">Gastos em manutenções / Viatura</p>
+                            <Card style={{ height: "600px" }} className="p-2 ">
+                                <p className="h4 my-3 text-center">
+                                    Gastos em manutenções / Viatura
+                                </p>
                                 <ResponsiveContainer width="100%" height="100%">
                                     <BarChart
                                         width={500}
