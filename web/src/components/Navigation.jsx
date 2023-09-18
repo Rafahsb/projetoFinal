@@ -2,15 +2,15 @@ import Col from "react-bootstrap/Col";
 import Nav from "react-bootstrap/Nav";
 import Row from "react-bootstrap/Row";
 import Tab from "react-bootstrap/Tab";
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import SpaceDashboardOutlinedIcon from "@mui/icons-material/SpaceDashboardOutlined";
+import { UserContext } from "../contexts/UserContexts";
 import DirectionsCarOutlinedIcon from "@mui/icons-material/DirectionsCarOutlined";
 import HandymanOutlinedIcon from "@mui/icons-material/HandymanOutlined";
 import PeopleAltOutlinedIcon from "@mui/icons-material/PeopleAltOutlined";
 export function Navigation() {
     const [currentPath, setCurrentPath] = useState(window.location.pathname);
-
+    const { menu } = useContext(UserContext);
     useEffect(() => {
         const handleRouteChange = () => {
             setCurrentPath(window.location.pathname);

@@ -30,7 +30,7 @@ export function Head() {
         formState: { errors },
     } = useForm();
     const [usuario, setUsuario] = useState({});
-    const { user, setUser, logout } = useContext(UserContext);
+    const { user, setUser, logout, menu, setMenu } = useContext(UserContext);
     const [isUpdated, setIsUpdated] = useState(false);
     const [isUpdated2, setIsUpdated2] = useState(false);
     const [key, setKey] = useState("dados");
@@ -85,7 +85,12 @@ export function Head() {
             <Navbar className="bg-body-tertiary p-0 shadow px-sm-5">
                 <Container fluid>
                     <Navbar.Brand className="d-flex align-items-center ">
-                        <HomeOutlinedIcon className="text-primary me-3 fs-2"></HomeOutlinedIcon>
+                        <HomeOutlinedIcon
+                            className="text-primary me-3 fs-2"
+                            onClick={() => {
+                                setMenu(!menu);
+                            }}
+                        ></HomeOutlinedIcon>
                         <h4
                             className="d-flex m-0"
                             style={{ cursor: "pointer" }}

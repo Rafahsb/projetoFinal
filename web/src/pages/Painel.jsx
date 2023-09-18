@@ -16,20 +16,19 @@ import {
 } from "recharts";
 
 import { getTotalManutencoes } from "../services/manutencoes-service";
-
 import { getTotalViaturas } from "../services/viaturas-service";
-
 import { getTotalUsuarios } from "../services/usuarios-service";
-
 import { getDataDashboard } from "../services/painel-service";
-
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
+import { UserContext } from "../contexts/UserContexts";
 import { useForm } from "react-hook-form";
 import { Navigate } from "react-router-dom";
 import { Card } from "react-bootstrap";
 import { Input } from "../components/Input";
 
 export function Painel() {
+    const { menu } = useContext(UserContext);
+
     const data = [
         {
             name: "Page A",
@@ -127,11 +126,16 @@ export function Painel() {
     return (
         <>
             <Head styles={{ overflow: "hidden" }}></Head>
-            <Row className="gx-0">
-                <Col sm={4} md={3} lg={2} className="border-end">
-                    <Navigation></Navigation>
-                </Col>
-                <Col sm={8} className="p-3">
+            <Row className={menu ? "d-flex justify-content-center" : "gx-0"}>
+                {menu ? (
+                    <></>
+                ) : (
+                    <Col sm={4} md={3} lg={2} className="border-end">
+                        <Navigation></Navigation>
+                    </Col>
+                )}
+
+                <Col sm={menu ? 9 : 8} className="p-3">
                     <Row>
                         <Col>
                             <p className="h3 mt-4">Paineis Gerenciais</p>

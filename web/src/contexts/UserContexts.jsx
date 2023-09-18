@@ -6,6 +6,7 @@ export const UserContext = createContext(null);
 export function UserContextProvider({ children }) {
     const [accessToken, setAccessToken] = useState(null);
     const [error, setError] = useState(null);
+    const [menu, setMenu] = useState(false);
     const [loading, setLoading] = useState(false);
     const [user, setUser] = useState(null);
 
@@ -36,8 +37,6 @@ export function UserContextProvider({ children }) {
         navigate("/");
     }
 
-   
-
     return (
         <UserContext.Provider
             value={{
@@ -48,7 +47,9 @@ export function UserContextProvider({ children }) {
                 loading,
                 logout,
                 user,
-                setUser
+                setUser,
+                menu,
+                setMenu,
             }}
         >
             {children}

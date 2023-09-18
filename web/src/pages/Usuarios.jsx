@@ -1,7 +1,6 @@
 import { Head } from "../components/Head";
 import { Navigation } from "../components/Navigation";
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Input } from "../components/Input";
 import Row from "react-bootstrap/Row";
@@ -24,7 +23,8 @@ import { Usuario } from "../components/Usuario";
 import { BsCheckLg } from "react-icons/bs";
 import Notification from "../components/Notification";
 import PaginationComponent from "../components/PaginationComponent";
-
+import { useEffect, useState, useContext } from "react";
+import { UserContext } from "../contexts/UserContexts";
 export function Usuarios() {
     let page = 1;
     let paginaAtual = 1;
@@ -35,6 +35,7 @@ export function Usuarios() {
     const [inputValue, setInputValue] = useState("");
     const [isCreated, setIsCreated] = useState(false);
     const [active, setActive] = useState(false);
+    const { menu } = useContext(UserContext);
     const {
         handleSubmit,
         register,
@@ -148,11 +149,15 @@ export function Usuarios() {
             )}
 
             <Head></Head>
-            <Row className="gx-0">
-                <Col sm={3} md={2} className="border-end">
-                    <Navigation></Navigation>
-                </Col>
-                <Col sm={7} md={8} className="p-3">
+            <Row className={menu ? "d-flex justify-content-center" : "gx-0"}>
+                {menu ? (
+                    <></>
+                ) : (
+                    <Col sm={4} md={3} lg={2} className="border-end">
+                        <Navigation></Navigation>
+                    </Col>
+                )}
+                <Col sm={menu ? 9 : 8} className="p-3">
                     <Row>
                         <Col>
                             <p className="h3 mt-4">Listar usuários</p>
