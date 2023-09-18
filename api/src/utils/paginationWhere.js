@@ -1,11 +1,11 @@
 //arquivo pagination.js
 //função para paginação
-async function paginationWhere(model, page, where) {
+async function paginationWhere(model, page, where, attributes) {
   limit = 5;
   //calcula o offset
   const offset = (page - 1) * limit;
   //busca os dados com limite e offset
-  const data = await model.findAll({ limit, offset, where });
+  const data = await model.findAll({ limit, offset, where, attributes });
   //busca o total de registros
   const count = await model.count({ where: where });
   //calcula o total de páginas

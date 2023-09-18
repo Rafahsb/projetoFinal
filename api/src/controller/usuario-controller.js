@@ -104,17 +104,29 @@ class UsuarioController {
 
     try {
       if (filtro != "undefined") {
-        busca = await paginationWhere(UsuariosModel, page, {
-          [Op.or]: [
-            { matricula: { [Op.like]: `%${filtro}%` } },
-            { nome: { [Op.like]: `%${filtro}%` } },
-            { email: { [Op.like]: `%${filtro}%` } },
-            { unidade: { [Op.like]: `%${filtro}%` } },
-            { cargo: { [Op.like]: `%${filtro}%` } },
-          ],
-        });
+        busca = await paginationWhere(
+          UsuariosModel,
+          page,
+          {
+            [Op.or]: [
+              { matricula: { [Op.like]: `%${filtro}%` } },
+              { nome: { [Op.like]: `%${filtro}%` } },
+              { email: { [Op.like]: `%${filtro}%` } },
+              { unidade: { [Op.like]: `%${filtro}%` } },
+              { cargo: { [Op.like]: `%${filtro}%` } },
+            ],
+          },
+          ["id_usuario", "matricula", "nome", "email", "unidade", "cargo"]
+        );
       } else {
-        busca = await paginationWhere(UsuariosModel, page);
+        busca = await paginationWhere(UsuariosModel, page, "", [
+          "id_usuario",
+          "matricula",
+          "nome",
+          "email",
+          "unidade",
+          "cargo",
+        ]);
       }
 
       return httpHelper.ok({ Usuarios: busca.data, TotalPages: busca.pages });
