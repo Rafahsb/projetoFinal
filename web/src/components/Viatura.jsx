@@ -5,7 +5,8 @@ import Dropdown from "react-bootstrap/Dropdown";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { Input } from "./Input";
 import Col from "react-bootstrap/Col";
-
+import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 export function Viatura(props) {
     const {
         handleSubmit,
@@ -34,10 +35,16 @@ export function Viatura(props) {
 
                     <Dropdown.Menu>
                         <Dropdown.Item onClick={() => setIsUpdated(true)}>
-                            Editar
+                            <div className="d-flex">
+                                <EditOutlinedIcon className="me-2"></EditOutlinedIcon>
+                                Editar
+                            </div>
                         </Dropdown.Item>
-                        <Dropdown.Item onClick={props.removeViatura}>
-                            Apagar
+                        <Dropdown.Item onClick={props.removeUsuario}>
+                            <div className="d-flex">
+                                <DeleteOutlineOutlinedIcon className="me-2"></DeleteOutlineOutlinedIcon>
+                                Apagar
+                            </div>
                         </Dropdown.Item>
                     </Dropdown.Menu>
                 </Dropdown>

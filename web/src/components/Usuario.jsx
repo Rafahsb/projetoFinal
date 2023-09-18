@@ -5,6 +5,8 @@ import Dropdown from "react-bootstrap/Dropdown";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { Input } from "./Input";
 import { useNavigate } from "react-router-dom";
+import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import Col from "react-bootstrap/Col";
 
 export function Usuario(props) {
@@ -62,10 +64,16 @@ export function Usuario(props) {
 
                     <Dropdown.Menu>
                         <Dropdown.Item onClick={() => setIsUpdated(true)}>
-                            Editar
+                            <div className="d-flex">
+                                <EditOutlinedIcon className="me-2"></EditOutlinedIcon>
+                                Editar
+                            </div>
                         </Dropdown.Item>
                         <Dropdown.Item onClick={props.removeUsuario}>
-                            Apagar
+                            <div className="d-flex">
+                                <DeleteOutlineOutlinedIcon className="me-2"></DeleteOutlineOutlinedIcon>
+                                Apagar
+                            </div>
                         </Dropdown.Item>
                     </Dropdown.Menu>
                 </Dropdown>

@@ -6,6 +6,8 @@ import { BsThreeDotsVertical } from "react-icons/bs";
 import { Input } from "./Input";
 import { useNavigate } from "react-router-dom";
 import Col from "react-bootstrap/Col";
+import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 
 import { getViaturas } from "../services/viaturas-service";
 export function Manutencao(props) {
@@ -70,15 +72,17 @@ export function Manutencao(props) {
                     </Dropdown.Toggle>
 
                     <Dropdown.Menu>
-                        <Dropdown.Item
-                            onClick={() => {
-                                setIsUpdated(true);
-                            }}
-                        >
-                            Editar
+                        <Dropdown.Item onClick={() => setIsUpdated(true)}>
+                            <div className="d-flex">
+                                <EditOutlinedIcon className="me-2"></EditOutlinedIcon>
+                                Editar
+                            </div>
                         </Dropdown.Item>
-                        <Dropdown.Item onClick={props.removeManutencao}>
-                            Apagar
+                        <Dropdown.Item onClick={props.removeUsuario}>
+                            <div className="d-flex">
+                                <DeleteOutlineOutlinedIcon className="me-2"></DeleteOutlineOutlinedIcon>
+                                Apagar
+                            </div>
                         </Dropdown.Item>
                     </Dropdown.Menu>
                 </Dropdown>
