@@ -23,6 +23,7 @@ class ManutencoesController {
       });
       return httpHelper.created({
         message: "Manutencoes cadastrada com sucesso!",
+        variant: "success",
       });
     } catch (error) {
       return httpHelper.internalError(error);
@@ -96,7 +97,7 @@ class ManutencoesController {
       }
 
       busca.data.forEach((manutencao) => {
-        manutencao.data_nota = Validates.formatDate(
+          manutencao.data_nota = Validates.formatDate(
           manutencao.data_nota
         );
       });
@@ -147,6 +148,7 @@ class ManutencoesController {
 
       return httpHelper.ok({
         message: `A Manutencoes foi atualizada com sucesso`,
+        variant: "success",
       });
     } catch (error) {
       return httpHelper.internalError(error);

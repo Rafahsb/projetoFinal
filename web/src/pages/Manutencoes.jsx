@@ -24,13 +24,13 @@ import { BsCheckLg } from "react-icons/bs";
 import Pagination from "react-bootstrap/Pagination";
 
 import { getViaturas } from "../services/viaturas-service";
-
+import Notification from "../components/Notification";
 import PaginationComponent from "../components/PaginationComponent";
 
 export function Manutencoes() {
     const [viaturas, setViaturas] = useState([]);
     const [inputValue, setInputValue] = useState("");
-
+    const [apiMessage, setApiMessage] = useState({});
     const [currentPage, setCurrentPage] = useState(1);
     let paginaAtual = 1;
     const [totalPages, setTotalPages] = useState();
@@ -96,26 +96,38 @@ export function Manutencoes() {
 
     async function addManutencao(data) {
         try {
-            await createManutencao(data);
+            const result = await createManutencao(data);
+            
             setIsCreated(false);
-            await findManutencoes();
+            setCurrentPage(1);
+            await filterManutencoes();
+
+            setApiMessage(result.data);
+            setActive(true);
         } catch (error) {
-            console.error(error);
+            setApiMessage(error.response.data);
+            setActive(true);
         }
     }
 
     async function removeManutencao(id) {
         try {
             await deleteManutencao(id);
-            await findManutencoes();
+           
+            setCurrentPage(1); 
+            await filterManutencoes();
+
+            setApiMessage({message: "Manutenção deletada com sucesso!", variant: "success"});
+            setActive(true);
         } catch (error) {
-            console.error(error);
+            setApiMessage(error.response.data);
+            setActive(true);
         }
     }
 
     async function editManutencao(data) {
         try {
-            await updateManutencao({
+            const result = await updateManutencao({
                 id_manutencao: data.id,
                 numero_nota: data.numero_nota,
                 descricao: data.descricao,
@@ -123,9 +135,16 @@ export function Manutencoes() {
                 data: data.data_nota,
                 id_viatura: data.id_viatura,
             });
-            await findManutencoes();
+
+            setCurrentPage(1);
+            await filterManutencoes();
+
+            setApiMessage(result.data);
+            setActive(true);
         } catch (error) {
-            console.error(error);
+            console.log(error);
+            setApiMessage(error.response.data);
+            setActive(true);
         }
     }
 
@@ -133,6 +152,15 @@ export function Manutencoes() {
 
     return (
         <>
+
+            {active && (
+                <Notification
+                    variant={apiMessage.variant}
+                    message={apiMessage.message}
+                    setActive={setActive}
+                />
+            )}
+
             <Head></Head>
             <Row className="gx-0">
                 <Col sm={3} md={2} className="border-end">
@@ -162,7 +190,10 @@ export function Manutencoes() {
                                 />
                                 <Button
                                     onClick={() =>
-                                        filterManutencoes(inputValue)
+                                        {
+                                            filterManutencoes(inputValue);
+                                            setCurrentPage(1);
+                                        }
                                     }
                                     variant="primary"
                                     id="button-addon2"
@@ -207,8 +238,8 @@ export function Manutencoes() {
                                 </thead>
                                 <tbody>
                                     {manutencoesList.map(
-                                        (manutencao, index) => (
-                                            <tr key={index}>
+                                        (manutencao) => (
+                                            <tr key={manutencao.id_manutencao}>
                                                 <Manutencao
                                                     manutencao={manutencao}
                                                     removeManutencao={async () =>

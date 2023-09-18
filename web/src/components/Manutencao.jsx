@@ -61,7 +61,6 @@ export function Manutencao(props) {
 
                     <Dropdown.Menu>
                         <Dropdown.Item
-                            href="#/action-1"
                             onClick={() => {
                                 setIsUpdated(true);
                             }}
@@ -69,7 +68,6 @@ export function Manutencao(props) {
                             Editar
                         </Dropdown.Item>
                         <Dropdown.Item
-                            href="#/action-2"
                             onClick={props.removeManutencao}
                         >
                             Apagar

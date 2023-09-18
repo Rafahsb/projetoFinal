@@ -38,6 +38,7 @@ class UsuarioController {
 
       return httpHelper.created({
         message: "Usuario criado com sucesso!",
+        variant: "success",
         accessToken,
       });
     } catch (error) {
@@ -186,7 +187,7 @@ class UsuarioController {
         }
       );
 
-      return httpHelper.ok({ message: "Senha alterada com sucesso" });
+      return httpHelper.ok({ message: "Senha alterada com sucesso", variant: "success" });
     } catch (error) {
       return httpHelper.internalError(error);
     }
@@ -234,7 +235,7 @@ class UsuarioController {
         }
       );
 
-      return httpHelper.ok({ message: `O usuário foi atualizado com sucesso` });
+      return httpHelper.ok({ message: `O usuário foi atualizado com sucesso`, variant: "success" });
     } catch (error) {
       return httpHelper.internalError(error);
     }
@@ -262,7 +263,7 @@ class UsuarioController {
         }
       );
 
-      return httpHelper.ok({ message: `O usuário foi atualizado com sucesso` });
+      return httpHelper.ok({ message: `O usuário foi atualizado com sucesso`, variant: "success", });
     } catch (error) {
       return httpHelper.internalError(error);
     }

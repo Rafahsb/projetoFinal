@@ -37,13 +37,11 @@ export function Usuario(props) {
 
                     <Dropdown.Menu>
                         <Dropdown.Item
-                            href="#/action-1"
                             onClick={ () => setIsUpdated(true) }
                         >
                             Editar
                         </Dropdown.Item>
                         <Dropdown.Item
-                            href="#/action-2"
                             onClick={props.removeUsuario}
                         >
                             Apagar

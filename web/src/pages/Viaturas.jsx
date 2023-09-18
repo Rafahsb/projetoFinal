@@ -83,24 +83,27 @@ export function Viaturas() {
         try {
             const result = await createViatura(data);
             setIsCreated(false);
-            await findViaturas();
+            setCurrentPage(1);
+            await filterViaturas();
             setApiMessage(result.data);
             setActive(true);
         } catch (error) {
-            setApiMessage(error.response.data.error);
+            setApiMessage(error.response.data);
             setActive(true);
         }
     }
 
     async function removeViatura(id) {
         try {
-            const result = await deleteViatura(id);
-            await findViaturas();
-            console.log("result: ",result);
+            await deleteViatura(id);
+
+            setCurrentPage(1);
+            await filterViaturas();
+            
             setApiMessage({message: "Viatura deletada com sucesso!", variant: "success"});
             setActive(true);
         } catch (error) {
-            setApiMessage(error.response.data.error);
+            setApiMessage(error.response.data);
             setActive(true);
         }
     }
@@ -120,10 +123,10 @@ export function Viaturas() {
                 batalhao: data.batalhao,
                 piloto: data.piloto,
             });
+            setCurrentPage(1);
+            await filterViaturas();
             setApiMessage(result.data);
             setActive(true);
-
-            await findViaturas();
         } catch (error) {
             setApiMessage(error.response.data);
             setActive(true);
@@ -140,17 +143,6 @@ export function Viaturas() {
                 />
             )}
 
-            {/* {" "}
-            {active && (
-                <Alert
-                    key={apiMessage.variant}
-                    variant={apiMessage.variant}
-                    onClose={fecharAlerta}
-                    dismissible
-                >
-                    {apiMessage.message}
-                </Alert>
-            )} */}
             <Head></Head>
             <Row className="gx-0">
                 <Col sm={3} md={2} className="border-end">
@@ -220,8 +212,8 @@ export function Viaturas() {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {viaturas.map((viatura, index) => (
-                                        <tr key={index}>
+                                    {viaturas.map((viatura) => (
+                                        <tr key={viatura.id_viatura}>
                                             <Viatura
                                                 viatura={viatura}
                                                 removeViatura={async () =>

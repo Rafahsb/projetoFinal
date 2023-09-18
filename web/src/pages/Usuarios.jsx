@@ -22,12 +22,14 @@ import {
 } from "../services/usuarios-service";
 import { Usuario } from "../components/Usuario";
 import { BsCheckLg } from "react-icons/bs";
+import Notification from "../components/Notification";
 import PaginationComponent from "../components/PaginationComponent";
 
 export function Usuarios() {
     let page = 1;
     let paginaAtual = 1;
     const [totalPages, setTotalPages] = useState(1);
+    const [apiMessage, setApiMessage] = useState({});
     const [currentPage, setCurrentPage] = useState(1);
     const [usuarios, setUsuarios] = useState([]);
     const [inputValue, setInputValue] = useState("");
@@ -80,26 +82,38 @@ export function Usuarios() {
 
     async function addUsuario(data) {
         try {
-            await createUsuario(data);
+            const result = await createUsuario(data);
+
             setIsCreated(false);
-            await findUsuarios();
+            setCurrentPage(1);
+            await filterUsuarios();
+
+            setApiMessage(result.data);
+            setActive(true);
         } catch (error) {
-            console.error(error);
+            setApiMessage(error.response.data);
+            setActive(true);
         }
     }
 
     async function removeUsuario(id) {
         try {
             await deleteUsuario(id);
-            await findUsuarios();
+
+            setCurrentPage(1);
+            await filterUsuarios();
+
+            setApiMessage({message: "Usuário deletado com sucesso!", variant: "success"});
+            setActive(true);
         } catch (error) {
-            console.error(error);
+            setApiMessage(error.response.data);
+            setActive(true);
         }
     }
 
     async function editUsuario(data) {
         try {
-            await updateUsuario({
+            const result = await updateUsuario({
                 id_usuario: data.id,
                 matricula: data.matricula,
                 nome: data.nome,
@@ -108,14 +122,28 @@ export function Usuarios() {
                 unidade: data.unidade,
                 cargo: data.cargo,
             });
-            await findUsuarios();
+
+            setCurrentPage(1);
+            await filterUsuarios();
+
+            setApiMessage(result.data);
+            setActive(true);
         } catch (error) {
-            console.error(error);
+            setApiMessage(error.response.data);
+            setActive(true);
         }
     }
 
     return (
         <>
+            {active && (
+                <Notification
+                    variant={apiMessage.variant}
+                    message={apiMessage.message}
+                    setActive={setActive}
+                />
+            )}
+
             <Head></Head>
             <Row className="gx-0">
                 <Col sm={3} md={2} className="border-end">
@@ -144,7 +172,12 @@ export function Usuarios() {
                                     })}
                                 />
                                 <Button
-                                    onClick={() => filterUsuarios(inputValue)}
+                                    onClick={() =>
+                                        {
+                                            setCurrentPage(1);
+                                            filterUsuarios(inputValue);
+                                        }
+                                    }
                                     variant="primary"
                                     id="button-addon2"
                                 >
@@ -185,8 +218,8 @@ export function Usuarios() {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {usuarios.map((usuario, index) => (
-                                        <tr key={index}>
+                                    {usuarios.map((usuario) => (
+                                        <tr key={usuario.id_usuario}>
                                             <Usuario
                                                 usuario={usuario}
                                                 removeUsuario={async () =>

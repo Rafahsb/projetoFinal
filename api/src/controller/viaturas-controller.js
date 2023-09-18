@@ -26,13 +26,6 @@ class ViaturaController {
       })
     }
 
-    if( chassi.length != 17 ) {
-      return httpHelper.badRequest({
-        message: "O chassi deve conter exatamente 17 dígitos numéricos.",
-        variant: "danger",
-      })
-    }
-
     if(bancos > 8) {
       return httpHelper.badRequest({
         message: "A quantidade de bancos não pode ser maior que 8",
@@ -182,16 +175,40 @@ class ViaturaController {
         batalhao,
         piloto,
       } = request.body;
+      
       if (!id) return httpHelper.badRequest("Parâmetros inválidos!");
-      if (portas > 5) {
-        return httpHelper.badRequest({
-          message: "A quantidades de portas não pode ser maior que 4.",
-          variant: "danger",
-        });
-      }
+      
       const viaturaExists = await ViaturasModel.findOne({ id_viatura: id });
 
       if (!viaturaExists) return httpHelper.notFound("Viatura não encontrada!");
+
+      if(bancos > 8) {
+        return httpHelper.badRequest({
+          message: "A quantidade de bancos não pode ser maior que 8",
+          variant: "danger",
+        })
+      }
+  
+      if(portas > 6) {
+        return httpHelper.badRequest({
+          message: "A quantidade de portas não pode ser maior que 6",
+          variant: "danger",
+        })
+      }
+  
+      if (kilometragem > 1000000 ) {
+        return httpHelper.badRequest({
+          message: "A quilometragem não pode ser maior que 1 milhão",
+          variant: "danger",
+        })
+      }
+  
+      if(piloto.length < 3) {
+        return httpHelper.badRequest({
+          message: "O nome do piloto deve ter pelo menos 3 caracteres",
+          variant: "danger",
+        })
+      }
 
       await ViaturasModel.update(
         {
