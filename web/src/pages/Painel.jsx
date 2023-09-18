@@ -220,7 +220,7 @@ export function Painel() {
                     <Row>
                         <Col xs={12} className="">
                             <Card
-                                style={{ height: "600px" }}
+                                style={{ minHeight: "400px" }}
                                 className="p-2 shadow"
                             >
                                 <p className="h4 my-3 text-center">
