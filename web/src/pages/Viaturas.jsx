@@ -96,7 +96,8 @@ export function Viaturas() {
         try {
             const result = await deleteViatura(id);
             await findViaturas();
-            setApiMessage(result.data);
+            console.log("result: ",result);
+            setApiMessage({message: "Viatura deletada com sucesso!", variant: "success"});
             setActive(true);
         } catch (error) {
             setApiMessage(error.response.data.error);
@@ -367,6 +368,10 @@ export function Viaturas() {
                                                     message:
                                                         "O chassi é um campo obrigatória",
                                                 },
+                                                pattern: {
+                                                    value: /^[0-9]{17}$/,
+                                                    message: "O chassi deve conter exatamente 17 dígitos numéricos.",
+                                                },
                                             })}
                                         />
                                     </Col>
@@ -387,6 +392,10 @@ export function Viaturas() {
                                                     message:
                                                         "A quantidade de portas é um campo obrigatória",
                                                 },
+                                                max: {
+                                                    value: 6,
+                                                    message: "A quantidade de portas não pode ser maior que 6",
+                                                },
                                             })}
                                         />
                                     </Col>
@@ -403,6 +412,10 @@ export function Viaturas() {
                                                     value: true,
                                                     message:
                                                         "A quantidade de bancos é um campo obrigatório",
+                                                },
+                                                max: {
+                                                    value: 8,
+                                                    message: "A quantidade de bancos não pode ser maior que 8",
                                                 },
                                             })}
                                         />
@@ -426,6 +439,10 @@ export function Viaturas() {
                                                         message:
                                                             "A kilometragem é um campo obrigatório",
                                                     },
+                                                    max: {
+                                                        value: 1000000,
+                                                        message: "A quilometragem não pode ser maior que 1 milhão",
+                                                    },
                                                 }
                                             )}
                                         />
@@ -442,7 +459,11 @@ export function Viaturas() {
                                                 required: {
                                                     value: true,
                                                     message:
-                                                        "A kilometragem é um campo obrigatório",
+                                                        "O nome do piloto é um campo obrigatório",
+                                                },
+                                                minLength: {
+                                                    value: 3,
+                                                    message: "O nome do piloto deve ter pelo menos 3 caracteres",
                                                 },
                                             })}
                                         />

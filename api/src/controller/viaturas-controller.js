@@ -18,6 +18,49 @@ class ViaturaController {
       batalhao,
       piloto,
     } = request.body;
+
+    if(!marca || !modelo || !chassi || !portas || !bancos || !cor || !kilometragem || !orgao_vinculado || !batalhao || !piloto ) {
+      return httpHelper.badRequest({
+        message: "Ops! faltou preencher algum campo!",
+        variant: "danger",
+      })
+    }
+
+    if( chassi.length != 17 ) {
+      return httpHelper.badRequest({
+        message: "O chassi deve conter exatamente 17 dígitos numéricos.",
+        variant: "danger",
+      })
+    }
+
+    if(bancos > 8) {
+      return httpHelper.badRequest({
+        message: "A quantidade de bancos não pode ser maior que 8",
+        variant: "danger",
+      })
+    }
+
+    if(portas > 6) {
+      return httpHelper.badRequest({
+        message: "A quantidade de portas não pode ser maior que 6",
+        variant: "danger",
+      })
+    }
+
+    if (kilometragem > 1000000 ) {
+      return httpHelper.badRequest({
+        message: "A quilometragem não pode ser maior que 1 milhão",
+        variant: "danger",
+      })
+    }
+
+    if(piloto.length < 3) {
+      return httpHelper.badRequest({
+        message: "O nome do piloto deve ter pelo menos 3 caracteres",
+        variant: "danger",
+      })
+    }
+
     try {
       await ViaturasModel.create({
         marca,
