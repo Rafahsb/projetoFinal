@@ -138,7 +138,7 @@ export function Painel() {
                 <Col sm={menu ? 9 : 8} className="p-3">
                     <Row>
                         <Col>
-                            <p className="h3 mt-4">Paineis Gerenciais</p>
+                            <p className="h3 mt-4">Painéis Gerenciais</p>
                         </Col>
                     </Row>
                     <Row className="d-flex justify-content-end my-4">
