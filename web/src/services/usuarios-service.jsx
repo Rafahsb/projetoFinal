@@ -1,5 +1,32 @@
 import { api } from "./api";
 
+export async function resetPassword(data) {
+    const result = await api.post(`/requestSenha`, {
+        matricula: data.matricula,
+    });
+    return result;
+}
+
+export async function editResetPassword(data) {
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const accessToken = urlParams.get("token");
+    const result = await api.post(
+        `/alterarSenha`,
+        {
+            nova_senha: data.nova_senha,
+            confirmar_nova_senha: data.confirmar_nova_senha,
+            token: accessToken,
+        },
+        {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        }
+    );
+    return result;
+}
+
 export async function editPassword(data) {
     const accessToken = sessionStorage.getItem("token");
     const result = await api.put(

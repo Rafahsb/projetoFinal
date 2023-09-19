@@ -95,12 +95,12 @@ export function Login() {
                         >
                             <Form.Text>
                                 <p>
-                                    <a
-                                        href="#"
+                                    <Link
+                                        to="/esqueceuSenha"
                                         className="link-underline-primary"
                                     >
                                         Esqueceu senha?
-                                    </a>
+                                    </Link>
                                 </p>
                             </Form.Text>
                         </Form.Group>

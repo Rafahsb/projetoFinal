@@ -4,10 +4,110 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const { HttpHelper } = require("../utils/http-helper");
 const { paginationWhere } = require("../utils/paginationWhere");
+const nodemailer = require("nodemailer");
 
 const itensPorPagina = 5;
+const transporter = nodemailer.createTransport({
+  service: "Gmail",
+  auth: {
+    user: "viagestaoreset@gmail.com",
+    pass: "sezs fcsc szif xgig",
+  },
+});
 
 class UsuarioController {
+  async esqueceuSenha(request, response) {
+    const httpHelper = new HttpHelper(response);
+    const { matricula } = request.body;
+
+    try {
+      const userExists = await UsuariosModel.findOne({
+        where: { matricula },
+      });
+
+      if (!userExists) {
+        return httpHelper.badRequest({
+          message: "Usuário não encontrado!",
+          variant: "danger",
+        });
+      }
+
+      const accessToken = jwt.sign(
+        { id: userExists.id_usuario },
+        process.env.TOKEN_SECRET,
+        { expiresIn: "15m" }
+      );
+
+      const resetLink = `http://localhost:3000/alterarSenha?token=${accessToken}`;
+
+      const mailOptions = {
+        from: "viagestaoreset@gmail.com",
+        to: userExists.email,
+        subject: "Redefinir senha - ViaGestão",
+        text: `Clique no link a seguir para redefinir sua senha: ${resetLink}. Expira em 15 minutos!.`,
+      };
+
+      transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+          return httpHelper.internalError("Erro ao enviar o email");
+        } else {
+          return httpHelper.ok({
+            message: "Email enviado com sucesso",
+            variant: "success",
+          });
+        }
+      });
+    } catch (error) {
+      return httpHelper.internalError(error);
+    }
+  }
+
+  async alterarEsqueceuSenha(request, response) {
+    const httpHelper = new HttpHelper(response);
+    const { token, nova_senha, confirmar_nova_senha } = request.body;
+
+    try {
+      const dadosUsuario = jwt.verify(
+        token.replace(/"/g, ""),
+        process.env.TOKEN_SECRET
+      );
+
+      console.log("dados: ", dadosUsuario);
+      if (!dadosUsuario.id) {
+        return httpHelper.internalError("Token expirado ou inválido!");
+      }
+
+      if (confirmar_nova_senha !== nova_senha) {
+        return httpHelper.badRequest(
+          "A nova senha informada não bate com a confirmação da nova senha!"
+        );
+      }
+
+      const passwordHashed = await bcrypt.hash(
+        nova_senha,
+        Number(process.env.SALT)
+      );
+
+      const result = await UsuariosModel.update(
+        {
+          senha: passwordHashed,
+        },
+        {
+          where: {
+            id_usuario: dadosUsuario.id,
+          },
+        }
+      );
+
+      return httpHelper.ok({
+        message: "Senha alterada com sucesso!",
+        variant: "success",
+      });
+    } catch (error) {
+      return httpHelper.internalError(error);
+    }
+  }
+
   async criarUsuario(request, response) {
     const httpHelper = new HttpHelper(response);
     const { matricula, nome, email, unidade, cargo } = request.body;

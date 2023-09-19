@@ -84,6 +84,12 @@ routes.get(
 );
 routes.put("/usuario/:id", authMiddleware, usuarioController.atualizarUsuario);
 routes.put("/senha/:id", authMiddleware, usuarioController.alterarSenha);
+routes.post("/requestSenha", usuarioController.esqueceuSenha);
+routes.post(
+  "/alterarSenha",
+  authMiddleware,
+  usuarioController.alterarEsqueceuSenha
+);
 routes.delete("/usuario/:id", authMiddleware, usuarioController.deletarUsuario);
 
 // Painel

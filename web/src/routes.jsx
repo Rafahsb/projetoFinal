@@ -1,5 +1,7 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
-
+import { isAuthenticatedQuery } from "./utils/is-authenticated";
+import { EsqueceuSenha } from "./pages/EsqueceuSenha";
+import { AlterarSenha } from "./pages/AlterarSenha";
 import { Login } from "./pages/Login";
 import { Painel } from "./pages/Painel";
 import { UserContextProvider } from "./contexts/UserContexts";
@@ -10,6 +12,13 @@ import { Usuarios } from "./pages/Usuarios";
 
 export function PrivateRoute({ children }) {
     if (!isAuthenticated()) {
+        return <Navigate to="/" replace />;
+    }
+    return children;
+}
+
+export function PrivateRouteQuery({ children }) {
+    if (!isAuthenticatedQuery()) {
         return <Navigate to="/" replace />;
     }
     return children;
@@ -51,6 +60,15 @@ export function Navigations() {
                             <PrivateRoute>
                                 <Usuarios />
                             </PrivateRoute>
+                        }
+                    />
+                    <Route path="/esqueceuSenha" element={<EsqueceuSenha />} />
+                    <Route
+                        path="/alterarSenha"
+                        element={
+                            <PrivateRouteQuery>
+                                <AlterarSenha />
+                            </PrivateRouteQuery>
                         }
                     />
                 </Routes>
