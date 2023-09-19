@@ -17,7 +17,7 @@ export function AlterarSenha() {
         <>
             <Container className="vh-100 d-flex justify-content-center align-items-center">
                 <Row className="w-100 d-flex justify-content-center">
-                    <Col xs={6}>
+                    <Col sm={6}>
                         <Card className="shadow p-2">
                             <Card.Body>
                                 <Card.Title className="mb-3">
