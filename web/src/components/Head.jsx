@@ -34,6 +34,7 @@ export function Head() {
     const [isUpdated, setIsUpdated] = useState(false);
     const [isUpdated2, setIsUpdated2] = useState(false);
     const [key, setKey] = useState("dados");
+
     let userId;
     const alterarRota = () => {
         navigate("/painel");
@@ -49,7 +50,7 @@ export function Head() {
             setUsuario(result.data.Usuario);
         } catch (error) {
             console.error(error);
-            Navigate("/painel");
+            navigate("/painel");
         }
     }
 

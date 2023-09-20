@@ -22,7 +22,7 @@ import { getDataDashboard } from "../services/painel-service";
 import { useEffect, useState, useContext } from "react";
 import { UserContext } from "../contexts/UserContexts";
 import { useForm } from "react-hook-form";
-import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Card } from "react-bootstrap";
 import { Input } from "../components/Input";
 import Layout from "../components/Layout";
@@ -34,7 +34,7 @@ export function Painel() {
     const [totalViaturas, setTotalViaturas] = useState({});
     const [totalUsuarios, setTotalUsuarios] = useState({});
     const [listDashboard, setListDashboard] = useState({});
-
+    const navigate = useNavigate();
     const {
         handleSubmit,
         register,
@@ -60,7 +60,7 @@ export function Painel() {
             setListDashboard(formattedData);
         } catch (error) {
             console.error(error);
-            Navigate("/painel");
+            navigate("/painel");
         }
     }
 
@@ -70,7 +70,7 @@ export function Painel() {
             setTotalManutencoes(result);
         } catch (error) {
             console.error(error);
-            Navigate("/painel");
+            navigate("/painel");
         }
     }
 
@@ -80,7 +80,7 @@ export function Painel() {
             setTotalUsuarios(result.data);
         } catch (error) {
             console.error(error);
-            Navigate("/painel");
+            navigate("/painel");
         }
     }
 
@@ -90,13 +90,12 @@ export function Painel() {
             setTotalViaturas(result.data);
         } catch (error) {
             console.error(error);
-            Navigate("/painel");
+            navigate("/painel");
         }
     }
 
     return (
         <Layout>
-            
             <Head styles={{ overflow: "hidden" }}></Head>
             <Row className={menu ? "d-flex justify-content-center" : "gx-0"}>
                 {menu ? (

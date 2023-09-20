@@ -7,6 +7,7 @@ const {
   ManutencoesController,
 } = require("./controller/manutencoes-controller");
 const { PainelController } = require("./controller/painel-controller");
+const { ValidatorController } = require("./controller/validator-controller");
 
 const routes = Router();
 
@@ -15,6 +16,7 @@ const viaturaController = new ViaturaController();
 const manutencoesController = new ManutencoesController();
 const usuarioController = new UsuarioController();
 const painelController = new PainelController();
+const validatorController = new ValidatorController();
 
 routes.post("/login", userController.sigin);
 routes.get("/perfil", authMiddleware, userController.editarPerfil);
@@ -93,7 +95,8 @@ routes.post(
 routes.delete("/usuario/:id", authMiddleware, usuarioController.deletarUsuario);
 
 // Painel
-
 routes.get("/dashboard", authMiddleware, painelController.Dashboard);
+
+routes.post("/validarToken", validatorController.validaToken);
 
 module.exports = { routes };
