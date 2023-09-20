@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import Row from "react-bootstrap/Row";
 import { Button, Col, Container, Form, Card } from "react-bootstrap";
 import { editResetPassword } from "../services/usuarios-service";
+import Layout from '../components/Layout';
 export function AlterarSenha() {
     const {
         register,
@@ -14,7 +15,8 @@ export function AlterarSenha() {
         await editResetPassword(params);
     }
     return (
-        <>
+
+        <Layout key={2}>
             <Container className="vh-100 d-flex justify-content-center align-items-center">
                 <Row className="w-100 d-flex justify-content-center">
                     <Col sm={6}>
@@ -89,6 +91,6 @@ export function AlterarSenha() {
                     </Col>
                 </Row>
             </Container>
-        </>
+        </Layout>
     );
 }

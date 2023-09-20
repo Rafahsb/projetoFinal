@@ -25,40 +25,11 @@ import { useForm } from "react-hook-form";
 import { Navigate } from "react-router-dom";
 import { Card } from "react-bootstrap";
 import { Input } from "../components/Input";
+import Layout from "../components/Layout";
 
 export function Painel() {
     const { menu } = useContext(UserContext);
 
-    const data = [
-        {
-            name: "Page A",
-            Veiculo: 4000,
-        },
-        {
-            name: "Page B",
-            Veiculo: 3000,
-        },
-        {
-            name: "Page C",
-            Veiculo: 2000,
-        },
-        {
-            name: "Page D",
-            Veiculo: 2780,
-        },
-        {
-            name: "Page E",
-            Veiculo: 1890,
-        },
-        {
-            name: "Page F",
-            Veiculo: 2390,
-        },
-        {
-            name: "Page G",
-            Veiculo: 3490,
-        },
-    ];
     const [totalManutencoes, setTotalManutencoes] = useState([]);
     const [totalViaturas, setTotalViaturas] = useState({});
     const [totalUsuarios, setTotalUsuarios] = useState({});
@@ -124,7 +95,8 @@ export function Painel() {
     }
 
     return (
-        <>
+        <Layout>
+            
             <Head styles={{ overflow: "hidden" }}></Head>
             <Row className={menu ? "d-flex justify-content-center" : "gx-0"}>
                 {menu ? (
@@ -251,6 +223,6 @@ export function Painel() {
                     </Row>
                 </Col>
             </Row>
-        </>
+        </Layout>
     );
 }

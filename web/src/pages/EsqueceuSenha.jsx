@@ -6,6 +6,7 @@ import { useState } from "react";
 import Row from "react-bootstrap/Row";
 import { Button, Col, Container, Form, Card, Modal } from "react-bootstrap";
 import { resetPassword } from "../services/usuarios-service";
+import Layout from '../components/Layout';
 export function EsqueceuSenha() {
     const {
         register,
@@ -38,7 +39,7 @@ export function EsqueceuSenha() {
         navigate("/");
     }
     return (
-        <>
+        <Layout key={3}>
             <Container className="vh-100 d-flex justify-content-center align-items-center">
                 <Row className="w-100 d-flex justify-content-center">
                     <Col sm={6}>
@@ -107,6 +108,6 @@ export function EsqueceuSenha() {
                     </Modal.Footer>
                 </Modal>
             </Container>
-        </>
+        </Layout>
     );
 }
