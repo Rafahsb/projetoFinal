@@ -196,7 +196,7 @@ export function Painel() {
                                 className="p-2 shadow"
                             >
                                 <p className="h4 my-3 text-center">
-                                    Gastos em manutenções / Viatura
+                                    Gastos em manutenções / viatura
                                 </p>
                                 <ResponsiveContainer width="100%" height="100%">
                                     <BarChart
