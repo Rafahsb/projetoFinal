@@ -1,22 +1,22 @@
 import { useForm } from "react-hook-form";
 import { Input } from "../components/Input";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import Row from "react-bootstrap/Row";
 import { Button, Col, Container, Form, Card, Modal } from "react-bootstrap";
 import { resetPassword } from "../services/usuarios-service";
-import Layout from '../components/Layout';
+import Layout from "../components/Layout";
 export function EsqueceuSenha() {
+    const [modal, setModal] = useState(false);
+    const [title, setTitle] = useState("");
+    const [message, setMessage] = useState("");
+    const navigate = useNavigate();
     const {
         register,
         handleSubmit,
         formState: { errors },
     } = useForm();
-    const [modal, setModal] = useState(false);
-    const [title, setTitle] = useState("");
-    const [message, setMessage] = useState("");
-    const navigate = useNavigate();
 
     async function requestPassword(params) {
         try {
@@ -38,6 +38,7 @@ export function EsqueceuSenha() {
     function fecharModal() {
         navigate("/");
     }
+
     return (
         <Layout key={3}>
             <Container className="vh-100 d-flex justify-content-center align-items-center">

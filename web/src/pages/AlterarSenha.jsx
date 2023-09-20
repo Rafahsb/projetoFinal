@@ -1,21 +1,42 @@
 import { useForm } from "react-hook-form";
 import { Input } from "../components/Input";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Row from "react-bootstrap/Row";
-import { Button, Col, Container, Form, Card } from "react-bootstrap";
+import { Button, Col, Container, Form, Card, Modal } from "react-bootstrap";
 import { editResetPassword } from "../services/usuarios-service";
-import Layout from '../components/Layout';
+import Layout from "../components/Layout";
+import { useState } from "react";
 export function AlterarSenha() {
+    const [modal, setModal] = useState(false);
+    const [title, setTitle] = useState("");
+    const [message, setMessage] = useState("");
+    const navigate = useNavigate();
     const {
         register,
         handleSubmit,
         formState: { errors },
     } = useForm();
     async function requestPassword(params) {
-        await editResetPassword(params);
+        try {
+            await editResetPassword(params);
+            setTitle("Aleterar Senha");
+            setMessage(
+                "Foi enviado um e-mail com um link para redefinição de senha! clique em 'ok' para voltar para a tela de login."
+            );
+            setModal(true);
+        } catch (error) {
+            setTitle("Esqueceu sua senha?");
+            setMessage(
+                `${error.response.data.error.message} Clique no 'x' para realizar uma nova tentativa, ou no 'Ok' para voltar para a tela de login.`
+            );
+            setModal(true);
+        }
+    }
+
+    function fecharModal() {
+        navigate("/");
     }
     return (
-
         <Layout key={2}>
             <Container className="vh-100 d-flex justify-content-center align-items-center">
                 <Row className="w-100 d-flex justify-content-center">
@@ -90,6 +111,17 @@ export function AlterarSenha() {
                         </Card>
                     </Col>
                 </Row>
+                <Modal show={modal} onHide={() => setModal(false)}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>{title}</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>{message}</Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="success" onClick={() => fecharModal()}>
+                            Ok
+                        </Button>
+                    </Modal.Footer>
+                </Modal>
             </Container>
         </Layout>
     );
