@@ -40,7 +40,7 @@ export function Viatura(props) {
                                 Editar
                             </div>
                         </Dropdown.Item>
-                        <Dropdown.Item onClick={props.removeUsuario}>
+                        <Dropdown.Item onClick={props.removeViatura}>
                             <div className="d-flex">
                                 <DeleteOutlineOutlinedIcon className="me-2"></DeleteOutlineOutlinedIcon>
                                 Apagar

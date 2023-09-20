@@ -1,4 +1,3 @@
-// import VLibras from '@moreiraste/react-vlibras'
 import React, { useState } from 'react';
 
 const Layout = ({ children }) => {

@@ -35,7 +35,6 @@ export function Manutencao(props) {
     }
 
     async function editManutencao(data) {
-        console.log("data: ", data);
         await props.editManutencao({
             ...data,
             id: props.manutencao.id_manutencao,
@@ -78,7 +77,7 @@ export function Manutencao(props) {
                                 Editar
                             </div>
                         </Dropdown.Item>
-                        <Dropdown.Item onClick={props.removeUsuario}>
+                        <Dropdown.Item onClick={props.removeManutencao}>
                             <div className="d-flex">
                                 <DeleteOutlineOutlinedIcon className="me-2"></DeleteOutlineOutlinedIcon>
                                 Apagar
