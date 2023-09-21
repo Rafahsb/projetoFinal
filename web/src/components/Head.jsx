@@ -20,7 +20,7 @@ import {
     updateUsuario,
     editPassword,
 } from "../services/usuarios-service";
-
+import Notification from "../components/Notification";
 export function Head() {
     const navigate = useNavigate();
 
@@ -34,7 +34,8 @@ export function Head() {
     const [isUpdated, setIsUpdated] = useState(false);
     const [isUpdated2, setIsUpdated2] = useState(false);
     const [key, setKey] = useState("dados");
-
+    const [active, setActive] = useState(false);
+    const [apiMessage, setApiMessage] = useState({});
     let userId;
     const alterarRota = () => {
         navigate("/painel");
@@ -56,34 +57,49 @@ export function Head() {
 
     async function editUsuario(data) {
         try {
-            await updateUsuario({
+            const result = await updateUsuario({
                 id_usuario: usuario.id_usuario,
                 email: data.email,
                 unidade: data.unidade,
                 cargo: data.cargo,
             });
             await logado();
+            setApiMessage(result.data);
+            setActive(true);
+            setIsUpdated(false);
         } catch (error) {
-            console.error(error);
+            setApiMessage(error.response.data.error);
+            setActive(true);
         }
     }
 
     async function editSenha(data) {
         try {
-            await editPassword({
+            const result = await editPassword({
                 id_usuario: usuario.id_usuario,
                 senha: data.senha,
                 nova_senha: data.nova_senha,
                 confirmar_nova_senha: data.confirmar_nova_senha,
             });
+            setApiMessage(result.data);
+            setActive(true);
+            setIsUpdated(false);
         } catch (error) {
-            console.error(error);
+            setApiMessage(error.response.data.error);
+            setActive(true);
         }
     }
 
     return (
         <>
             <Navbar className="bg-body-tertiary p-0 shadow px-sm-5">
+                {active && (
+                    <Notification
+                        variant={apiMessage.variant}
+                        message={apiMessage.message}
+                        setActive={setActive}
+                    />
+                )}
                 <Container fluid>
                     <Navbar.Brand className="d-flex align-items-center ">
                         <HomeOutlinedIcon

@@ -292,12 +292,15 @@ class UsuarioController {
       const isPasswordValid = await bcrypt.compare(senha, userExists.senha);
 
       if (!isPasswordValid) {
-        return httpHelper.badRequest("Senha incorreta!");
+        return httpHelper.badRequest({message: "Senha incorreta!", variant: "danger"});
       }
 
       if (confirmar_nova_senha !== nova_senha) {
         return httpHelper.badRequest(
-          "A nova senha informada não bate com a confirmação da nova senha!"
+          { 
+            message: "A nova senha informada não bate com a confirmação da nova senha!", 
+            variant: "danger"
+          }
         );
       }
 
