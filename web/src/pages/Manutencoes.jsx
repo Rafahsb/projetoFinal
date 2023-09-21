@@ -47,7 +47,7 @@ export function Manutencoes() {
 
     useEffect(() => {
         filterManutencoes();
-        // findViaturas();
+        findViaturas();
         // eslint-disable-next-line
     }, []);
 
@@ -249,6 +249,7 @@ export function Manutencoes() {
                                                     )
                                                 }
                                                 editManutencao={editManutencao}
+                                                viaturas={viaturas}
                                             />
                                         </tr>
                                     ))}
@@ -369,8 +370,9 @@ export function Manutencoes() {
                                                 Clique para selecionar a marca
                                             </option>
 
-                                            {viaturas.map((viatura, index) => (
+                                            {viaturas.map((viatura) => (
                                                 <option
+                                                    key={viatura.id_viatura}
                                                     value={viatura.id_viatura}
                                                 >{`${viatura.marca} - ${viatura.modelo} - ${viatura.chassi}`}</option>
                                             ))}

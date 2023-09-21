@@ -17,22 +17,7 @@ export function Manutencao(props) {
         formState: { errors },
     } = useForm();
     const [isUpdated, setIsUpdated] = useState(false);
-    const [viaturas, setViaturas] = useState([]);
     const navigate = useNavigate();
-
-    useEffect(() => {
-        findViaturas();
-    }, []);
-
-    async function findViaturas() {
-        try {
-            const result = await getViaturas();
-            setViaturas(result.data.Viaturas);
-        } catch (error) {
-            console.error(error);
-            navigate("/manutencoes");
-        }
-    }
 
     async function editManutencao(data) {
         await props.editManutencao({
@@ -194,9 +179,9 @@ export function Manutencao(props) {
                                         Clique para selecionar a marca
                                     </option>
 
-                                    {viaturas.map((viatura, index) => (
+                                    {props.viaturas.map((viatura) => (
                                         <option
-                                            key={index}
+                                            key={viatura.id_viatura}
                                             value={viatura.id_viatura}
                                         >{`${viatura.marca} - ${viatura.modelo} - ${viatura.chassi}`}</option>
                                     ))}

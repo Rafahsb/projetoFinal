@@ -14,6 +14,9 @@ import {
     Tooltip,
     Legend,
     ResponsiveContainer,
+    PieChart,
+    Pie,
+    Sector,
 } from "recharts";
 
 import { getTotalManutencoes } from "../services/manutencoes-service";
@@ -31,10 +34,12 @@ import { Card, Tab, Tabs } from "react-bootstrap";
 import { Input } from "../components/Input";
 import Layout from "../components/Layout";
 import { Form } from "react-bootstrap";
+import { format } from "d3-format";
+
 export function Painel() {
     const currentYear = new Date().getFullYear();
     const { menu } = useContext(UserContext);
-    const [key, setKey] = useState("dados");
+    const [key, setKey] = useState("DM1");
     const [totalManutencoes, setTotalManutencoes] = useState([]);
     const [totalViaturas, setTotalViaturas] = useState({});
     const [totalUsuarios, setTotalUsuarios] = useState({});
@@ -61,6 +66,34 @@ export function Painel() {
     const handleYearChange = (date) => {
         setSelectedYear(date);
     };
+
+    function CustomTooltip({ active, payload, label }) {
+        if (active && payload && payload.length) {
+            const value = payload[0].value;
+            const formattedValue = `R$ ${format(",.2f")(value)}`;
+            const valueStyle = {
+                color: payload[0].fill,
+            };
+
+            return (
+                <div
+                    className="recharts-tooltip"
+                    style={{
+                        backgroundColor: "white",
+                        padding: "8px",
+                        border: "1px solid rgba(0, 0, 0, 0.175)",
+                    }}
+                >
+                    <p className="recharts-tooltip-label">{`${label}`}</p>
+                    <p className="recharts-tooltip-value" style={valueStyle}>
+                        {formattedValue}
+                    </p>
+                </div>
+            );
+        }
+
+        return null;
+    }
 
     async function findDataDashboard() {
         try {
@@ -204,10 +237,10 @@ export function Painel() {
                             onSelect={(k) => setKey(k)}
                             className="mb-3"
                         >
-                            <Tab eventKey="dados" title="Dados Pessoais">
+                            <Tab eventKey="DM1" title="GM / VEI">
                                 <Col xs={12} className="">
                                     <Card
-                                        style={{ height: "500px" }}
+                                        style={{ height: "650px" }}
                                         className="p-2 shadow"
                                     >
                                         <p className="h4 my-3 text-center">
@@ -230,8 +263,16 @@ export function Painel() {
                                             >
                                                 <CartesianGrid strokeDasharray="3 3" />
                                                 <XAxis dataKey="name" />
-                                                <YAxis />
-                                                <Tooltip />
+                                                <YAxis
+                                                    tickFormatter={(value) =>
+                                                        `R$ ${format(",.2f")(
+                                                            value
+                                                        )}`
+                                                    }
+                                                />
+                                                <Tooltip
+                                                    content={<CustomTooltip />}
+                                                />
                                                 <Legend />
                                                 <Bar
                                                     dataKey="Total"
@@ -243,16 +284,16 @@ export function Painel() {
                                 </Col>
                             </Tab>
 
-                            <Tab eventKey="teste" title="Dados Pessoais">
+                            <Tab eventKey="DM2" title="TM / ANO">
                                 <Row className="d-flex justify-content-end mb-3">
-                                    <Col xs={6} md={5} lg={4} xl={3}>
+                                    <Col xs={12} md={5} lg={4} xl={3}>
                                         <Form
                                             noValidate
                                             onSubmit={handleSubmit(
                                                 filterDataDashboard2
                                             )}
                                             validated={!!errors}
-                                            className="d-flex"
+                                            className="d-flex justify-content-end"
                                         >
                                             <Input
                                                 size={"sm"}
@@ -289,7 +330,7 @@ export function Painel() {
                                         className="p-2 shadow"
                                     >
                                         <p className="h4 my-3 text-center">
-                                            Gastos em manutenções / viatura
+                                            Gasto total em manutenções / Ano
                                         </p>
                                         <p className="h4 my-3 text-center">
                                             {listDashboard2Year}
@@ -312,8 +353,16 @@ export function Painel() {
                                             >
                                                 <CartesianGrid strokeDasharray="3 3" />
                                                 <XAxis dataKey="name" />
-                                                <YAxis />
-                                                <Tooltip />
+                                                <YAxis
+                                                    tickFormatter={(value) =>
+                                                        `R$ ${format(",.2f")(
+                                                            value
+                                                        )}`
+                                                    }
+                                                />
+                                                <Tooltip
+                                                    content={<CustomTooltip />}
+                                                />
                                                 <Legend />
                                                 <Bar
                                                     dataKey="Total"
@@ -324,6 +373,8 @@ export function Painel() {
                                     </Card>
                                 </Col>
                             </Tab>
+
+                            <Tab eventKey="DU1" title="U / CARGO"></Tab>
                         </Tabs>
                     </Row>
                 </Col>
