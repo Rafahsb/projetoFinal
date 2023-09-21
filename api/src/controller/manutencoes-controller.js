@@ -118,10 +118,8 @@ class ManutencoesController {
           type: Sequelize.QueryTypes.SELECT,
         }
       );
-      // const filtro = await ManutencoesModel.findAll({});
       filtro.forEach((manutencao) => {
         manutencao.data_nota = Validates.formatDate(manutencao.data_nota);
-        // manutencao.dataValues.data_nota = format(new Date(manutencao.dataValues.data_nota), "dd/MM/yyyy")
       });
 
       return httpHelper.ok({ Manutencoes: filtro });

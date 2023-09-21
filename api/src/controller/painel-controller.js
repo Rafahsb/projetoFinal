@@ -13,7 +13,8 @@ class PainelController {
 
     try {
       const data = await ManutencoesModel.sequelize.query(
-        "SELECT sum(preco), chassi, marca, modelo FROM viaturas INNER JOIN manutencoes ON manutencoes.id_viatura = viaturas.id_viatura group by chassi, marca, modelo;",
+        `SELECT sum(preco), chassi, marca, modelo FROM viaturas 
+        INNER JOIN manutencoes ON manutencoes.id_viatura = viaturas.id_viatura group by chassi, marca, modelo;`,
         {
           type: Sequelize.QueryTypes.SELECT,
         }
