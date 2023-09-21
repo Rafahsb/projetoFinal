@@ -191,7 +191,7 @@ class UsuarioController {
         { expiresIn: "300m" }
       );
 
-      return httpHelper.ok({ accessToken, id: userExists.id_usuario });
+      return httpHelper.ok({ accessToken });
     } catch (error) {
       return httpHelper.internalError(error);
     }
@@ -292,16 +292,18 @@ class UsuarioController {
       const isPasswordValid = await bcrypt.compare(senha, userExists.senha);
 
       if (!isPasswordValid) {
-        return httpHelper.badRequest({message: "Senha incorreta!", variant: "danger"});
+        return httpHelper.badRequest({
+          message: "Senha incorreta!",
+          variant: "danger",
+        });
       }
 
       if (confirmar_nova_senha !== nova_senha) {
-        return httpHelper.badRequest(
-          { 
-            message: "A nova senha informada não bate com a confirmação da nova senha!", 
-            variant: "danger"
-          }
-        );
+        return httpHelper.badRequest({
+          message:
+            "A nova senha informada não bate com a confirmação da nova senha!",
+          variant: "danger",
+        });
       }
 
       const passwordHashed = await bcrypt.hash(
@@ -332,6 +334,7 @@ class UsuarioController {
   async pesquisarUsuario(request, response) {
     const httpHelper = new HttpHelper(response);
     const { token } = request.params;
+
     const dadosUsuario = jwt.verify(
       token.replace(/"/g, ""),
       process.env.TOKEN_SECRET

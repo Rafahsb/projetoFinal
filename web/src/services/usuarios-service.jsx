@@ -104,7 +104,6 @@ export async function updateUsuario(data) {
         `/usuario/${data.id_usuario}`,
         {
             matricula: data.matricula,
-            senha: data.senha,
             email: data.email,
             unidade: data.unidade,
             cargo: data.cargo,
