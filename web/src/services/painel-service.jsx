@@ -10,9 +10,9 @@ export async function getDataDashboard() {
     return result;
 }
 
-export async function getDataDashboard2() {
+export async function getDataDashboard2(ano) {
     const accessToken = sessionStorage.getItem("token");
-    const result = await api.get("/dashboard2", {
+    const result = await api.get(`/dashboard2/${ano}`, {
         headers: {
             Authorization: `Bearer ${JSON.parse(accessToken)}`,
         },

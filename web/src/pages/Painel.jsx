@@ -1,6 +1,7 @@
 import { Head } from "../components/Head";
 import { Navigation } from "../components/Navigation";
 import Container from "react-bootstrap/Container";
+import Button from "react-bootstrap/Button";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import {
@@ -29,8 +30,9 @@ import { useNavigate } from "react-router-dom";
 import { Card, Tab, Tabs } from "react-bootstrap";
 import { Input } from "../components/Input";
 import Layout from "../components/Layout";
-
+import { Form } from "react-bootstrap";
 export function Painel() {
+    const currentYear = new Date().getFullYear();
     const { menu } = useContext(UserContext);
     const [key, setKey] = useState("dados");
     const [totalManutencoes, setTotalManutencoes] = useState([]);
@@ -38,6 +40,8 @@ export function Painel() {
     const [totalUsuarios, setTotalUsuarios] = useState({});
     const [listDashboard, setListDashboard] = useState({});
     const [listDashboard2, setListDashboard2] = useState({});
+    const [listDashboard2Year, setListDashboard2Year] = useState("");
+    const [selectedYear, setSelectedYear] = useState(null);
     const navigate = useNavigate();
     const {
         handleSubmit,
@@ -50,9 +54,13 @@ export function Painel() {
         findTotalViaturas();
         findTotalUsuarios();
         findDataDashboard();
-        findDataDashboard2();
+        filterDataDashboard2();
         // eslint-disable-next-line
     }, []);
+
+    const handleYearChange = (date) => {
+        setSelectedYear(date);
+    };
 
     async function findDataDashboard() {
         try {
@@ -69,15 +77,15 @@ export function Painel() {
         }
     }
 
-    async function findDataDashboard2() {
+    async function filterDataDashboard2(data) {
         try {
-            const result = await getDataDashboard2();
+            const result = await getDataDashboard2(data ? data.ano : "");
             const formattedData = result.data.dashboard2.map((item) => ({
                 name: `${item.mes}`,
                 Total: item.total_por_mes,
             }));
-            console.log("a", formattedData);
             setListDashboard2(formattedData);
+            setListDashboard2Year(result.data.ano);
         } catch (error) {
             console.error(error);
             navigate("/painel");
@@ -237,26 +245,42 @@ export function Painel() {
 
                             <Tab eventKey="teste" title="Dados Pessoais">
                                 <Row className="d-flex justify-content-end mb-3">
-                                    <Col xs={4} sm={5} md={4} lg={3} xl={2}>
-                                        <Input
-                                            size={"sm"}
-                                            type="date"
-                                            label="Data:*"
-                                            placeholder="Informe a data da realização do serviço:"
-                                            required={true}
-                                            name="data"
-                                            error={errors.data}
-                                            validations={register(
-                                                "data_dashboard",
-                                                {
-                                                    required: {
-                                                        value: true,
-                                                        message:
-                                                            "A data é um campo obrigatório",
-                                                    },
-                                                }
+                                    <Col xs={6} md={5} lg={4} xl={3}>
+                                        <Form
+                                            noValidate
+                                            onSubmit={handleSubmit(
+                                                filterDataDashboard2
                                             )}
-                                        />
+                                            validated={!!errors}
+                                            className="d-flex"
+                                        >
+                                            <Input
+                                                size={"sm"}
+                                                type="number"
+                                                label="Ano:*"
+                                                placeholder={`Informe o ano (1980 - ${currentYear})`}
+                                                name="ano"
+                                                error={errors.ano}
+                                                className="me-2"
+                                                validations={register("ano", {
+                                                    min: {
+                                                        value: 1980,
+                                                        message:
+                                                            "O ano deve ser igual ou maior que 1980",
+                                                    },
+                                                    max: {
+                                                        value: currentYear,
+                                                        message: `O ano deve ser igual ou menor que ${currentYear}`,
+                                                    },
+                                                })}
+                                            />
+                                            <Button
+                                                type="submit"
+                                                style={{ maxHeight: "58px" }}
+                                            >
+                                                Enviar
+                                            </Button>
+                                        </Form>
                                     </Col>
                                 </Row>
                                 <Col xs={12} className="">
@@ -267,6 +291,10 @@ export function Painel() {
                                         <p className="h4 my-3 text-center">
                                             Gastos em manutenções / viatura
                                         </p>
+                                        <p className="h4 my-3 text-center">
+                                            {listDashboard2Year}
+                                        </p>
+
                                         <ResponsiveContainer
                                             width="100%"
                                             height="100%"

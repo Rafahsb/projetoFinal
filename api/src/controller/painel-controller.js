@@ -27,16 +27,48 @@ class PainelController {
 
   async Dashboard2(request, response) {
     const httpHelper = new HttpHelper(response);
+    let { ano } = request.params;
+    const currentDate = new Date();
 
+    if (ano < 1980 || ano > currentDate.getFullYear()) {
+      return httpHelper.badRequest({
+        message: "O ano deve ser entre 1980 e o ano atual",
+        variant: "danger",
+      });
+    }
+    if (ano == "undefined" || ano == undefined) {
+      ano = currentDate.getFullYear();
+    }
     try {
       const data = await ManutencoesModel.sequelize.query(
-        "SELECT CASE WHEN EXTRACT(MONTH FROM data_nota) = 1 THEN 'Jan' WHEN EXTRACT(MONTH FROM data_nota) = 2 THEN 'Fev' WHEN EXTRACT(MONTH FROM data_nota) = 3 THEN 'Mar' WHEN EXTRACT(MONTH FROM data_nota) = 4 THEN 'Abr' WHEN EXTRACT(MONTH FROM data_nota) = 5 THEN 'Mai' WHEN EXTRACT(MONTH FROM data_nota) = 6 THEN 'Jun' WHEN EXTRACT(MONTH FROM data_nota) = 7 THEN 'Jul' WHEN EXTRACT(MONTH FROM data_nota) = 8 THEN 'Ago' WHEN EXTRACT(MONTH FROM data_nota) = 9 THEN 'Set' WHEN EXTRACT(MONTH FROM data_nota) = 10 THEN 'Out' WHEN EXTRACT(MONTH FROM data_nota) = 11 THEN 'Nov' WHEN EXTRACT(MONTH FROM data_nota) = 12 THEN 'Dez' END AS mes, SUM(preco) AS total_por_mes FROM manutencoes GROUP BY mes, data_nota ORDER BY EXTRACT(MONTH FROM data_nota);",
+        `WITH meses AS (
+          SELECT generate_series(1, 12) AS mes
+        )
+        SELECT
+          CASE
+            WHEN m.mes = 1 THEN 'Jan'
+            WHEN m.mes = 2 THEN 'Fev'
+            WHEN m.mes = 3 THEN 'Mar'
+            WHEN m.mes = 4 THEN 'Abr'
+            WHEN m.mes = 5 THEN 'Mai'
+            WHEN m.mes = 6 THEN 'Jun'
+            WHEN m.mes = 7 THEN 'Jul'
+            WHEN m.mes = 8 THEN 'Ago'
+            WHEN m.mes = 9 THEN 'Set'
+            WHEN m.mes = 10 THEN 'Out'
+            WHEN m.mes = 11 THEN 'Nov'
+            WHEN m.mes = 12 THEN 'Dez'
+          END AS mes, COALESCE(SUM(preco), 0) AS total_por_mes
+        FROM meses m
+        LEFT JOIN manutencoes ma ON EXTRACT(YEAR FROM ma.data_nota) = ${ano} AND EXTRACT (MONTH FROM ma.data_nota) = m.mes
+        GROUP BY m.mes
+        ORDER BY m.mes;`,
         {
           type: Sequelize.QueryTypes.SELECT,
         }
       );
 
-      return httpHelper.ok({ dashboard2: data });
+      return httpHelper.ok({ dashboard2: data, ano: ano });
     } catch (error) {
       return httpHelper.internalError(error);
     }
