@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, Card, Form, Modal, Row } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import Dropdown from "react-bootstrap/Dropdown";
@@ -7,6 +7,8 @@ import { Input } from "./Input";
 import Col from "react-bootstrap/Col";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
+import Localizacao from "../components/Localizacao";
 export function Viatura(props) {
     const {
         handleSubmit,
@@ -14,12 +16,13 @@ export function Viatura(props) {
         formState: { errors },
     } = useForm();
     const [isUpdated, setIsUpdated] = useState(false);
+    const [modalLocale, setModalLocale] = useState(false);
+    const location = { lat: -15.6014, lng: -56.0979 };
 
     async function editViatura(data) {
         await props.editViatura({ ...data, id: props.viatura.id_viatura });
         setIsUpdated(false);
     }
-
     return (
         <>
             <td>{props.viatura.marca}</td>
@@ -44,6 +47,15 @@ export function Viatura(props) {
                             <div className="d-flex">
                                 <DeleteOutlineOutlinedIcon className="me-2"></DeleteOutlineOutlinedIcon>
                                 Apagar
+                            </div>
+                        </Dropdown.Item>
+                        <Dropdown.Item>
+                            <div
+                                className="d-flex"
+                                onClick={() => setModalLocale(true)}
+                            >
+                                <LocationOnIcon className="me-2"></LocationOnIcon>
+                                Localização
                             </div>
                         </Dropdown.Item>
                     </Dropdown.Menu>
@@ -304,6 +316,44 @@ export function Viatura(props) {
                         </Button>
                         <Button variant="success" type="submit">
                             Editar
+                        </Button>
+                    </Modal.Footer>
+                </Form>
+            </Modal>
+            <Modal
+                size="lg"
+                show={modalLocale}
+                onHide={() => setModalLocale(false)}
+            >
+                <Modal.Header>
+                    <Modal.Title>Editar viatura</Modal.Title>
+                </Modal.Header>
+                <Form
+                    noValidate
+                    onSubmit={handleSubmit(editViatura)}
+                    validated={!!errors}
+                >
+                    <Modal.Body>
+                        <Row className="">
+                            <Col sm={12} style={{ overflow: "auto" }}>
+                                <div className="App">
+                                    <p className="fs-5 fw-bold">
+                                        Mapa com Localização Atual
+                                    </p>
+                                    <Localizacao
+                                        lat={location.lat}
+                                        lng={location.lng}
+                                    />
+                                </div>
+                            </Col>
+                        </Row>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button
+                            variant="primary"
+                            onClick={() => setModalLocale(false)}
+                        >
+                            Voltar
                         </Button>
                     </Modal.Footer>
                 </Form>
