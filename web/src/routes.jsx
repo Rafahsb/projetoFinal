@@ -1,4 +1,4 @@
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes, useNavigate } from "react-router-dom";
 import { isAuthenticatedQuery } from "./utils/is-authenticated";
 import { EsqueceuSenha } from "./pages/EsqueceuSenha";
 import { AlterarSenha } from "./pages/AlterarSenha";
@@ -9,13 +9,34 @@ import { isAuthenticated } from "./utils/is-authenticated";
 import { Viaturas } from "./pages/Viaturas";
 import { Manutencoes } from "./pages/Manutencoes";
 import { Usuarios } from "./pages/Usuarios";
+import { validaToken } from "./services/validator-service";
+import { useEffect, useState } from 'react';
 
-export function PrivateRoute({ children }) {
-    if (!isAuthenticated()) {
-        return <Navigate to="/" replace />;
+function PrivateRoute({ children }) {
+    const accessToken = sessionStorage.getItem("token");
+    const [token, setToken] = useState(false);
+    const navigate = useNavigate();
+    useEffect(() => {
+      (async () => {
+        try {
+           await validaToken(accessToken);
+           setToken(true);
+        } catch (error) {
+            navigate("/");
+        }
+      })()
+    }, [accessToken]);
+    
+
+    if (!accessToken) {
+        navigate("/");
+        return null;
+      }
+
+    if(token){
+        return children;
     }
-    return children;
-}
+  }
 
 export function PrivateRouteQuery({ children }) {
     if (!isAuthenticatedQuery()) {
