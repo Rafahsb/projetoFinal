@@ -15,6 +15,8 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+const a = 1;
+
 class UsuarioController {
   async esqueceuSenha(request, response) {
     const httpHelper = new HttpHelper(response);
