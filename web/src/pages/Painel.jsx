@@ -25,6 +25,7 @@ import { getTotalUsuarios } from "../services/usuarios-service";
 import {
     getDataDashboard,
     getDataDashboard2,
+    getDataDashboard3,
 } from "../services/painel-service";
 import { useEffect, useState, useContext } from "react";
 import { UserContext } from "../contexts/UserContexts";
@@ -35,6 +36,7 @@ import { Input } from "../components/Input";
 import Layout from "../components/Layout";
 import { Form } from "react-bootstrap";
 import { format } from "d3-format";
+import ApexPie from "../components/ApexPie";
 
 export function Painel() {
     const currentYear = new Date().getFullYear();
@@ -45,6 +47,7 @@ export function Painel() {
     const [totalUsuarios, setTotalUsuarios] = useState({});
     const [listDashboard, setListDashboard] = useState({});
     const [listDashboard2, setListDashboard2] = useState({});
+    const [listDashboard3, setListDashboard3] = useState({});
     const [listDashboard2Year, setListDashboard2Year] = useState("");
     const [selectedYear, setSelectedYear] = useState(null);
     const navigate = useNavigate();
@@ -60,6 +63,7 @@ export function Painel() {
         findTotalUsuarios();
         findDataDashboard();
         filterDataDashboard2();
+        findDataDashboard3();
         // eslint-disable-next-line
     }, []);
 
@@ -119,6 +123,30 @@ export function Painel() {
             }));
             setListDashboard2(formattedData);
             setListDashboard2Year(result.data.ano);
+        } catch (error) {
+            console.error(error);
+            navigate("/painel");
+        }
+    }
+
+    async function findDataDashboard3() {
+        try {
+            const result = await getDataDashboard3();
+
+            const unidadeArray = result.data.dashboard.map(
+                (result) => result.unidade
+            );
+
+            const totalArray = result.data.dashboard.map((result) =>
+                parseInt(result.total, 10)
+            );
+
+            const resultObject = {
+                unidade: unidadeArray,
+                total: totalArray,
+            };
+            console.log(resultObject);
+            setListDashboard3(resultObject);
         } catch (error) {
             console.error(error);
             navigate("/painel");
@@ -374,7 +402,27 @@ export function Painel() {
                                 </Col>
                             </Tab>
 
-                            <Tab eventKey="DU1" title="U / CARGO"></Tab>
+                            <Tab eventKey="DU1" title="U / Unidade">
+                                <Card
+                                    style={{ height: "500px" }}
+                                    className="p-2 shadow"
+                                >
+                                    <p className="h4 my-3 text-center">
+                                        Usuarios / Unidade
+                                    </p>
+                                    {}
+                                    {listDashboard3.unidade ? (
+                                        <ApexPie
+                                            unidade={listDashboard3.unidade}
+                                            total={listDashboard3.total}
+                                        />
+                                    ) : (
+                                        <></>
+                                    )}
+                                </Card>
+
+                                {/* Renderize o gráfico de pizza aqui */}
+                            </Tab>
                         </Tabs>
                     </Row>
                 </Col>

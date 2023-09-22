@@ -19,3 +19,13 @@ export async function getDataDashboard2(ano) {
     });
     return result;
 }
+
+export async function getDataDashboard3() {
+    const accessToken = sessionStorage.getItem("token");
+    const result = await api.get("/dashboard3", {
+        headers: {
+            Authorization: `Bearer ${JSON.parse(accessToken)}`,
+        },
+    });
+    return result;
+}
