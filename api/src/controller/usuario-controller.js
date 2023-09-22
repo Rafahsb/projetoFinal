@@ -10,12 +10,10 @@ const itensPorPagina = 5;
 const transporter = nodemailer.createTransport({
   service: "Gmail",
   auth: {
-    user: "viagestaoreset@gmail.com",
-    pass: "sezs fcsc szif xgig",
+    user: process.env.USER,
+    pass: process.env.PASS,
   },
 });
-
-const a = 1;
 
 class UsuarioController {
   async esqueceuSenha(request, response) {
