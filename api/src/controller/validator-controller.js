@@ -12,7 +12,6 @@ class ValidatorController {
 
       return httpHelper.ok("Token válido");
     } catch (error) {
-      console.log(httpHelper.internalError(error));
       return httpHelper.internalError(error);
     }
   }

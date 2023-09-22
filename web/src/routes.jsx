@@ -1,48 +1,76 @@
-import { BrowserRouter, Navigate, Route, Routes, useNavigate } from "react-router-dom";
+import {
+    BrowserRouter,
+    Navigate,
+    Route,
+    Routes,
+    useNavigate,
+} from "react-router-dom";
 import { isAuthenticatedQuery } from "./utils/is-authenticated";
 import { EsqueceuSenha } from "./pages/EsqueceuSenha";
 import { AlterarSenha } from "./pages/AlterarSenha";
 import { Login } from "./pages/Login";
 import { Painel } from "./pages/Painel";
 import { UserContextProvider } from "./contexts/UserContexts";
-import { isAuthenticated } from "./utils/is-authenticated";
 import { Viaturas } from "./pages/Viaturas";
 import { Manutencoes } from "./pages/Manutencoes";
 import { Usuarios } from "./pages/Usuarios";
 import { validaToken } from "./services/validator-service";
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 
 function PrivateRoute({ children }) {
     const accessToken = sessionStorage.getItem("token");
     const [token, setToken] = useState(false);
     const navigate = useNavigate();
+
     useEffect(() => {
-      (async () => {
-        try {
-           await validaToken(accessToken);
-           setToken(true);
-        } catch (error) {
-            navigate("/");
-        }
-      })()
+        (async () => {
+            try {
+                if (!accessToken) {
+                    navigate("/");
+                    return null;
+                }
+                await validaToken(accessToken);
+                setToken(true);
+            } catch (error) {
+                sessionStorage.removeItem("token");
+                navigate("/");
+                return null;
+            }
+        })();
     }, [accessToken]);
-    
 
-    if (!accessToken) {
-        navigate("/");
-        return null;
-      }
-
-    if(token){
+    if (token) {
         return children;
     }
-  }
+}
 
-export function PrivateRouteQuery({ children }) {
-    if (!isAuthenticatedQuery()) {
-        return <Navigate to="/" replace />;
+function PrivateRouteQuery({ children }) {
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const accessToken = urlParams.get("token");
+    const [token, setToken] = useState(false);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        (async () => {
+            try {
+                if (!accessToken) {
+                    navigate("/");
+                    return null;
+                }
+                await validaToken(accessToken);
+                setToken(true);
+            } catch (error) {
+                sessionStorage.removeItem("token");
+                navigate("/");
+                return null;
+            }
+        })();
+    }, [accessToken]);
+
+    if (token) {
+        return children;
     }
-    return children;
 }
 
 export function Navigations() {

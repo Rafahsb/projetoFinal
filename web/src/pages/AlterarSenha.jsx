@@ -18,11 +18,10 @@ export function AlterarSenha() {
     } = useForm();
     async function requestPassword(params) {
         try {
-            await editResetPassword(params);
+            const result = await editResetPassword(params);
+            console.log("result");
             setTitle("Aleterar Senha");
-            setMessage(
-                "Foi enviado um e-mail com um link para redefinição de senha! clique em 'ok' para voltar para a tela de login."
-            );
+            setMessage(result.data.message);
             setModal(true);
         } catch (error) {
             setTitle("Esqueceu sua senha?");

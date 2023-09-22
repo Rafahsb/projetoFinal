@@ -88,7 +88,6 @@ export function Viaturas() {
             setApiMessage(result.data);
             setActive(true);
         } catch (error) {
-            console.log(error);
             setApiMessage(error.response.data.error);
             setActive(true);
         }

@@ -72,15 +72,15 @@ class UsuarioController {
         process.env.TOKEN_SECRET
       );
 
-      console.log("dados: ", dadosUsuario);
       if (!dadosUsuario.id) {
         return httpHelper.internalError("Token expirado ou inválido!");
       }
 
       if (confirmar_nova_senha !== nova_senha) {
-        return httpHelper.badRequest(
-          "A nova senha informada não bate com a confirmação da nova senha!"
-        );
+        return httpHelper.badRequest({
+          message:
+            "A nova senha informada não bate com a confirmação da nova senha!",
+        });
       }
 
       const passwordHashed = await bcrypt.hash(
@@ -140,17 +140,9 @@ class UsuarioController {
         cargo,
       });
 
-      // Gera e retorna o access token
-      const accessToken = jwt.sign(
-        { id: createUser.id },
-        process.env.TOKEN_SECRET,
-        { expiresIn: "300m" }
-      );
-
       return httpHelper.created({
         message: "Usuario criado com sucesso!",
         variant: "success",
-        accessToken,
       });
     } catch (error) {
       return httpHelper.internalError(error);
@@ -340,6 +332,12 @@ class UsuarioController {
       process.env.TOKEN_SECRET
     );
 
+    if (!dadosUsuario.id) {
+      return httpHelper.badRequest({
+        message: "Token inválido!",
+        variant: "danger",
+      });
+    }
     try {
       const filtro = await UsuariosModel.findOne({
         attributes: ["matricula", "email", "unidade", "cargo", "id_usuario"],
