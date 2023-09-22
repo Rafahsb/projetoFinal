@@ -97,6 +97,7 @@ routes.delete("/usuario/:id", authMiddleware, usuarioController.deletarUsuario);
 // Painel
 routes.get("/dashboard", authMiddleware, painelController.Dashboard);
 routes.get("/dashboard2/:ano?", authMiddleware, painelController.Dashboard2);
+routes.get("/dashboard3", authMiddleware, painelController.Dashboard3);
 
 routes.post("/validarToken", validatorController.validaToken);
 

@@ -6,6 +6,7 @@ const { format } = require("date-fns");
 const { QueryTypes } = require("sequelize");
 const { Op } = require("sequelize");
 const { HttpHelper } = require("../utils/http-helper");
+const { UsuariosModel } = require("../model/usuarios-model");
 
 class PainelController {
   async Dashboard(request, response) {
@@ -70,6 +71,20 @@ class PainelController {
       );
 
       return httpHelper.ok({ dashboard2: data, ano: ano });
+    } catch (error) {
+      return httpHelper.internalError(error);
+    }
+  }
+  async Dashboard3(request, response) {
+    const httpHelper = new HttpHelper(response);
+
+    try {
+      const data = await UsuariosModel.findAll({
+        attributes: ["unidade", [Sequelize.fn("COUNT", "unidade"), "total"]],
+        group: ["unidade"],
+      });
+
+      return httpHelper.ok({ dashboard: data });
     } catch (error) {
       return httpHelper.internalError(error);
     }
