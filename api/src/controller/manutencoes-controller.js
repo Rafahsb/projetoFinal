@@ -12,6 +12,7 @@ const { paginationWhereManut } = require("../utils/paginationWhereManut");
 class ManutencoesController {
   async criarManutencao(request, response) {
     const httpHelper = new HttpHelper(response);
+    console.log("TEste");
     const { numero_nota, descricao, preco, data, id_viatura } = request.body;
     try {
       if (!numero_nota || !descricao || !preco || !id_viatura) {
