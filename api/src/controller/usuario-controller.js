@@ -163,7 +163,6 @@ class UsuarioController {
       const userExists = await UsuariosModel.findOne({
         where: { matricula },
       });
-
       if (!userExists) {
         return httpHelper.badRequest("Usuario não existe!");
       }
