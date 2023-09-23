@@ -28,7 +28,7 @@ export function Viatura(props) {
             <td>{props.viatura.marca}</td>
             <td>{props.viatura.modelo}</td>
             <td>{props.viatura.kilometragem}</td>
-            <td>{props.viatura.chassi}</td>
+            <td style={{minWidth: "84.94px"}}>{props.viatura.placa}</td>
             <td>{props.viatura.piloto}</td>
             <td>
                 <Dropdown>
@@ -281,29 +281,27 @@ export function Viatura(props) {
                                 </Form.Group>
                             </Col>
                             <Col sm={6}>
-                                <Form.Group className="mb-3">
-                                    <Form.Label>
-                                        Selecione um batalhão:
-                                    </Form.Label>
-                                    <Form.Select
-                                        {...register("batalhao")}
-                                        defaultValue={props.viatura.batalhao}
-                                        size="lg"
-                                    >
-                                        <option disabled>
-                                            Clique para selecionar um órgão
-                                        </option>
-                                        <option value={"10b"}>
-                                            10º batalhão
-                                        </option>
-                                        <option value={"11b"}>
-                                            11º batalhão
-                                        </option>
-                                        <option value={"12b"}>
-                                            12º batalhão
-                                        </option>
-                                    </Form.Select>
-                                </Form.Group>
+                            <Input
+                                    type="text"
+                                    defaultValue={props.viatura.placa}
+                                    label="Placa:*"
+                                    placeholder="Informe a placa do carro:"
+                                    required={true}
+                                    name="placa"
+                                    error={errors.placa}
+                                    validations={register("placa", {
+                                        required: {
+                                            value: true,
+                                            message:
+                                                "A placa é um campo obrigatório",
+                                        },
+                                        pattern: {
+                                            value: /^[A-Z]{3}-(\d{4}|\d[A-Z]\d{2})$/,
+                                            message:
+                                                "A placa deve estar no seguinte formato LLL-N(N/L)NN",
+                                        },
+                                    })}
+                                />
                             </Col>
                         </Row>
                     </Modal.Body>

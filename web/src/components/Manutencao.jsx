@@ -44,7 +44,7 @@ export function Manutencao(props) {
             <td>{props.manutencao.data_nota}</td>
             <td>{props.manutencao.marca}</td>
             <td>{props.manutencao.modelo}</td>
-            <td>{props.manutencao.chassi}</td>
+            <td style={{minWidth: "84.94px"}}>{props.manutencao.placa}</td>
             <td>
                 <Dropdown>
                     <Dropdown.Toggle

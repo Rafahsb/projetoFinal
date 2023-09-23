@@ -118,12 +118,12 @@ export function Viaturas() {
                 marca: data.marca,
                 modelo: data.modelo,
                 chassi: data.chassi,
+                placa: data.placa,
                 portas: data.portas,
                 bancos: data.bancos,
                 cor: data.cor,
                 kilometragem: data.kilometragem,
                 orgao_vinculado: data.orgao_vinculado,
-                batalhao: data.batalhao,
                 piloto: data.piloto,
             });
             setCurrentPage(1);
@@ -213,7 +213,7 @@ export function Viaturas() {
                                         <th>Marca</th>
                                         <th>Modelo</th>
                                         <th>Kilometragem</th>
-                                        <th>Chassi</th>
+                                        <th>Placa</th>
                                         <th>Piloto</th>
                                         <th>Ações</th>
                                     </tr>
@@ -257,7 +257,7 @@ export function Viaturas() {
                         >
                             <Modal.Body>
                                 <Row className="d-flex align-items-start mb-4">
-                                    <Col sm={6}>
+                                    <Col sm={6} className="mb-3 mb-sm-0">
                                         <Form.Group>
                                             <Form.Label>
                                                 Seleciona uma marca:
@@ -334,7 +334,7 @@ export function Viaturas() {
                                 </Row>
 
                                 <Row className="d-flex align-items-start mb-4">
-                                    <Col sm={6}>
+                                    <Col sm={6} className="mb-3 mb-sm-0">
                                         {" "}
                                         <Input
                                             size={"sm"}
@@ -378,7 +378,7 @@ export function Viaturas() {
                                 </Row>
 
                                 <Row className="d-flex align-items-start mb-3">
-                                    <Col sm={6}>
+                                    <Col sm={6} className="mb-3 mb-sm-0">
                                         <Input
                                             type="number"
                                             label="Portas:*"
@@ -425,7 +425,7 @@ export function Viaturas() {
                                 </Row>
 
                                 <Row className="d-flex align-items-start mb-3">
-                                    <Col sm={6}>
+                                    <Col sm={6} className="mb-3 mb-sm-0">
                                         <Input
                                             type="number"
                                             label="Kilometragem:*"
@@ -475,9 +475,9 @@ export function Viaturas() {
                                 </Row>
 
                                 <Row className="d-flex align-items-start mb-3">
-                                    <Col sm={6}>
+                                    <Col sm={6} className="mb-3 mb-sm-0">
                                         <Form.Group>
-                                            <Form.Label>
+                                            <Form.Label >
                                                 Selecione um órgão:
                                             </Form.Label>
                                             <Form.Select
@@ -504,29 +504,26 @@ export function Viaturas() {
                                         </Form.Group>
                                     </Col>
                                     <Col sm={6}>
-                                        <Form.Group className="mb-3">
-                                            <Form.Label>
-                                                Selecione um batalhão:
-                                            </Form.Label>
-                                            <Form.Select
-                                                {...register("batalhao")}
-                                                size="lg"
-                                            >
-                                                <option disabled>
-                                                    Clique para selecionar um
-                                                    órgão
-                                                </option>
-                                                <option value={"10b"}>
-                                                    10º batalhão
-                                                </option>
-                                                <option value={"11b"}>
-                                                    11º batalhão
-                                                </option>
-                                                <option value={"12b"}>
-                                                    12º batalhão
-                                                </option>
-                                            </Form.Select>
-                                        </Form.Group>
+                                        <Input
+                                        type="text"
+                                        label="Placa:*"
+                                        placeholder="Informe a placa do carro:"
+                                        required={true}
+                                        name="placa"
+                                        error={errors.placa}
+                                        validations={register("placa", {
+                                            required: {
+                                                value: true,
+                                                message:
+                                                    "A placa é um campo obrigatório",
+                                            },
+                                            pattern: {
+                                                value: /^[A-Z]{3}-(\d{4}|\d[A-Z]\d{2})$/,
+                                                message:
+                                                    "A placa deve estar no seguinte formato LLL-N(N/L)NN",
+                                            },
+                                        })}
+                                        />
                                     </Col>
                                 </Row>
                             </Modal.Body>

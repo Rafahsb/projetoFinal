@@ -22,6 +22,11 @@ class ViaturasModel extends Model {
           allowNull: false,
           unique: true,
         },
+        placa: {
+          type: DataTypes.CHAR(8),
+          allowNull: false,
+          unique: true,
+        },
         portas: {
           type: DataTypes.SMALLINT,
           allowNull: false,
@@ -39,10 +44,6 @@ class ViaturasModel extends Model {
           allowNull: false,
         },
         orgao_vinculado: {
-          type: DataTypes.TEXT,
-          allowNull: false,
-        },
-        batalhao: {
           type: DataTypes.TEXT,
           allowNull: false,
         },

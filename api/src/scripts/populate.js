@@ -25,7 +25,7 @@ const viaturas = [
     cor: "Preto",
     kilometragem: 12323,
     orgao_vinculado: "PF",
-    batalhao: "10b",
+    placa: "ABC-7080",
     piloto: "Rafael Henrick",
   },
   {
@@ -37,7 +37,7 @@ const viaturas = [
     cor: "Prata",
     kilometragem: 25000,
     orgao_vinculado: "PF",
-    batalhao: "11b",
+    placa: "DEF-9999",
     piloto: "Ana Silva",
   },
   {
@@ -49,7 +49,7 @@ const viaturas = [
     cor: "Azul",
     kilometragem: 30000,
     orgao_vinculado: "PC",
-    batalhao: "10º",
+    placa: "AAA-9999",
     piloto: "Pedro Santos",
   },
 ];
@@ -146,12 +146,12 @@ async function criarViaturas() {
       marca: viatura.marca,
       modelo: viatura.modelo,
       chassi: viatura.chassi,
+      placa: viatura.placa,
       portas: viatura.portas,
       bancos: viatura.bancos,
       cor: viatura.cor,
       kilometragem: viatura.kilometragem,
       orgao_vinculado: viatura.orgao_vinculado,
-      batalhao: viatura.batalhao,
       piloto: viatura.piloto,
     });
   }

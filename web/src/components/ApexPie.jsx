@@ -9,7 +9,7 @@ export default function ApexPie(props) {
                 width: 380,
                 type: "pie",
             },
-            labels: props.unidade,
+            labels: props.coluna,
             responsive: [
                 {
                     breakpoint: 480,

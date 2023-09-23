@@ -22,6 +22,11 @@ module.exports = {
         allowNull: false,
         unique: true,
       },
+      placa: {
+        type: Sequelize.CHAR(8),
+        allowNull: false,
+        unique: true,
+      },
       portas: {
         type: Sequelize.SMALLINT,
         allowNull: false,
@@ -39,10 +44,6 @@ module.exports = {
         allowNull: false,
       },
       orgao_vinculado: {
-        type: Sequelize.TEXT,
-        allowNull: false,
-      },
-      batalhao: {
         type: Sequelize.TEXT,
         allowNull: false,
       },

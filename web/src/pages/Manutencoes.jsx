@@ -234,7 +234,7 @@ export function Manutencoes() {
                                         <th>Data</th>
                                         <th>Marca</th>
                                         <th>Modelo</th>
-                                        <th>Chassi</th>
+                                        <th>Placa</th>
                                         <th>Ações</th>
                                     </tr>
                                 </thead>

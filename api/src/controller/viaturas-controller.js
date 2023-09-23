@@ -11,12 +11,12 @@ class ViaturaController {
       marca,
       modelo,
       chassi,
+      placa,
       portas,
       bancos,
       cor,
       kilometragem,
       orgao_vinculado,
-      batalhao,
       piloto,
     } = request.body;
 
@@ -29,7 +29,7 @@ class ViaturaController {
       !cor ||
       !kilometragem ||
       !orgao_vinculado ||
-      !batalhao ||
+      !placa ||
       !piloto
     ) {
       return httpHelper.badRequest({
@@ -94,7 +94,7 @@ class ViaturaController {
         cor,
         kilometragem,
         orgao_vinculado,
-        batalhao,
+        placa: placa.toUpperCase(),
         piloto,
       });
 
@@ -148,7 +148,7 @@ class ViaturaController {
             { chassi: { [Op.like]: `%${filtro}%` } },
             { cor: { [Op.like]: `%${filtro}%` } },
             { orgao_vinculado: { [Op.like]: `%${filtro}%` } },
-            { batalhao: { [Op.like]: `%${filtro}%` } },
+            { placa: { [Op.like]: `%${filtro}%` } },
             { piloto: { [Op.like]: `%${filtro}%` } },
           ],
         });
@@ -213,7 +213,7 @@ class ViaturaController {
         cor,
         kilometragem,
         orgao_vinculado,
-        batalhao,
+        placa,
         piloto,
       } = request.body;
 
@@ -257,12 +257,12 @@ class ViaturaController {
           marca,
           modelo,
           chassi,
+          placa: placa.toUpperCase(),
           portas,
           bancos,
           cor,
           kilometragem,
           orgao_vinculado,
-          batalhao,
           piloto,
         },
         {

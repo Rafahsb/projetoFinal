@@ -4,7 +4,7 @@ import "./styles/viewport.css";
 export default function App() {
     return (
         <div>
-            <VLibras forceOnload={false} />
+            <VLibras forceOnload={true} />
             <Navigations />
         </div>
     );

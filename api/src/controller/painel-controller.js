@@ -14,8 +14,8 @@ class PainelController {
 
     try {
       const data = await ManutencoesModel.sequelize.query(
-        `SELECT sum(preco), chassi, marca, modelo FROM viaturas 
-        INNER JOIN manutencoes ON manutencoes.id_viatura = viaturas.id_viatura group by chassi, marca, modelo;`,
+        `SELECT sum(preco), placa, marca, modelo FROM viaturas 
+        INNER JOIN manutencoes ON manutencoes.id_viatura = viaturas.id_viatura group by placa, marca, modelo;`,
         {
           type: Sequelize.QueryTypes.SELECT,
         }
@@ -75,6 +75,7 @@ class PainelController {
       return httpHelper.internalError(error);
     }
   }
+
   async Dashboard3(request, response) {
     const httpHelper = new HttpHelper(response);
 
@@ -82,6 +83,21 @@ class PainelController {
       const data = await UsuariosModel.findAll({
         attributes: ["unidade", [Sequelize.fn("COUNT", "unidade"), "total"]],
         group: ["unidade"],
+      });
+
+      return httpHelper.ok({ dashboard: data });
+    } catch (error) {
+      return httpHelper.internalError(error);
+    }
+  }
+
+  async Dashboard4(request, response) {
+    const httpHelper = new HttpHelper(response);
+
+    try {
+      const data = await ViaturasModel.findAll({
+        attributes: ["orgao_vinculado", [Sequelize.fn("COUNT", "orgao_vinculado"), "total"]],
+        group: ["orgao_vinculado"],
       });
 
       return httpHelper.ok({ dashboard: data });

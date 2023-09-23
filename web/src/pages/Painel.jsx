@@ -26,6 +26,7 @@ import {
     getDataDashboard,
     getDataDashboard2,
     getDataDashboard3,
+    getDataDashboard4,
 } from "../services/painel-service";
 import { useEffect, useState, useContext } from "react";
 import { UserContext } from "../contexts/UserContexts";
@@ -37,6 +38,7 @@ import Layout from "../components/Layout";
 import { Form } from "react-bootstrap";
 import { format } from "d3-format";
 import ApexPie from "../components/ApexPie";
+import OrgaosEnum from "../enums/orgaosEnum";
 
 export function Painel() {
     const currentYear = new Date().getFullYear();
@@ -48,6 +50,7 @@ export function Painel() {
     const [listDashboard, setListDashboard] = useState({});
     const [listDashboard2, setListDashboard2] = useState({});
     const [listDashboard3, setListDashboard3] = useState({});
+    const [listDashboard4, setListDashboard4] = useState({});
     const [listDashboard2Year, setListDashboard2Year] = useState("");
     const [selectedYear, setSelectedYear] = useState(null);
     const navigate = useNavigate();
@@ -64,6 +67,7 @@ export function Painel() {
         findDataDashboard();
         filterDataDashboard2();
         findDataDashboard3();
+        findDataDashboard4();
         // eslint-disable-next-line
     }, []);
 
@@ -104,7 +108,7 @@ export function Painel() {
             const result = await getDataDashboard();
 
             const formattedData = result.data.dashboard.map((item) => ({
-                name: `${item.marca} - ${item.modelo} - ${item.chassi}`,
+                name: `${item.marca} - ${item.modelo} - ${item.placa}`,
                 Total: item.sum,
             }));
             setListDashboard(formattedData);
@@ -145,8 +149,33 @@ export function Painel() {
                 unidade: unidadeArray,
                 total: totalArray,
             };
-            console.log(resultObject);
+
             setListDashboard3(resultObject);
+        } catch (error) {
+            console.error(error);
+            navigate("/painel");
+        }
+    }
+
+    async function findDataDashboard4() {
+        try {
+            const result = await getDataDashboard4();
+
+            const unidadeArray = result.data.dashboard.map((result) => {
+                const orgao_vinculado = OrgaosEnum[result.orgao_vinculado];
+                return orgao_vinculado ? orgao_vinculado : result.orgao_vinculado;
+              });
+
+            const totalArray = result.data.dashboard.map((result) =>
+                parseInt(result.total, 10)
+            );
+
+            const resultObject = {
+                orgao_vinculado: unidadeArray,
+                total: totalArray,
+            };
+            
+            setListDashboard4(resultObject);
         } catch (error) {
             console.error(error);
             navigate("/painel");
@@ -265,7 +294,7 @@ export function Painel() {
                             onSelect={(k) => setKey(k)}
                             className="mb-3"
                         >
-                            <Tab eventKey="DM1" title="GM / VEI">
+                            <Tab eventKey="DM1" title="GM / VIATURA">
                                 <Col xs={12} className="">
                                     <Card
                                         style={{ height: "650px" }}
@@ -402,7 +431,7 @@ export function Painel() {
                                 </Col>
                             </Tab>
 
-                            <Tab eventKey="DU1" title="U / Unidade">
+                            <Tab eventKey="DU1" title="U / UNIDADE">
                                 <Card
                                     style={{ height: "500px" }}
                                     className="p-2 shadow"
@@ -410,18 +439,34 @@ export function Painel() {
                                     <p className="h4 my-3 text-center">
                                         Usuarios / Unidade
                                     </p>
-                                    {}
+                                    
                                     {listDashboard3.unidade ? (
                                         <ApexPie
-                                            unidade={listDashboard3.unidade}
+                                            coluna={listDashboard3.unidade}
                                             total={listDashboard3.total}
                                         />
                                     ) : (
                                         <></>
                                     )}
                                 </Card>
-
-                                {/* Renderize o gráfico de pizza aqui */}
+                            </Tab>
+                            <Tab eventKey="DV1" title="V / ORGAO">
+                                <Card
+                                    style={{ height: "500px" }}
+                                    className="p-2 shadow"
+                                >
+                                    <p className="h4 my-3 text-center">
+                                        Viaturas / Orgão
+                                    </p>
+                                    {listDashboard4.orgao_vinculado ? (
+                                        <ApexPie
+                                            coluna={listDashboard4.orgao_vinculado}
+                                            total={listDashboard4.total}
+                                        />
+                                    ) : (
+                                        <></>
+                                    )}
+                                </Card>
                             </Tab>
                         </Tabs>
                     </Row>
