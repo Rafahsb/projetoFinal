@@ -101,5 +101,6 @@ routes.get("/dashboard3", authMiddleware, painelController.Dashboard3);
 routes.get("/dashboard4", authMiddleware, painelController.Dashboard4);
 
 routes.post("/validarToken", validatorController.validaToken);
+routes.post("/verify-recaptcha", validatorController.validaRecaptcha);
 
 module.exports = { routes };

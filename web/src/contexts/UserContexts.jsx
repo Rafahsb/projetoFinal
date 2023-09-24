@@ -9,13 +9,22 @@ export function UserContextProvider({ children }) {
     const [menu, setMenu] = useState(false);
     const [loading, setLoading] = useState(false);
     const [user, setUser] = useState(null);
+    const [apiRecaptcha,setApiReCaptcha] = useState("");
+
 
     const navigate = useNavigate();
 
     async function login(data) {
+
         try {
             setLoading(true);
             const result = await api.post("/login", data);
+            const resultVerifyRecaptcha = await api.post("/verify-recaptcha", {
+                recaptchaToken: apiRecaptcha,
+                
+            },)
+
+            console.log("resultVerifyRecaptcha: ", resultVerifyRecaptcha);
             sessionStorage.setItem(
                 "token",
                 JSON.stringify(result.data.accessToken)
@@ -25,7 +34,7 @@ export function UserContextProvider({ children }) {
         } catch (e) {
             setError({
                 title: "Houve um erro no login!",
-                message: e.response.data.error,
+                message: e.response.data.error.message,
             });
         } finally {
             setLoading(false);
@@ -50,6 +59,7 @@ export function UserContextProvider({ children }) {
                 setUser,
                 menu,
                 setMenu,
+                setApiReCaptcha,
             }}
         >
             {children}

@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { Button, Col, Container, Form } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
@@ -9,7 +9,8 @@ import imagem from "../Dashboard.png";
 import { Input } from "../components/Input";
 import { UserContext } from "../contexts/UserContexts";
 import Layout from "../components/Layout";
-
+import ReCAPTCHA from "react-google-recaptcha";
+import Notification from "../components/Notification";
 
 export function Login() {
     const {
@@ -17,15 +18,23 @@ export function Login() {
         register,
         formState: { errors },
     } = useForm();
-    const { login, error, setError, loading } = useContext(UserContext);
-
+    const { login, error, setError, loading, setApiReCaptcha, active, apiMessage, setActive } = useContext(UserContext);
+  
+    const googleCaptchaApiKey = process.env.REACT_APP_CAPTCHA_API_KEY;
     return (
 
         <Layout >
             <Container
                 fluid
                 className="vw-100 vh-100 d-flex justify-content-center p-0"
-            >
+            >   
+                {active && (
+                    <Notification
+                        variant={apiMessage.variant}
+                        message={apiMessage.message}
+                        setActive={setActive}
+                    />
+                )}
                 <Modal
                     show={error}
                     title={error?.title}
@@ -93,6 +102,10 @@ export function Login() {
                                     })}
                                 />
                             </Form.Group>
+                             
+                            <ReCAPTCHA sitekey={googleCaptchaApiKey} 
+                            onChange={setApiReCaptcha}      
+                            />
                             <Form.Group
                                 className="mb-3 d-flex justify-content-end"
                                 controlId="formBasicCheckbox"
