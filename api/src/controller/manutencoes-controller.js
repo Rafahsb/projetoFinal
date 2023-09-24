@@ -65,7 +65,7 @@ class ManutencoesController {
         numero_nota,
         descricao,
         preco,
-        data_nota: data,
+        data_nota: dataInformada,
         id_viatura,
       });
 
@@ -209,7 +209,7 @@ class ManutencoesController {
           numero_nota,
           descricao,
           preco,
-          data_nota: data,
+          data_nota: dataInformada,
           id_viatura,
         },
         {

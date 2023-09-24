@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import Col from "react-bootstrap/Col";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
-
+import { RemoveItem } from "../components/RemoveItem";
 import { getViaturas } from "../services/viaturas-service";
 export function Manutencao(props) {
     const {
@@ -17,6 +17,7 @@ export function Manutencao(props) {
         formState: { errors },
     } = useForm();
     const [isUpdated, setIsUpdated] = useState(false);
+    const [modalDelete, setModalDelete] = useState(false);
     const navigate = useNavigate();
 
     async function editManutencao(data) {
@@ -62,7 +63,7 @@ export function Manutencao(props) {
                                 Editar
                             </div>
                         </Dropdown.Item>
-                        <Dropdown.Item onClick={props.removeManutencao}>
+                        <Dropdown.Item onClick={() => setModalDelete(true)}>
                             <div className="d-flex">
                                 <DeleteOutlineOutlinedIcon className="me-2"></DeleteOutlineOutlinedIcon>
                                 Apagar
@@ -202,6 +203,13 @@ export function Manutencao(props) {
                     </Modal.Footer>
                 </Form>
             </Modal>
+            <RemoveItem
+                show={modalDelete}
+                title={"Excluir manutenção"}
+                message={"Deseja realmente excluir a manutenção? Isso afetará os dashboards."}
+                handleClose={() => setModalDelete(false)}
+                remove={props.removeManutencao}
+            />
         </>
     );
 }

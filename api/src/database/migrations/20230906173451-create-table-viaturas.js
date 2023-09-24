@@ -39,7 +39,7 @@ module.exports = {
         type: Sequelize.TEXT,
         allowNull: false,
       },
-      kilometragem: {
+      quilometragem: {
         type: Sequelize.INTEGER,
         allowNull: false,
       },

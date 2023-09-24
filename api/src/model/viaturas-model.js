@@ -39,7 +39,7 @@ class ViaturasModel extends Model {
           type: DataTypes.TEXT,
           allowNull: false,
         },
-        kilometragem: {
+        quilometragem: {
           type: DataTypes.INTEGER,
           allowNull: false,
         },
@@ -62,6 +62,7 @@ class ViaturasModel extends Model {
   }
   static associate(models) {
     this.belongsTo(models.Manutencoes, { foreignKey: "id_viatura" });
+    this.belongsTo(models.HistoricoKm, { foreignKey: "id_viatura" });
   }
 }
 

@@ -7,6 +7,7 @@ import { Input } from "./Input";
 import { useNavigate } from "react-router-dom";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import { RemoveItem } from "../components/RemoveItem";
 import Col from "react-bootstrap/Col";
 
 export function Usuario(props) {
@@ -16,6 +17,7 @@ export function Usuario(props) {
         formState: { errors },
     } = useForm();
     const [isUpdated, setIsUpdated] = useState(false);
+    const [modalDelete, setModalDelete] = useState(false);
     const navigate = useNavigate();
 
     async function editUsuario(data) {
@@ -69,7 +71,7 @@ export function Usuario(props) {
                                 Editar
                             </div>
                         </Dropdown.Item>
-                        <Dropdown.Item onClick={props.removeUsuario}>
+                        <Dropdown.Item onClick={() => setModalDelete(true)}>
                             <div className="d-flex">
                                 <DeleteOutlineOutlinedIcon className="me-2"></DeleteOutlineOutlinedIcon>
                                 Apagar
@@ -215,6 +217,13 @@ export function Usuario(props) {
                     </Modal.Footer>
                 </Form>
             </Modal>
+            <RemoveItem
+                show={modalDelete}
+                title={"Excluir usuário"}
+                message={"Deseja realmente excluir o usuário? Isso afetará os dashboards."}
+                handleClose={() => setModalDelete(false)}
+                remove={props.removeUsuario}
+            />
         </>
     );
 }

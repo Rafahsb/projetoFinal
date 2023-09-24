@@ -24,6 +24,8 @@ import Notification from "../components/Notification";
 import PaginationComponent from "../components/PaginationComponent";
 import { useEffect, useState, useContext } from "react";
 import { UserContext } from "../contexts/UserContexts";
+import { RemoveItem } from "../components/RemoveItem";
+
 export function Viaturas() {
     const [active, setActive] = useState(false);
     const [apiMessage, setApiMessage] = useState({});
@@ -33,6 +35,7 @@ export function Viaturas() {
     const [currentPage, setCurrentPage] = useState(1);
     let paginaAtual = 1;
     const [itemsPerPage, setItemsPerPage] = useState(1);
+    
     const [totalPages, setTotalPages] = useState();
     const { menu } = useContext(UserContext);
     const {
@@ -122,7 +125,7 @@ export function Viaturas() {
                 portas: data.portas,
                 bancos: data.bancos,
                 cor: data.cor,
-                kilometragem: data.kilometragem,
+                quilometragem: data.quilometragem,
                 orgao_vinculado: data.orgao_vinculado,
                 piloto: data.piloto,
             });
@@ -212,7 +215,7 @@ export function Viaturas() {
                                     <tr>
                                         <th>Marca</th>
                                         <th>Modelo</th>
-                                        <th>Kilometragem</th>
+                                        <th>Quilometragem</th>
                                         <th>Placa</th>
                                         <th>Piloto</th>
                                         <th>Ações</th>
@@ -428,18 +431,18 @@ export function Viaturas() {
                                     <Col sm={6} className="mb-3 mb-sm-0">
                                         <Input
                                             type="number"
-                                            label="Kilometragem:*"
+                                            label="quilometragem:*"
                                             placeholder="Informe a quantidade de km rodados do carro:"
                                             required={true}
-                                            name="kilometragem"
-                                            error={errors.kilometragem}
+                                            name="quilometragem"
+                                            error={errors.quilometragem}
                                             validations={register(
-                                                "kilometragem",
+                                                "quilometragem",
                                                 {
                                                     required: {
                                                         value: true,
                                                         message:
-                                                            "A kilometragem é um campo obrigatório",
+                                                            "A quilometragem é um campo obrigatório",
                                                     },
                                                     max: {
                                                         value: 1000000,
@@ -540,6 +543,8 @@ export function Viaturas() {
                             </Modal.Footer>
                         </Form>
                     </Modal>
+
+                   
                 </Col>
             </Row>
         </>

@@ -7,8 +7,10 @@ import { Input } from "./Input";
 import Col from "react-bootstrap/Col";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import PlagiarismOutlinedIcon from '@mui/icons-material/PlagiarismOutlined';
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import Localizacao from "../components/Localizacao";
+import { RemoveItem } from "../components/RemoveItem";
 export function Viatura(props) {
     const {
         handleSubmit,
@@ -17,6 +19,8 @@ export function Viatura(props) {
     } = useForm();
     const [isUpdated, setIsUpdated] = useState(false);
     const [modalLocale, setModalLocale] = useState(false);
+    const [modalDelete, setModalDelete] = useState(false);
+    const [modalRelatorios, setModalRelatorios] = useState(false);
     const location = { lat: -15.6014, lng: -56.0979 };
 
     async function editViatura(data) {
@@ -27,7 +31,7 @@ export function Viatura(props) {
         <>
             <td>{props.viatura.marca}</td>
             <td>{props.viatura.modelo}</td>
-            <td>{props.viatura.kilometragem}</td>
+            <td>{props.viatura.quilometragem}</td>
             <td style={{minWidth: "84.94px"}}>{props.viatura.placa}</td>
             <td>{props.viatura.piloto}</td>
             <td>
@@ -43,10 +47,16 @@ export function Viatura(props) {
                                 Editar
                             </div>
                         </Dropdown.Item>
-                        <Dropdown.Item onClick={props.removeViatura}>
+                        <Dropdown.Item onClick={() => setModalDelete(true)}>
                             <div className="d-flex">
                                 <DeleteOutlineOutlinedIcon className="me-2"></DeleteOutlineOutlinedIcon>
                                 Apagar
+                            </div>
+                        </Dropdown.Item>
+                        <Dropdown.Item onClick={() => setModalRelatorios(true)}>
+                            <div className="d-flex">
+                                <PlagiarismOutlinedIcon className="me-2"></PlagiarismOutlinedIcon>
+                                Relatórios
                             </div>
                         </Dropdown.Item>
                         <Dropdown.Item>
@@ -218,17 +228,17 @@ export function Viatura(props) {
                             <Col sm={6}>
                                 <Input
                                     type="number"
-                                    label="Kilometragem:*"
-                                    defaultValue={props.viatura.kilometragem}
+                                    label="quilometragem:*"
+                                    defaultValue={props.viatura.quilometragem}
                                     placeholder="Informe a quantidade de km rodados do carro:"
                                     required={true}
-                                    name="kilometragem"
-                                    error={errors.kilometragem}
-                                    validations={register("kilometragem", {
+                                    name="quilometragem"
+                                    error={errors.quilometragem}
+                                    validations={register("quilometragem", {
                                         required: {
                                             value: true,
                                             message:
-                                                "A kilometragem é um campo obrigatório",
+                                                "A quilometragem é um campo obrigatório",
                                         },
                                     })}
                                 />
@@ -246,7 +256,7 @@ export function Viatura(props) {
                                         required: {
                                             value: true,
                                             message:
-                                                "A kilometragem é um campo obrigatório",
+                                                "A quilometragem é um campo obrigatório",
                                         },
                                     })}
                                 />
@@ -324,7 +334,7 @@ export function Viatura(props) {
                 onHide={() => setModalLocale(false)}
             >
                 <Modal.Header>
-                    <Modal.Title>Editar viatura</Modal.Title>
+                    <Modal.Title>Localização Atual</Modal.Title>
                 </Modal.Header>
                 <Form
                     noValidate
@@ -335,9 +345,7 @@ export function Viatura(props) {
                         <Row className="">
                             <Col sm={12} style={{ overflow: "auto" }}>
                                 <div className="App">
-                                    <p className="fs-5 fw-bold">
-                                        Mapa com Localização Atual
-                                    </p>
+                                    
                                     <Localizacao
                                         lat={location.lat}
                                         lng={location.lng}
@@ -356,6 +364,14 @@ export function Viatura(props) {
                     </Modal.Footer>
                 </Form>
             </Modal>
+            <RemoveItem
+                show={modalDelete}
+                title={"Excluir viatura"}
+                message={`Deseja realmente excluir a viatura? Todo o histórico de alterações na kilometragem será perdido,
+                 além de afetar os dashboards.`}
+                handleClose={() => setModalDelete(false)}
+                remove={props.removeViatura}
+            />
         </>
     );
 }

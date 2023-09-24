@@ -1,7 +1,8 @@
 const { HttpHelper } = require("../utils/http-helper");
-const { Op } = require("sequelize");
+const { Op, where } = require("sequelize");
 const { ViaturasModel } = require("../model/viaturas-model");
 const { ManutencoesModel } = require("../model/manutencoes-model");
+const { HistoricoKmModel } = require("../model/historico-km-model");
 const { paginationWhere } = require("../utils/paginationWhere");
 
 class ViaturaController {
@@ -15,7 +16,7 @@ class ViaturaController {
       portas,
       bancos,
       cor,
-      kilometragem,
+      quilometragem,
       orgao_vinculado,
       piloto,
     } = request.body;
@@ -27,7 +28,7 @@ class ViaturaController {
       !portas ||
       !bancos ||
       !cor ||
-      !kilometragem ||
+      !quilometragem ||
       !orgao_vinculado ||
       !placa ||
       !piloto
@@ -37,6 +38,14 @@ class ViaturaController {
         variant: "danger",
       });
     }
+
+    const viaturaChassiExists = await ViaturasModel.findOne({
+      where: { chassi },
+    });
+
+    const viaturaPlacaExists = await ViaturasModel.findOne({
+      where: { placa },
+    });
 
     if (chassi.length != 17) {
       return httpHelper.badRequest({
@@ -59,7 +68,7 @@ class ViaturaController {
       });
     }
 
-    if (kilometragem > 1000000) {
+    if (quilometragem >= 1000000 || quilometragem < 0) {
       return httpHelper.badRequest({
         message: "A quilometragem não pode ser maior que 1 milhão",
         variant: "danger",
@@ -73,30 +82,42 @@ class ViaturaController {
       });
     }
 
-    const viaturaExists = await ViaturasModel.findOne({
-      where: { chassi },
-    });
+    
 
-    if (viaturaExists) {
+    if (viaturaChassiExists) {
       return httpHelper.badRequest({
         message: "Já existe um veículo com o chassi informado!",
         variant: "danger",
       });
     }
 
+    if (viaturaPlacaExists) {
+      return httpHelper.badRequest({
+        message: "Já existe um veículo com a placa informada!",
+        variant: "danger",
+      });
+    }
+
+
     try {
-      await ViaturasModel.create({
+      const viaturaCreated = await ViaturasModel.create({
         marca,
         modelo,
         chassi,
         portas,
         bancos,
         cor,
-        kilometragem,
+        quilometragem,
         orgao_vinculado,
         placa: placa.toUpperCase(),
         piloto,
       });
+
+      await HistoricoKmModel.create({
+        quilometragem,
+        data: new Date(),
+        id_viatura : viaturaCreated.id_viatura,
+      })
 
       return httpHelper.created({
         message: "Viatura cadastrada com sucesso!",
@@ -122,6 +143,7 @@ class ViaturaController {
           variant: "danger",
         });
       }
+      
       await ViaturasModel.destroy({
         where: {
           id_viatura: id,
@@ -211,15 +233,18 @@ class ViaturaController {
         portas,
         bancos,
         cor,
-        kilometragem,
+        quilometragem,
         orgao_vinculado,
         placa,
         piloto,
       } = request.body;
 
+      console.log("id: ", id);
       if (!id) return httpHelper.badRequest("Parâmetros inválidos!");
 
-      const viaturaExists = await ViaturasModel.findOne({ id_viatura: id });
+      const viaturaExists = await ViaturasModel.findOne({ where: {
+        id_viatura: id,
+      }, });
 
       if (!viaturaExists) return httpHelper.notFound("Viatura não encontrada!");
 
@@ -237,9 +262,16 @@ class ViaturaController {
         });
       }
 
-      if (kilometragem > 1000000) {
+      if (quilometragem >= 1000000 || quilometragem < 0) {
         return httpHelper.badRequest({
-          message: "A quilometragem não pode ser maior que 1 milhão",
+          message: "A quilometragem não pode ser maior que 1 milhão nem menor que 0",
+          variant: "danger",
+        });
+      }
+
+      if(quilometragem < viaturaExists.quilometragem) { 
+        return httpHelper.badRequest({
+          message: "A quilometragem não pode ser menor que a atual",
           variant: "danger",
         });
       }
@@ -251,6 +283,7 @@ class ViaturaController {
         });
       }
 
+
       await ViaturasModel.update(
         {
           id_viatura: id,
@@ -261,7 +294,7 @@ class ViaturaController {
           portas,
           bancos,
           cor,
-          kilometragem,
+          quilometragem,
           orgao_vinculado,
           piloto,
         },
@@ -271,6 +304,25 @@ class ViaturaController {
           },
         }
       );
+      
+      const historicoExists = await HistoricoKmModel.findOne({ where: {
+        id_viatura: viaturaExists.id_viatura,
+      }, });
+
+      if (historicoExists === null) {
+        await HistoricoKmModel.create({
+          quilometragem: viaturaExists.quilometragem,
+          data: new Date(), // Utiliza a data e hora atuais
+          id_viatura: id,
+        });
+      }
+
+      await HistoricoKmModel.create({
+        quilometragem,
+        data: new Date(),
+        id_viatura : id,
+      })
+
 
       return httpHelper.ok({
         message: "Viatura atualizada com sucesso!",
