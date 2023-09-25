@@ -30,6 +30,7 @@ routes.get(
   authMiddleware,
   viaturaController.pesquisarTotalViaturas
 );
+routes.get("/viatura/historico/:id", authMiddleware, viaturaController.buscarHistoricoViaturas)
 routes.put("/viatura/:id", authMiddleware, viaturaController.atualizarViatura);
 routes.delete("/viatura/:id", authMiddleware, viaturaController.deletarViatura);
 

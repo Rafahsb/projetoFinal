@@ -4,8 +4,14 @@ const { ViaturasModel } = require("../model/viaturas-model");
 const { ManutencoesModel } = require("../model/manutencoes-model");
 const { HistoricoKmModel } = require("../model/historico-km-model");
 const { paginationWhere } = require("../utils/paginationWhere");
+const { Validates } = require("../utils/validates");
+const { Sequelize } = require("sequelize");
+const ExcelJS = require('exceljs');
+
 
 class ViaturaController {
+
+
   async criarViatura(request, response) {
     const httpHelper = new HttpHelper(response);
     const {
@@ -221,6 +227,80 @@ class ViaturaController {
     }
   }
 
+  async buscarHistoricoViaturas(request, response) {
+    const httpHelper = new HttpHelper(response);
+
+    try {
+      const { id } = request.params;
+
+      const historicoExists = await HistoricoKmModel.sequelize.query(
+        `SELECT hk.quilometragem, data, marca, modelo, 
+        chassi, placa, portas, bancos, cor, orgao_vinculado, piloto 
+        FROM "historicoKm" as hk INNER JOIN viaturas as v ON hk.id_viatura = v.id_viatura
+        WHERE hk.id_viatura = ${id}`,
+        {
+          type: Sequelize.QueryTypes.SELECT,
+        }
+      );
+      if (!id) return httpHelper.badRequest({message: "Parâmetros inválidos!", variant:"danger"});
+
+      console.log(historicoExists);
+
+      // Crie uma nova planilha Excel
+      const workbook = new ExcelJS.Workbook();
+      const worksheet = workbook.addWorksheet('Dados');
+
+      // Adicione os cabeçalhos da tabela
+      worksheet.columns = [
+        { header: 'Quilometragem', key: 'quilometragem', width: 15 },
+        { header: 'Data', key: 'data', width: 20 },
+        { header: 'Marca', key: 'marca', width: 20 },
+        { header: 'Modelo', key: 'modelo', width: 20 },
+        { header: 'Chassi', key: 'chassi', width: 20 },
+        { header: 'Placa', key: 'placa', width: 20 },
+        { header: 'Portas', key: 'portas', width: 20 },
+        { header: 'Bancos', key: 'bancos', width: 20 },
+        { header: 'Cor', key: 'cor', width: 20 },
+        { header: 'Órgão Vinculado', key: 'orgao_vinculado', width: 20 },
+      ];
+      
+      // Preencha a planilha com os dados
+      historicoExists.forEach((row) => {
+        const formattedDate = Validates.formatDate(row.data);
+        const newRow = {
+          quilometragem: row.quilometragem,
+          data: formattedDate,
+          marca: row.marca,
+          modelo: row.modelo,
+          chassi: row.chassi,
+          placa: row.placa,
+          portas: row.portas,
+          bancos: row.bancos,
+          cor: row.cor,
+          orgao_vinculado: row.orgao_vinculado,
+        };
+         worksheet.addRow(newRow);
+      });
+
+
+      // Defina o tipo de conteúdo da resposta para XLSX
+
+
+      response.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+      response.setHeader('Content-Disposition', 'attachment; filename=dados.xlsx');
+
+      const buffer = await workbook.xlsx.writeBuffer();
+      const base64Data = Buffer.from(buffer).toString('base64');
+
+      // Finalize a resposta
+      return httpHelper.ok({ message: 'Planilha enviada!', data: base64Data });
+
+
+    } catch (error) {
+      return httpHelper.internalError(error);
+    }
+  }
+
   async atualizarViatura(request, response) {
     const httpHelper = new HttpHelper(response);
 
@@ -240,7 +320,7 @@ class ViaturaController {
       } = request.body;
 
       console.log("id: ", id);
-      if (!id) return httpHelper.badRequest("Parâmetros inválidos!");
+      if (!id) return httpHelper.badRequest({message: "Parâmetros inválidos!", variant:"danger"});
 
       const viaturaExists = await ViaturasModel.findOne({ where: {
         id_viatura: id,

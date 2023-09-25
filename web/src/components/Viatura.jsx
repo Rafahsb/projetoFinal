@@ -11,6 +11,9 @@ import PlagiarismOutlinedIcon from '@mui/icons-material/PlagiarismOutlined';
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import Localizacao from "../components/Localizacao";
 import { RemoveItem } from "../components/RemoveItem";
+import { getViaturaHistorico } from "../services/viaturas-service";
+import { saveAs } from 'file-saver';
+
 export function Viatura(props) {
     const {
         handleSubmit,
@@ -22,6 +25,25 @@ export function Viatura(props) {
     const [modalDelete, setModalDelete] = useState(false);
     const [modalRelatorios, setModalRelatorios] = useState(false);
     const location = { lat: -15.6014, lng: -56.0979 };
+
+
+     async function viaturaHistorico() {
+        try {
+            const response = await getViaturaHistorico(props.viatura.id_viatura)
+            const base64Data = response.data.data;
+            const byteCharacters = atob(base64Data);
+            const byteNumbers = new Array(byteCharacters.length);
+            for (let i = 0; i < byteCharacters.length; i++) {
+                byteNumbers[i] = byteCharacters.charCodeAt(i);
+            }
+            const byteArray = new Uint8Array(byteNumbers);
+            const blob = new Blob([byteArray], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+            saveAs(blob, 'dados.xlsx');
+
+        } catch (error) {
+            return console.error(error);
+        }
+    }
 
     async function editViatura(data) {
         await props.editViatura({ ...data, id: props.viatura.id_viatura });
@@ -336,33 +358,63 @@ export function Viatura(props) {
                 <Modal.Header>
                     <Modal.Title>Localização Atual</Modal.Title>
                 </Modal.Header>
-                <Form
-                    noValidate
-                    onSubmit={handleSubmit(editViatura)}
-                    validated={!!errors}
-                >
-                    <Modal.Body>
-                        <Row className="">
-                            <Col sm={12} style={{ overflow: "auto" }}>
-                                <div className="App">
-                                    
-                                    <Localizacao
-                                        lat={location.lat}
-                                        lng={location.lng}
-                                    />
-                                </div>
-                            </Col>
-                        </Row>
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <Button
-                            variant="primary"
-                            onClick={() => setModalLocale(false)}
-                        >
-                            Voltar
-                        </Button>
-                    </Modal.Footer>
-                </Form>
+               
+                <Modal.Body>
+                    <Row className="">
+                        <Col sm={12} style={{ overflow: "auto" }}>
+                            <div className="App">
+                                
+                                <Localizacao
+                                    lat={location.lat}
+                                    lng={location.lng}
+                                />
+                            </div>
+                        </Col>
+                    </Row>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button
+                        variant="primary"
+                        onClick={() => setModalLocale(false)}
+                    >
+                        Voltar
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+
+            <Modal
+                size="lg"
+                show={modalRelatorios}
+                onHide={() => setModalLocale(false)}
+            >
+                <Modal.Header>
+                    <Modal.Title>Relatórios</Modal.Title>
+                </Modal.Header>
+                
+                <Modal.Body>
+                    <Row className="">
+                        <Col sm={6} >
+                        <Card style={{ width: '18rem' }}>
+                            <Card.Body>
+                                <Card.Title>Relatório de kilometragem</Card.Title>
+                                <Card.Text>
+                                Relatório com todo o histórico de kilometragem da viatura.
+                                </Card.Text>
+                                <Button onClick={() => viaturaHistorico()}>Baixar relatório</Button>
+                            </Card.Body>
+                            </Card>
+                        </Col>
+                    </Row>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button
+                        variant="primary"
+                        onClick={() => setModalRelatorios(false)}
+                    >
+                        Voltar
+                    </Button>
+                </Modal.Footer>
+                
             </Modal>
             <RemoveItem
                 show={modalDelete}

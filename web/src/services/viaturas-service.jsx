@@ -10,6 +10,16 @@ export async function getViaturas() {
     return result;
 }
 
+export async function getViaturaHistorico(id) {
+    const accessToken = sessionStorage.getItem("token");
+    const result = await api.get(`/viatura/historico/${id}`, {
+        headers: {
+            Authorization: `Bearer ${JSON.parse(accessToken)}`,
+        },
+    });
+    return result;
+}
+
 export async function getBuscarViaturas(params) {
     const accessToken = sessionStorage.getItem("token");
     const result = await api.get(
