@@ -48,6 +48,7 @@ class UsuarioController {
       };
 
       transporter.sendMail(mailOptions, (error, info) => {
+        console.log(error, " ", info);
         if (error) {
           return httpHelper.internalError("Erro ao enviar o email");
         } else {
@@ -156,7 +157,9 @@ class UsuarioController {
 
       // Validar parâmetros
       if (!matricula || !senha) {
-        return httpHelper.badRequest({message: "Nome e senha são obrigatórios!"});
+        return httpHelper.badRequest({
+          message: "Nome e senha são obrigatórios!",
+        });
       }
 
       // Verifica se usuário existe
@@ -164,16 +167,15 @@ class UsuarioController {
         where: { matricula },
       });
       if (!userExists) {
-        return httpHelper.badRequest({message:"Usuario não existe!"});
+        return httpHelper.badRequest({ message: "Usuario não existe!" });
       }
 
       const isPasswordValid = await bcrypt.compare(senha, userExists.senha);
 
       if (!isPasswordValid) {
         return httpHelper.badRequest({
-          message: "Senha incorreta!"
-        })
-        
+          message: "Senha incorreta!",
+        });
       }
 
       // Gera e retorna o access token
@@ -182,7 +184,6 @@ class UsuarioController {
         process.env.TOKEN_SECRET,
         { expiresIn: "300m" }
       );
-
       return httpHelper.ok({ accessToken });
     } catch (error) {
       return httpHelper.internalError(error);

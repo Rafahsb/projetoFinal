@@ -9,22 +9,18 @@ export function UserContextProvider({ children }) {
     const [menu, setMenu] = useState(false);
     const [loading, setLoading] = useState(false);
     const [user, setUser] = useState(null);
-    const [apiRecaptcha,setApiReCaptcha] = useState("");
-
+    const [apiRecaptcha, setApiReCaptcha] = useState("");
 
     const navigate = useNavigate();
 
     async function login(data) {
-
         try {
             setLoading(true);
             const result = await api.post("/login", data);
             const resultVerifyRecaptcha = await api.post("/verify-recaptcha", {
                 recaptchaToken: apiRecaptcha,
-                
-            },)
+            });
 
-            console.log("resultVerifyRecaptcha: ", resultVerifyRecaptcha);
             sessionStorage.setItem(
                 "token",
                 JSON.stringify(result.data.accessToken)

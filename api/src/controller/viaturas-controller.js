@@ -6,12 +6,9 @@ const { HistoricoKmModel } = require("../model/historico-km-model");
 const { paginationWhere } = require("../utils/paginationWhere");
 const { Validates } = require("../utils/validates");
 const { Sequelize } = require("sequelize");
-const ExcelJS = require('exceljs');
-
+const ExcelJS = require("exceljs");
 
 class ViaturaController {
-
-
   async criarViatura(request, response) {
     const httpHelper = new HttpHelper(response);
     const {
@@ -88,8 +85,6 @@ class ViaturaController {
       });
     }
 
-    
-
     if (viaturaChassiExists) {
       return httpHelper.badRequest({
         message: "Já existe um veículo com o chassi informado!",
@@ -103,7 +98,6 @@ class ViaturaController {
         variant: "danger",
       });
     }
-
 
     try {
       const viaturaCreated = await ViaturasModel.create({
@@ -122,8 +116,8 @@ class ViaturaController {
       await HistoricoKmModel.create({
         quilometragem,
         data: new Date(),
-        id_viatura : viaturaCreated.id_viatura,
-      })
+        id_viatura: viaturaCreated.id_viatura,
+      });
 
       return httpHelper.created({
         message: "Viatura cadastrada com sucesso!",
@@ -149,7 +143,7 @@ class ViaturaController {
           variant: "danger",
         });
       }
-      
+
       await ViaturasModel.destroy({
         where: {
           id_viatura: id,
@@ -242,28 +236,30 @@ class ViaturaController {
           type: Sequelize.QueryTypes.SELECT,
         }
       );
-      if (!id) return httpHelper.badRequest({message: "Parâmetros inválidos!", variant:"danger"});
-
-      console.log(historicoExists);
+      if (!id)
+        return httpHelper.badRequest({
+          message: "Parâmetros inválidos!",
+          variant: "danger",
+        });
 
       // Crie uma nova planilha Excel
       const workbook = new ExcelJS.Workbook();
-      const worksheet = workbook.addWorksheet('Dados');
+      const worksheet = workbook.addWorksheet("Dados");
 
       // Adicione os cabeçalhos da tabela
       worksheet.columns = [
-        { header: 'Quilometragem', key: 'quilometragem', width: 15 },
-        { header: 'Data', key: 'data', width: 20 },
-        { header: 'Marca', key: 'marca', width: 20 },
-        { header: 'Modelo', key: 'modelo', width: 20 },
-        { header: 'Chassi', key: 'chassi', width: 20 },
-        { header: 'Placa', key: 'placa', width: 20 },
-        { header: 'Portas', key: 'portas', width: 20 },
-        { header: 'Bancos', key: 'bancos', width: 20 },
-        { header: 'Cor', key: 'cor', width: 20 },
-        { header: 'Órgão Vinculado', key: 'orgao_vinculado', width: 20 },
+        { header: "Quilometragem", key: "quilometragem", width: 15 },
+        { header: "Data", key: "data", width: 20 },
+        { header: "Marca", key: "marca", width: 20 },
+        { header: "Modelo", key: "modelo", width: 20 },
+        { header: "Chassi", key: "chassi", width: 20 },
+        { header: "Placa", key: "placa", width: 20 },
+        { header: "Portas", key: "portas", width: 20 },
+        { header: "Bancos", key: "bancos", width: 20 },
+        { header: "Cor", key: "cor", width: 20 },
+        { header: "Órgão Vinculado", key: "orgao_vinculado", width: 20 },
       ];
-      
+
       // Preencha a planilha com os dados
       historicoExists.forEach((row) => {
         const formattedDate = Validates.formatDate(row.data);
@@ -279,23 +275,25 @@ class ViaturaController {
           cor: row.cor,
           orgao_vinculado: row.orgao_vinculado,
         };
-         worksheet.addRow(newRow);
+        worksheet.addRow(newRow);
       });
-
 
       // Defina o tipo de conteúdo da resposta para XLSX
 
-
-      response.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-      response.setHeader('Content-Disposition', 'attachment; filename=dados.xlsx');
+      response.setHeader(
+        "Content-Type",
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+      );
+      response.setHeader(
+        "Content-Disposition",
+        "attachment; filename=dados.xlsx"
+      );
 
       const buffer = await workbook.xlsx.writeBuffer();
-      const base64Data = Buffer.from(buffer).toString('base64');
+      const base64Data = Buffer.from(buffer).toString("base64");
 
       // Finalize a resposta
-      return httpHelper.ok({ message: 'Planilha enviada!', data: base64Data });
-
-
+      return httpHelper.ok({ message: "Planilha enviada!", data: base64Data });
     } catch (error) {
       return httpHelper.internalError(error);
     }
@@ -319,12 +317,17 @@ class ViaturaController {
         piloto,
       } = request.body;
 
-      console.log("id: ", id);
-      if (!id) return httpHelper.badRequest({message: "Parâmetros inválidos!", variant:"danger"});
+      if (!id)
+        return httpHelper.badRequest({
+          message: "Parâmetros inválidos!",
+          variant: "danger",
+        });
 
-      const viaturaExists = await ViaturasModel.findOne({ where: {
-        id_viatura: id,
-      }, });
+      const viaturaExists = await ViaturasModel.findOne({
+        where: {
+          id_viatura: id,
+        },
+      });
 
       if (!viaturaExists) return httpHelper.notFound("Viatura não encontrada!");
 
@@ -344,12 +347,13 @@ class ViaturaController {
 
       if (quilometragem >= 1000000 || quilometragem < 0) {
         return httpHelper.badRequest({
-          message: "A quilometragem não pode ser maior que 1 milhão nem menor que 0",
+          message:
+            "A quilometragem não pode ser maior que 1 milhão nem menor que 0",
           variant: "danger",
         });
       }
 
-      if(quilometragem < viaturaExists.quilometragem) { 
+      if (quilometragem < viaturaExists.quilometragem) {
         return httpHelper.badRequest({
           message: "A quilometragem não pode ser menor que a atual",
           variant: "danger",
@@ -362,7 +366,6 @@ class ViaturaController {
           variant: "danger",
         });
       }
-
 
       await ViaturasModel.update(
         {
@@ -384,10 +387,12 @@ class ViaturaController {
           },
         }
       );
-      
-      const historicoExists = await HistoricoKmModel.findOne({ where: {
-        id_viatura: viaturaExists.id_viatura,
-      }, });
+
+      const historicoExists = await HistoricoKmModel.findOne({
+        where: {
+          id_viatura: viaturaExists.id_viatura,
+        },
+      });
 
       if (historicoExists === null) {
         await HistoricoKmModel.create({
@@ -400,9 +405,8 @@ class ViaturaController {
       await HistoricoKmModel.create({
         quilometragem,
         data: new Date(),
-        id_viatura : id,
-      })
-
+        id_viatura: id,
+      });
 
       return httpHelper.ok({
         message: "Viatura atualizada com sucesso!",

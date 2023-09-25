@@ -1,6 +1,6 @@
 const { HttpHelper } = require("../utils/http-helper");
 const jwt = require("jsonwebtoken");
-const axios = require('axios');
+const axios = require("axios");
 class ValidatorController {
   validaToken(request, response) {
     const httpHelper = new HttpHelper(response);
@@ -10,7 +10,7 @@ class ValidatorController {
         token.replace(/"/g, ""),
         process.env.TOKEN_SECRET
       );
-
+      console.log("dados: ", dadosUsuario);
       return httpHelper.ok("Token válido");
     } catch (error) {
       return httpHelper.internalError(error);
@@ -20,11 +20,10 @@ class ValidatorController {
   async validaRecaptcha(request, response) {
     const httpHelper = new HttpHelper(response);
     const { recaptchaToken } = request.body;
-    console.log("token: ", recaptchaToken);
     const secretKey = process.env.TOKEN_RECAPTCHA;
     try {
-      const reCaptchaResponse  = await axios.post(
-        'https://www.google.com/recaptcha/api/siteverify',
+      const reCaptchaResponse = await axios.post(
+        "https://www.google.com/recaptcha/api/siteverify",
         null,
         {
           params: {
@@ -33,25 +32,19 @@ class ValidatorController {
           },
         }
       );
-        
-      console.log(reCaptchaResponse);
 
-      console.log("data", reCaptchaResponse.status);
       if (reCaptchaResponse.data.success) {
-        httpHelper.ok({message: 'reCAPTCHA verificado com sucesso'})
+        httpHelper.ok({ message: "reCAPTCHA verificado com sucesso" });
       } else {
         return httpHelper.badRequest({
           message: "Ops! Captcha incorreto!",
           variant: "danger",
         });
       }
-
-      console.log(data);
     } catch (error) {
-      return httpHelper.internalError(error)
+      return httpHelper.internalError(error);
     }
   }
-
 }
 
 module.exports = { ValidatorController };

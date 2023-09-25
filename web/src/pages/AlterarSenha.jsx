@@ -19,7 +19,6 @@ export function AlterarSenha() {
     async function requestPassword(params) {
         try {
             const result = await editResetPassword(params);
-            console.log("result");
             setTitle("Aleterar Senha");
             setMessage(result.data.message);
             setModal(true);
