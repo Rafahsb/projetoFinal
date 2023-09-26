@@ -9,6 +9,6 @@ server.use(express.json());
 server.use(cors());
 server.use(routes);
 
-server.listen("http://localhost:8080", () => {
+server.listen(8080, () => {
   console.log("Server started at localhost:8080");
 });
