@@ -38,7 +38,7 @@ export function Viatura(props) {
             }
             const byteArray = new Uint8Array(byteNumbers);
             const blob = new Blob([byteArray], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-            saveAs(blob, 'dados.xlsx');
+            saveAs(blob, 'RelatorioKilometragem.xlsx');
 
         } catch (error) {
             return console.error(error);
