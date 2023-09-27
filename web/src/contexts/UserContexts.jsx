@@ -29,10 +29,17 @@ export function UserContextProvider({ children }) {
             navigate("/painel");
         } catch (e) {
             console.log(e);
-            setError({
-                title: "Houve um erro no login!",
-                message: e.response.data.error.message,
-            });
+            if (e.response.status === 429) {
+                setError({
+                    title: "Houve um erro no login!",
+                    message: e.response.data,
+                });
+            } else {
+                setError({
+                    title: "Houve um erro no login!",
+                    message: e.response.data.error.message,
+                });
+            }
         } finally {
             setLoading(false);
         }
