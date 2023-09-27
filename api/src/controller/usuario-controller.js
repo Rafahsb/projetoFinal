@@ -38,7 +38,9 @@ class UsuarioController {
         { expiresIn: "15m" }
       );
 
-      const resetLink = `http://localhost:3000/alterarSenha?token=${accessToken}`;
+      const baseURL = process.env.REACT_APP_BASE_URL || 'http://localhost:3000';
+
+      const resetLink = `${baseURL}/alterarSenha?token=${accessToken}`;
 
       const mailOptions = {
         from: "viagestaoreset@gmail.com",
