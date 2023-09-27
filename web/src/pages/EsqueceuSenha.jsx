@@ -28,9 +28,17 @@ export function EsqueceuSenha() {
             setModal(true);
         } catch (error) {
             setTitle("Esqueceu sua senha?");
-            setMessage(
-                `${error.response.data.error.message} Clique no 'x' para realizar uma nova tentativa, ou no 'Ok' para voltar para a tela de login.`
-            );
+    
+            if(error.response.status === 429 ) {
+                setMessage(
+                    `${error.response.data} Clique no 'x' para realizar uma nova tentativa, ou no 'Ok' para voltar para a tela de login.`
+                );
+            } else {
+                setMessage(
+                    `${error.response.data.error.message} Clique no 'x' para realizar uma nova tentativa, ou no 'Ok' para voltar para a tela de login.`
+                );
+            }
+
             setModal(true);
         }
     }
