@@ -50,9 +50,8 @@ class UsuarioController {
       };
 
       transporter.sendMail(mailOptions, (error, info) => {
-        console.log(error, " ", info);
         if (error) {
-          return httpHelper.internalError("Erro ao enviar o email");
+          return httpHelper.internalError(`Erro ao enviar o email: ${error}`);
         } else {
           return httpHelper.ok({
             message: "Email enviado com sucesso",
