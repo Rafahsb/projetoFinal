@@ -28,6 +28,7 @@ export function UserContextProvider({ children }) {
             setAccessToken(result.data.accessToken);
             navigate("/painel");
         } catch (e) {
+            console.log(e);
             setError({
                 title: "Houve um erro no login!",
                 message: e.response.data.error.message,
