@@ -10,7 +10,7 @@ const itensPorPagina = 5;
 const transporter = nodemailer.createTransport({
   service: "Gmail",
   auth: {
-    user: process.env.USER,
+    user: process.env.USEREMAIL,
     pass: process.env.PASS,
   },
 });
