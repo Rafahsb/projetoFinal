@@ -33,12 +33,12 @@ class UsuarioController {
       }
 
       const accessToken = jwt.sign(
-        { id: userExists.id_usuario },
+        { id: userExists.id_usuario, cargo: userExists.cargo },
         process.env.TOKEN_SECRET,
         { expiresIn: "15m" }
       );
 
-      const baseURL = process.env.BASE_URL || 'http://localhost:3000';
+      const baseURL = process.env.BASE_URL || "http://localhost:3000";
 
       const resetLink = `${baseURL}/alterarSenha?token=${accessToken}`;
 
@@ -181,7 +181,7 @@ class UsuarioController {
 
       // Gera e retorna o access token
       const accessToken = jwt.sign(
-        { id: userExists.id_usuario },
+        { id: userExists.id_usuario, cargo: userExists.cargo },
         process.env.TOKEN_SECRET,
         { expiresIn: "300m" }
       );

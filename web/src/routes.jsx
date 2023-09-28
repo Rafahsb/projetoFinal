@@ -14,6 +14,7 @@ import { UserContextProvider } from "./contexts/UserContexts";
 import { Viaturas } from "./pages/Viaturas";
 import { Manutencoes } from "./pages/Manutencoes";
 import { Usuarios } from "./pages/Usuarios";
+import { NotFound } from "./pages/NotFound";
 import { validaToken } from "./services/validator-service";
 import { useEffect, useState } from "react";
 
@@ -120,6 +121,7 @@ export function Navigations() {
                             </PrivateRouteQuery>
                         }
                     />
+                    <Route path="*" element={<NotFound />} />
                 </Routes>
             </UserContextProvider>
         </BrowserRouter>

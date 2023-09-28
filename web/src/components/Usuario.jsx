@@ -185,23 +185,22 @@ export function Usuario(props) {
                         </Row>
 
                         <Row className="mb-4">
-                            <Input
-                                size={"sm"}
-                                defaultValue={props.usuario.cargo}
-                                type="text"
-                                label="Cargo:*"
-                                placeholder="Informe o cargo:"
-                                required={true}
-                                name="cargo"
-                                error={errors.cargo}
-                                validations={register("cargo", {
-                                    required: {
-                                        value: true,
-                                        message:
-                                            "O cargo é um campo obrigatório",
-                                    },
-                                })}
-                            />
+                            <Form.Group>
+                                <Form.Label>Seleciona uma marca:</Form.Label>
+                                <Form.Select
+                                    {...register("cargo")}
+                                    size="lg"
+                                    defaultValue={props.usuario.cargo}
+                                >
+                                    <option disabled>
+                                        Clique para selecionar a marca
+                                    </option>
+                                    <option value={"Admin"}>
+                                        Administrador
+                                    </option>
+                                    <option value={"Usuario"}>Usuário</option>
+                                </Form.Select>
+                            </Form.Group>
                         </Row>
                     </Modal.Body>
                     <Modal.Footer>
@@ -220,7 +219,9 @@ export function Usuario(props) {
             <RemoveItem
                 show={modalDelete}
                 title={"Excluir usuário"}
-                message={"Deseja realmente excluir o usuário? Isso afetará os dashboards."}
+                message={
+                    "Deseja realmente excluir o usuário? Isso afetará os dashboards."
+                }
                 handleClose={() => setModalDelete(false)}
                 remove={props.removeUsuario}
             />

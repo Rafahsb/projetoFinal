@@ -39,3 +39,13 @@ export async function getDataDashboard4() {
     });
     return result;
 }
+
+export async function getDataDashboard5() {
+    const accessToken = sessionStorage.getItem("token");
+    const result = await api.get("/dashboard5", {
+        headers: {
+            Authorization: `Bearer ${JSON.parse(accessToken)}`,
+        },
+    });
+    return result;
+}

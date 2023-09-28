@@ -96,8 +96,26 @@ class PainelController {
 
     try {
       const data = await ViaturasModel.findAll({
-        attributes: ["orgao_vinculado", [Sequelize.fn("COUNT", "orgao_vinculado"), "total"]],
+        attributes: [
+          "orgao_vinculado",
+          [Sequelize.fn("COUNT", "orgao_vinculado"), "total"],
+        ],
         group: ["orgao_vinculado"],
+      });
+
+      return httpHelper.ok({ dashboard: data });
+    } catch (error) {
+      return httpHelper.internalError(error);
+    }
+  }
+
+  async Dashboard5(request, response) {
+    const httpHelper = new HttpHelper(response);
+
+    try {
+      const data = await UsuariosModel.findAll({
+        attributes: ["cargo", [Sequelize.fn("COUNT", "cargo"), "total"]],
+        group: ["cargo"],
       });
 
       return httpHelper.ok({ dashboard: data });

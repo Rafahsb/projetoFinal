@@ -27,6 +27,15 @@ class HttpHelper {
     });
   }
 
+  forbidden(error) {
+    return this.response.status(403).json({
+      error: {
+        message: `Erro interno: ${error}`,
+        variant: "danger",
+      },
+    });
+  }
+
   notFound(message) {
     return this.response.status(404).json({
       error: message,

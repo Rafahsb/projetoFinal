@@ -27,6 +27,7 @@ import {
     getDataDashboard2,
     getDataDashboard3,
     getDataDashboard4,
+    getDataDashboard5,
 } from "../services/painel-service";
 import { useEffect, useState, useContext } from "react";
 import { UserContext } from "../contexts/UserContexts";
@@ -51,6 +52,7 @@ export function Painel() {
     const [listDashboard2, setListDashboard2] = useState({});
     const [listDashboard3, setListDashboard3] = useState({});
     const [listDashboard4, setListDashboard4] = useState({});
+    const [listDashboard5, setListDashboard5] = useState({});
     const [listDashboard2Year, setListDashboard2Year] = useState("");
     const [selectedYear, setSelectedYear] = useState(null);
     const navigate = useNavigate();
@@ -68,6 +70,7 @@ export function Painel() {
         filterDataDashboard2();
         findDataDashboard3();
         findDataDashboard4();
+        findDataDashboard5();
         // eslint-disable-next-line
     }, []);
 
@@ -163,8 +166,10 @@ export function Painel() {
 
             const unidadeArray = result.data.dashboard.map((result) => {
                 const orgao_vinculado = OrgaosEnum[result.orgao_vinculado];
-                return orgao_vinculado ? orgao_vinculado : result.orgao_vinculado;
-              });
+                return orgao_vinculado
+                    ? orgao_vinculado
+                    : result.orgao_vinculado;
+            });
 
             const totalArray = result.data.dashboard.map((result) =>
                 parseInt(result.total, 10)
@@ -174,7 +179,7 @@ export function Painel() {
                 orgao_vinculado: unidadeArray,
                 total: totalArray,
             };
-            
+
             setListDashboard4(resultObject);
         } catch (error) {
             console.error(error);
@@ -182,6 +187,29 @@ export function Painel() {
         }
     }
 
+    async function findDataDashboard5() {
+        try {
+            const result = await getDataDashboard5();
+
+            const cargoArray = result.data.dashboard.map(
+                (result) => result.cargo
+            );
+
+            const totalArray = result.data.dashboard.map((result) =>
+                parseInt(result.total, 10)
+            );
+
+            const resultObject = {
+                cargo: cargoArray,
+                total: totalArray,
+            };
+
+            setListDashboard5(resultObject);
+        } catch (error) {
+            console.error(error);
+            navigate("/painel");
+        }
+    }
     async function findTotalManutencoes() {
         try {
             const result = await getTotalManutencoes();
@@ -439,11 +467,30 @@ export function Painel() {
                                     <p className="h4 my-3 text-center">
                                         Usuarios / Unidade
                                     </p>
-                                    
+
                                     {listDashboard3.unidade ? (
                                         <ApexPie
                                             coluna={listDashboard3.unidade}
                                             total={listDashboard3.total}
+                                        />
+                                    ) : (
+                                        <></>
+                                    )}
+                                </Card>
+                            </Tab>
+                            <Tab eventKey="DU2" title="U / CARGO">
+                                <Card
+                                    style={{ height: "500px" }}
+                                    className="p-2 shadow"
+                                >
+                                    <p className="h4 my-3 text-center">
+                                        Usuarios / Cargo
+                                    </p>
+
+                                    {listDashboard5.cargo ? (
+                                        <ApexPie
+                                            coluna={listDashboard5.cargo}
+                                            total={listDashboard5.total}
                                         />
                                     ) : (
                                         <></>
@@ -460,7 +507,9 @@ export function Painel() {
                                     </p>
                                     {listDashboard4.orgao_vinculado ? (
                                         <ApexPie
-                                            coluna={listDashboard4.orgao_vinculado}
+                                            coluna={
+                                                listDashboard4.orgao_vinculado
+                                            }
                                             total={listDashboard4.total}
                                         />
                                     ) : (

@@ -129,7 +129,6 @@ export function Usuarios() {
 
             setCurrentPage(1);
             await filterUsuarios();
-
             setApiMessage(result.data);
             setActive(true);
         } catch (error) {
@@ -353,22 +352,25 @@ export function Usuarios() {
                                 </Row>
 
                                 <Row className="mb-4">
-                                    <Input
-                                        size={"sm"}
-                                        type="text"
-                                        label="Cargo:*"
-                                        placeholder="Informe o cargo:"
-                                        required={true}
-                                        name="cargo"
-                                        error={errors.cargo}
-                                        validations={register("cargo", {
-                                            required: {
-                                                value: true,
-                                                message:
-                                                    "O cargo é um campo obrigatório",
-                                            },
-                                        })}
-                                    />
+                                    <Form.Group>
+                                        <Form.Label>
+                                            Seleciona uma marca:
+                                        </Form.Label>
+                                        <Form.Select
+                                            {...register("cargo")}
+                                            size="lg"
+                                        >
+                                            <option disabled>
+                                                Clique para selecionar a marca
+                                            </option>
+                                            <option value={"Admin"}>
+                                                Administrador
+                                            </option>
+                                            <option value={"Usuario"}>
+                                                Usuário
+                                            </option>
+                                        </Form.Select>
+                                    </Form.Group>
                                 </Row>
                             </Modal.Body>
                             <Modal.Footer>

@@ -188,6 +188,13 @@ routes.get(
   painelController.Dashboard4
 );
 
+routes.get(
+  "/dashboard5",
+  authMiddleware,
+  rateLimitMiddleware,
+  painelController.Dashboard5
+);
+
 routes.post("/validarToken", validatorController.validaToken);
 routes.post(
   "/verify-recaptcha",
