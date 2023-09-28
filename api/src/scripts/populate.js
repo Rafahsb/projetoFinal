@@ -11,7 +11,7 @@ const usuarios = [
     matricula: "123456789",
     email: "admin@email.com",
     unidade: "unidade",
-    cargo: "gestor",
+    cargo: "Admin",
   },
 ];
 
