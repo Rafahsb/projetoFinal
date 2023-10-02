@@ -24,12 +24,16 @@ class ManutencoesModel extends Model {
         },
         data_nota: {
           type: DataTypes.DATE,
-          allowNull: false,
+          allowNull: true,
         },
-        id_viatura: { 
+        id_viatura: {
           type: DataTypes.INTEGER,
           allowNull: false,
-        }
+        },
+        data_manutencao: {
+          type: DataTypes.DATE,
+          allowNull: false,
+        },
       },
       {
         modelName: "Manutencoes",

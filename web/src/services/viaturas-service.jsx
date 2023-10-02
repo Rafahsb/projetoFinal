@@ -68,6 +68,9 @@ export async function updateViatura(data) {
             quilometragem: data.quilometragem,
             orgao_vinculado: data.orgao_vinculado,
             piloto: data.piloto,
+            status: data.status,
+            lat: data.latitude,
+            long: data.longitude,
         },
         {
             headers: {
@@ -93,6 +96,9 @@ export async function createViatura(data) {
             quilometragem: data.quilometragem,
             orgao_vinculado: data.orgao_vinculado,
             piloto: data.piloto,
+            status: data.status,
+            lat: data.latitude,
+            long: data.longitude,
         },
         {
             headers: {

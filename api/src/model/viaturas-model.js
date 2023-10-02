@@ -51,6 +51,18 @@ class ViaturasModel extends Model {
           type: DataTypes.TEXT,
           allowNull: false,
         },
+        status: {
+          type: DataTypes.TEXT,
+          allowNull: false,
+        },
+        lat: {
+          type: DataTypes.TEXT,
+          allowNull: true,
+        },
+        long: {
+          type: DataTypes.TEXT,
+          allowNull: true,
+        },
       },
       {
         modelName: "Viaturas",

@@ -14,7 +14,7 @@ class ManutencoesController {
     const httpHelper = new HttpHelper(response);
     const { numero_nota, descricao, preco, data, id_viatura } = request.body;
     try {
-      if (!numero_nota || !descricao || !preco || !id_viatura) {
+      if (!numero_nota || !descricao || !preco || !id_viatura || data) {
         return httpHelper.badRequest({
           message: "Ops! faltou preencher algum campo!",
           variant: "danger",
@@ -50,10 +50,11 @@ class ManutencoesController {
           variant: "danger",
         });
       }
-      const dataInformada = new Date(data);
+
+      const dataInformadaManutencao = new Date(data);
       const dataAtual = new Date();
 
-      if (dataInformada > dataAtual) {
+      if (dataInformadaManutencao > dataAtual) {
         return httpHelper.badRequest({
           message: "Data inválida!",
           variant: "danger",
@@ -64,8 +65,8 @@ class ManutencoesController {
         numero_nota,
         descricao,
         preco,
-        data_nota: dataInformada,
         id_viatura,
+        data_manutencao: dataInformadaManutencao,
       });
 
       return httpHelper.created({
@@ -118,10 +119,15 @@ class ManutencoesController {
           type: Sequelize.QueryTypes.SELECT,
         }
       );
+      console.log(filtro);
       filtro.forEach((manutencao) => {
         manutencao.data_nota = Validates.formatDate(manutencao.data_nota);
+        manutencao.data_manutencao = Validates.formatDate(
+          manutencao.data_manutencao
+        );
       });
 
+      console.log(filtro);
       return httpHelper.ok({ Manutencoes: filtro });
     } catch (error) {
       return httpHelper.internalError(error);
@@ -144,9 +150,13 @@ class ManutencoesController {
       } else {
         busca = await paginationWhereManut(ManutencoesModel, page);
       }
-
       busca.data.forEach((manutencao) => {
-        manutencao.data_nota = Validates.formatDate(manutencao.data_nota);
+        if (manutencao.data_nota) {
+          manutencao.data_nota = Validates.formatDate(manutencao.data_nota);
+        }
+        manutencao.data_manutencao = Validates.formatDate(
+          manutencao.data_manutencao
+        );
       });
 
       return httpHelper.ok({
@@ -172,7 +182,8 @@ class ManutencoesController {
   async atualizarManutencao(request, response) {
     const httpHelper = new HttpHelper(response);
     const { id } = request.params;
-    const { numero_nota, descricao, preco, data, id_viatura } = request.body;
+    const { numero_nota, descricao, preco, data_manutencao, data, id_viatura } =
+      request.body;
 
     try {
       if (numero_nota.length != 9) {
@@ -193,10 +204,14 @@ class ManutencoesController {
           variant: "danger",
         });
       }
-      const dataInformada = new Date(data);
+      const dataInformadaNota = new Date(data);
+      const dataInformadaManutencao = new Date(data_manutencao);
       const dataAtual = new Date();
 
-      if (dataInformada > dataAtual) {
+      if (
+        dataInformadaNota > dataAtual ||
+        dataInformadaManutencao > dataAtual
+      ) {
         return httpHelper.badRequest({
           message: "Data inválida!",
           variant: "danger",
@@ -208,8 +223,9 @@ class ManutencoesController {
           numero_nota,
           descricao,
           preco,
-          data_nota: dataInformada,
+          data_nota: dataInformadaNota,
           id_viatura,
+          data_manutencao: dataInformadaManutencao,
         },
         {
           where: {

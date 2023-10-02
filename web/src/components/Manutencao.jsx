@@ -42,10 +42,12 @@ export function Manutencao(props) {
                 {props.manutencao.descricao}
             </td>
             <td>{props.manutencao.preco}</td>
-            <td>{props.manutencao.data_nota}</td>
-            <td>{props.manutencao.marca}</td>
+            <td>{props.manutencao.data_manutencao}</td>
+            <td>
+                {props.manutencao.data_nota ? props.manutencao.data_nota : ""}
+            </td>
             <td>{props.manutencao.modelo}</td>
-            <td style={{minWidth: "84.94px"}}>{props.manutencao.placa}</td>
+            <td style={{ minWidth: "84.94px" }}>{props.manutencao.placa}</td>
             <td>
                 <Dropdown>
                     <Dropdown.Toggle
@@ -149,10 +151,14 @@ export function Manutencao(props) {
                         <Row className="mb-4">
                             <Input
                                 size={"sm"}
-                                defaultValue={props.manutencao.data_nota
-                                    .split("/")
-                                    .reverse()
-                                    .join("-")}
+                                defaultValue={
+                                    props.manutencao.data_nota
+                                        ? props.manutencao.data_nota
+                                              .split("/")
+                                              .reverse()
+                                              .join("-")
+                                        : ""
+                                }
                                 type="date"
                                 label="Data:*"
                                 placeholder="Informe a data da realização do serviço:"
@@ -206,7 +212,9 @@ export function Manutencao(props) {
             <RemoveItem
                 show={modalDelete}
                 title={"Excluir manutenção"}
-                message={"Deseja realmente excluir a manutenção? Isso afetará os dashboards."}
+                message={
+                    "Deseja realmente excluir a manutenção? Isso afetará os dashboards."
+                }
                 handleClose={() => setModalDelete(false)}
                 remove={props.removeManutencao}
             />

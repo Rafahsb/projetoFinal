@@ -230,8 +230,8 @@ export function Manutencoes() {
                                         <th>Nº da nota</th>
                                         <th>Descrição</th>
                                         <th>Preço</th>
-                                        <th>Data</th>
-                                        <th>Marca</th>
+                                        <th>Data entrada</th>
+                                        <th>Data saída</th>
                                         <th>Modelo</th>
                                         <th>Placa</th>
                                         <th>Ações</th>

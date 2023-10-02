@@ -7,12 +7,12 @@ import { Input } from "./Input";
 import Col from "react-bootstrap/Col";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
-import PlagiarismOutlinedIcon from '@mui/icons-material/PlagiarismOutlined';
+import PlagiarismOutlinedIcon from "@mui/icons-material/PlagiarismOutlined";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import Localizacao from "../components/Localizacao";
 import { RemoveItem } from "../components/RemoveItem";
 import { getViaturaHistorico } from "../services/viaturas-service";
-import { saveAs } from 'file-saver';
+import { saveAs } from "file-saver";
 
 export function Viatura(props) {
     const {
@@ -26,10 +26,11 @@ export function Viatura(props) {
     const [modalRelatorios, setModalRelatorios] = useState(false);
     const location = { lat: -15.6014, lng: -56.0979 };
 
-
-     async function viaturaHistorico() {
+    async function viaturaHistorico() {
         try {
-            const response = await getViaturaHistorico(props.viatura.id_viatura)
+            const response = await getViaturaHistorico(
+                props.viatura.id_viatura
+            );
             const base64Data = response.data.data;
             const byteCharacters = atob(base64Data);
             const byteNumbers = new Array(byteCharacters.length);
@@ -37,9 +38,10 @@ export function Viatura(props) {
                 byteNumbers[i] = byteCharacters.charCodeAt(i);
             }
             const byteArray = new Uint8Array(byteNumbers);
-            const blob = new Blob([byteArray], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-            saveAs(blob, 'RelatorioKilometragem.xlsx');
-
+            const blob = new Blob([byteArray], {
+                type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            });
+            saveAs(blob, "RelatorioKilometragem.xlsx");
         } catch (error) {
             return console.error(error);
         }
@@ -54,8 +56,9 @@ export function Viatura(props) {
             <td>{props.viatura.marca}</td>
             <td>{props.viatura.modelo}</td>
             <td>{props.viatura.quilometragem}</td>
-            <td style={{minWidth: "84.94px"}}>{props.viatura.placa}</td>
+            <td style={{ minWidth: "84.94px" }}>{props.viatura.placa}</td>
             <td>{props.viatura.piloto}</td>
+            <td>{props.viatura.status}</td>
             <td>
                 <Dropdown>
                     <Dropdown.Toggle variant="primary" id="dropdown-basic">
@@ -284,7 +287,31 @@ export function Viatura(props) {
                                 />
                             </Col>
                         </Row>
-
+                        <Row className="d-flex align-items-start mb-3">
+                            <Col sm={6}>
+                                <Input
+                                    type="text"
+                                    defaultValue={props.viatura.placa}
+                                    label="Placa:*"
+                                    placeholder="Informe a placa do carro:"
+                                    required={true}
+                                    name="placa"
+                                    error={errors.placa}
+                                    validations={register("placa", {
+                                        required: {
+                                            value: true,
+                                            message:
+                                                "A placa é um campo obrigatório",
+                                        },
+                                        pattern: {
+                                            value: /^[A-Z]{3}-(\d{4}|\d[A-Z]\d{2})$/,
+                                            message:
+                                                "A placa deve estar no seguinte formato LLL-N(N/L)NN",
+                                        },
+                                    })}
+                                />
+                            </Col>
+                        </Row>
                         <Row className="d-flex align-items-start mb-3">
                             <Col sm={6}>
                                 <Form.Group>
@@ -312,28 +339,30 @@ export function Viatura(props) {
                                     </Form.Select>
                                 </Form.Group>
                             </Col>
-                            <Col sm={6}>
-                            <Input
-                                    type="text"
-                                    defaultValue={props.viatura.placa}
-                                    label="Placa:*"
-                                    placeholder="Informe a placa do carro:"
-                                    required={true}
-                                    name="placa"
-                                    error={errors.placa}
-                                    validations={register("placa", {
-                                        required: {
-                                            value: true,
-                                            message:
-                                                "A placa é um campo obrigatório",
-                                        },
-                                        pattern: {
-                                            value: /^[A-Z]{3}-(\d{4}|\d[A-Z]\d{2})$/,
-                                            message:
-                                                "A placa deve estar no seguinte formato LLL-N(N/L)NN",
-                                        },
-                                    })}
-                                />
+                            <Col sm={6} className="mb-3 mb-sm-0">
+                                <Form.Group>
+                                    <Form.Label>
+                                        Selecione um status:
+                                    </Form.Label>
+                                    <Form.Select
+                                        {...register("status")}
+                                        defaultValue={props.viatura.status}
+                                        size="lg"
+                                    >
+                                        <option disabled>
+                                            Clique para selecionar um órgão
+                                        </option>
+                                        <option value={"manutencao"}>
+                                            Manutenção
+                                        </option>
+                                        <option value={"garagem"}>
+                                            Garagem
+                                        </option>
+                                        <option value={"patrulha"}>
+                                            Patrulha
+                                        </option>
+                                    </Form.Select>
+                                </Form.Group>
                             </Col>
                         </Row>
                     </Modal.Body>
@@ -358,12 +387,11 @@ export function Viatura(props) {
                 <Modal.Header>
                     <Modal.Title>Localização Atual</Modal.Title>
                 </Modal.Header>
-               
+
                 <Modal.Body>
                     <Row className="">
                         <Col sm={12} style={{ overflow: "auto" }}>
                             <div className="App">
-                                
                                 <Localizacao
                                     lat={location.lat}
                                     lng={location.lng}
@@ -390,18 +418,23 @@ export function Viatura(props) {
                 <Modal.Header>
                     <Modal.Title>Relatórios</Modal.Title>
                 </Modal.Header>
-                
+
                 <Modal.Body>
                     <Row className="">
-                        <Col sm={6} >
-                        <Card style={{ width: '18rem' }}>
-                            <Card.Body>
-                                <Card.Title>Relatório de kilometragem</Card.Title>
-                                <Card.Text>
-                                Relatório com todo o histórico de kilometragem da viatura.
-                                </Card.Text>
-                                <Button onClick={() => viaturaHistorico()}>Baixar relatório</Button>
-                            </Card.Body>
+                        <Col sm={6}>
+                            <Card style={{ width: "18rem" }}>
+                                <Card.Body>
+                                    <Card.Title>
+                                        Relatório de kilometragem
+                                    </Card.Title>
+                                    <Card.Text>
+                                        Relatório com todo o histórico de
+                                        kilometragem da viatura.
+                                    </Card.Text>
+                                    <Button onClick={() => viaturaHistorico()}>
+                                        Baixar relatório
+                                    </Button>
+                                </Card.Body>
                             </Card>
                         </Col>
                     </Row>
@@ -414,7 +447,6 @@ export function Viatura(props) {
                         Voltar
                     </Button>
                 </Modal.Footer>
-                
             </Modal>
             <RemoveItem
                 show={modalDelete}

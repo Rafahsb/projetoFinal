@@ -22,6 +22,8 @@ class ViaturaController {
       quilometragem,
       orgao_vinculado,
       piloto,
+      lat,
+      long,
     } = request.body;
 
     if (
@@ -34,7 +36,8 @@ class ViaturaController {
       !quilometragem ||
       !orgao_vinculado ||
       !placa ||
-      !piloto
+      !piloto ||
+      !status
     ) {
       return httpHelper.badRequest({
         message: "Ops! faltou preencher algum campo!",
@@ -111,6 +114,9 @@ class ViaturaController {
         orgao_vinculado,
         placa: placa.toUpperCase(),
         piloto,
+        status: "garagem",
+        lat,
+        long,
       });
 
       await HistoricoKmModel.create({
@@ -315,6 +321,9 @@ class ViaturaController {
         orgao_vinculado,
         placa,
         piloto,
+        status,
+        lat,
+        long,
       } = request.body;
 
       if (!id)
@@ -328,6 +337,23 @@ class ViaturaController {
           id_viatura: id,
         },
       });
+
+      if (status !== "manutencao") {
+        const manutencaoExists = await ManutencoesModel.sequelize.query(`
+        SELECT * FROM viaturas INNER JOIN manutencoes ON manutencoes.id_viatura = viaturas.id_viatura
+        WHERE viaturas.id_viatura =  ${id} and data_nota isNull
+        order by id_manutencao desc
+        limit 1;
+        `);
+
+        if (manutencaoExists[0][0] != undefined) {
+          return httpHelper.badRequest({
+            message:
+              "Status inválido! A viatura possui uma manutenção cadastrada sem a data final.",
+            variant: "danger",
+          });
+        }
+      }
 
       if (!viaturaExists) return httpHelper.notFound("Viatura não encontrada!");
 
@@ -380,6 +406,7 @@ class ViaturaController {
           quilometragem,
           orgao_vinculado,
           piloto,
+          status,
         },
         {
           where: {

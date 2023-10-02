@@ -51,6 +51,18 @@ module.exports = {
         type: Sequelize.TEXT,
         allowNull: false,
       },
+      status: {
+        type: Sequelize.TEXT,
+        allowNull: false,
+      },
+      lat: {
+        type: Sequelize.TEXT,
+        allowNull: true,
+      },
+      long: {
+        type: Sequelize.TEXT,
+        allowNull: true,
+      },
     });
   },
 

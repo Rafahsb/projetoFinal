@@ -35,7 +35,7 @@ export function Viaturas() {
     const [currentPage, setCurrentPage] = useState(1);
     let paginaAtual = 1;
     const [itemsPerPage, setItemsPerPage] = useState(1);
-    
+
     const [totalPages, setTotalPages] = useState();
     const { menu } = useContext(UserContext);
     const {
@@ -128,6 +128,7 @@ export function Viaturas() {
                 quilometragem: data.quilometragem,
                 orgao_vinculado: data.orgao_vinculado,
                 piloto: data.piloto,
+                status: data.status,
             });
             setCurrentPage(1);
             await filterViaturas();
@@ -218,6 +219,7 @@ export function Viaturas() {
                                         <th>Quilometragem</th>
                                         <th>Placa</th>
                                         <th>Piloto</th>
+                                        <th>Status</th>
                                         <th>Ações</th>
                                     </tr>
                                 </thead>
@@ -476,11 +478,10 @@ export function Viaturas() {
                                         />
                                     </Col>
                                 </Row>
-
                                 <Row className="d-flex align-items-start mb-3">
                                     <Col sm={6} className="mb-3 mb-sm-0">
                                         <Form.Group>
-                                            <Form.Label >
+                                            <Form.Label>
                                                 Selecione um órgão:
                                             </Form.Label>
                                             <Form.Select
@@ -508,24 +509,24 @@ export function Viaturas() {
                                     </Col>
                                     <Col sm={6}>
                                         <Input
-                                        type="text"
-                                        label="Placa:*"
-                                        placeholder="Informe a placa do carro:"
-                                        required={true}
-                                        name="placa"
-                                        error={errors.placa}
-                                        validations={register("placa", {
-                                            required: {
-                                                value: true,
-                                                message:
-                                                    "A placa é um campo obrigatório",
-                                            },
-                                            pattern: {
-                                                value: /^[A-Z]{3}-(\d{4}|\d[A-Z]\d{2})$/,
-                                                message:
-                                                    "A placa deve estar no seguinte formato LLL-N(N/L)NN",
-                                            },
-                                        })}
+                                            type="text"
+                                            label="Placa:*"
+                                            placeholder="Informe a placa do carro:"
+                                            required={true}
+                                            name="placa"
+                                            error={errors.placa}
+                                            validations={register("placa", {
+                                                required: {
+                                                    value: true,
+                                                    message:
+                                                        "A placa é um campo obrigatório",
+                                                },
+                                                pattern: {
+                                                    value: /^[A-Z]{3}-(\d{4}|\d[A-Z]\d{2})$/,
+                                                    message:
+                                                        "A placa deve estar no seguinte formato LLL-N(N/L)NN",
+                                                },
+                                            })}
                                         />
                                     </Col>
                                 </Row>
@@ -543,8 +544,6 @@ export function Viaturas() {
                             </Modal.Footer>
                         </Form>
                     </Modal>
-
-                   
                 </Col>
             </Row>
         </>

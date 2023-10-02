@@ -22,9 +22,13 @@ module.exports = {
         type: Sequelize.FLOAT,
         allowNull: false,
       },
-      data_nota: {
+      data_manutencao: {
         type: Sequelize.DATE,
         allowNull: false,
+      },
+      data_nota: {
+        type: Sequelize.DATE,
+        allowNull: true,
       },
     });
   },
