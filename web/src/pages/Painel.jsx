@@ -28,6 +28,7 @@ import {
     getDataDashboard3,
     getDataDashboard4,
     getDataDashboard5,
+    getTotalStatusViaturas
 } from "../services/painel-service";
 import { useEffect, useState, useContext } from "react";
 import { UserContext } from "../contexts/UserContexts";
@@ -40,12 +41,17 @@ import { Form } from "react-bootstrap";
 import { format } from "d3-format";
 import ApexPie from "../components/ApexPie";
 import OrgaosEnum from "../enums/orgaosEnum";
-
+import PeopleAltOutlinedIcon from "@mui/icons-material/PeopleAltOutlined";
+import DirectionsCarOutlinedIcon from "@mui/icons-material/DirectionsCarOutlined";
+import EmojiTransportationOutlinedIcon from '@mui/icons-material/EmojiTransportationOutlined';
+import GarageOutlinedIcon from '@mui/icons-material/GarageOutlined';
+import CarRepairOutlinedIcon from '@mui/icons-material/CarRepairOutlined';
 export function Painel() {
     const currentYear = new Date().getFullYear();
     const { menu } = useContext(UserContext);
     const [key, setKey] = useState("DM1");
     const [totalManutencoes, setTotalManutencoes] = useState([]);
+    const [totalStatusViaturas, setTotalStatusViaturas] = useState({});
     const [totalViaturas, setTotalViaturas] = useState({});
     const [totalUsuarios, setTotalUsuarios] = useState({});
     const [listDashboard, setListDashboard] = useState({});
@@ -71,6 +77,7 @@ export function Painel() {
         findDataDashboard3();
         findDataDashboard4();
         findDataDashboard5();
+        findTotalStatusViaturas();
         // eslint-disable-next-line
     }, []);
 
@@ -213,7 +220,7 @@ export function Painel() {
     async function findTotalManutencoes() {
         try {
             const result = await getTotalManutencoes();
-            setTotalManutencoes(result);
+            setTotalManutencoes(result.data.dashboard);
         } catch (error) {
             console.error(error);
             navigate("/painel");
@@ -240,6 +247,17 @@ export function Painel() {
         }
     }
 
+    async function findTotalStatusViaturas() {
+        try {
+            const result = await getTotalStatusViaturas();
+            console.log('result total  status: ', result);
+            setTotalStatusViaturas(result.data.dashboard);
+        } catch (error) {
+            console.error(error);
+            navigate("/painel");
+        }
+    }
+
     return (
         <Layout>
             <Head styles={{ overflow: "hidden" }}></Head>
@@ -259,38 +277,8 @@ export function Painel() {
                         </Col>
                     </Row>
                     <Row className="d-flex justify-content-end my-4">
-                        <Col
-                            lg={4}
-                            md={5}
-                            sm={6}
-                            xs={12}
-                            className="mb-3 mb-sm-0"
-                        >
-                            <Card className="p-4 shadow">
-                                <Row>
-                                    <Col
-                                        className="d-flex align-items-center justify-content-center"
-                                        xs={5}
-                                    >
-                                        <p className="fs-1 m-0 fw-bold">
-                                            {" "}
-                                            {totalViaturas.Total}
-                                        </p>
-                                    </Col>
-                                    <Col>
-                                        <div className="vr h-100"></div>
-                                    </Col>
-                                    <Col
-                                        className="d-flex align-items-center justify-content-center"
-                                        xs={5}
-                                    >
-                                        <p className="m-0">Viaturas</p>
-                                    </Col>
-                                </Row>
-                            </Card>
-                        </Col>
-                        <Col lg={4} md={5} sm={6} xs={12}>
-                            <Card className="p-4  shadow">
+                    <Col lg={4} md={5} sm={6} xs={12} className="mb-3">
+                            <Card className="p-4 p-sm-3 p-md-4  shadow">
                                 <Row>
                                     <Col
                                         className="d-flex align-items-center justify-content-center"
@@ -305,10 +293,118 @@ export function Painel() {
                                         <div className="vr h-100"></div>
                                     </Col>
                                     <Col
+                                        className="d-flex align-items-center justify-content-center flex-column"
+                                        xs={5}
+                                    >
+                                        <PeopleAltOutlinedIcon></PeopleAltOutlinedIcon>
+                                        <p className="m-0">Usuários</p>
+                                    </Col>
+                                </Row>
+                            </Card>
+                        </Col>
+                        <Col
+                            lg={4}
+                            md={5}
+                            sm={6}
+                            xs={12}
+                            className="mb-3 mb-lg-0"
+                        >
+                            <Card className="p-4 p-sm-3 p-md-4  shadow">
+                                <Row>
+                                    <Col
+                                        className="d-flex align-items-center justify-content-center flex-column"
+                                        xs={5}
+                                    >
+                                        <p className="fs-1 m-0 fw-bold">
+                                            {" "}
+                                            {totalViaturas.Total}
+                                        </p>
+                                    </Col>
+                                    <Col>
+                                        <div className="vr h-100"></div>
+                                    </Col>
+                                    <Col
+                                        className="d-flex align-items-center justify-content-center flex-column"
+                                        xs={5}
+                                    >   
+                                    <DirectionsCarOutlinedIcon ></DirectionsCarOutlinedIcon>
+                                        <p className="m-0">Viaturas</p>
+                                    </Col>
+                                </Row>
+                            </Card>
+                        </Col>
+                       
+                        <Col lg={4} md={5} sm={6} xs={12} className="mb-3 mb-lg-0">
+                            <Card className="p-4 p-sm-3 p-md-4  shadow">
+                                <Row>
+                                    <Col
                                         className="d-flex align-items-center justify-content-center"
                                         xs={5}
                                     >
-                                        <p className="m-0">Usuários</p>
+                                        <p className="fs-1 m-0 fw-bold ">
+                                            {" "}
+                                            {totalStatusViaturas[0] ? totalStatusViaturas[0].total : ''}
+                                        </p>
+                                    </Col>
+                                    <Col>
+                                        <div className="vr h-100"></div>
+                                    </Col>
+                                    <Col
+                                        className="d-flex align-items-center justify-content-cente flex-column"
+                                        xs={5}
+                                    >
+                                        <GarageOutlinedIcon></GarageOutlinedIcon>
+                                        <p className="m-0"> Garagem</p>
+                                    </Col>
+                                </Row>
+                            </Card>
+                        </Col>
+                        <Col lg={4} md={5} sm={6} xs={12} className="mb-3 mb-lg-0">
+                            <Card className="p-4 p-sm-3 p-md-4  shadow">
+                                <Row>
+                                    <Col
+                                        className="d-flex align-items-center justify-content-center"
+                                        xs={5}
+                                    >
+                                        <p className="fs-1 m-0 fw-bold ">
+                                            {" "}
+                                            {totalStatusViaturas[1] ? totalStatusViaturas[1].total : ''}
+                                        </p>
+                                    </Col>
+                                    <Col>
+                                        <div className="vr h-100"></div>
+                                    </Col>
+                                    <Col
+                                        className="d-flex align-items-center justify-content-center flex-column"
+                                        xs={5}
+                                    >
+                                        <CarRepairOutlinedIcon></CarRepairOutlinedIcon>
+                                        <p className="m-0"> Manutenção</p>
+                                    </Col>
+                                </Row>
+                            </Card>
+                        </Col>
+                        <Col lg={4} md={5} sm={6} xs={12} className="mb-3 mb-lg-0">
+                            <Card className="p-4 p-sm-3 p-md-4  shadow">
+                                <Row>
+                                    <Col
+                                        className="d-flex align-items-center justify-content-center"
+                                        xs={5}
+                                    >
+                                        <p className="fs-1 m-0 fw-bold ">
+                                            {" "}
+                                            {totalStatusViaturas[2] ? totalStatusViaturas[2].total : ''}
+                                        </p>
+                                    </Col>
+                                    <Col>
+                                        <div className="vr h-100"></div>
+                                    </Col>
+                                    <Col
+                                        className="d-flex align-items-center justify-content-center flex-column"
+                                        xs={5}
+                                    >
+                                        <EmojiTransportationOutlinedIcon></EmojiTransportationOutlinedIcon>
+                                        <p className="m-0">Patrulha</p>
                                     </Col>
                                 </Row>
                             </Card>

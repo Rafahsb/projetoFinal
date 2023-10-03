@@ -195,6 +195,17 @@ routes.get(
   painelController.Dashboard5
 );
 
+
+routes.get(
+  "/totalStatusViaturas",
+  authMiddleware,
+  rateLimitMiddleware,
+  painelController.totalStatusViaturas
+);
+
+
+// Verificações
+
 routes.post("/validarToken", validatorController.validaToken);
 routes.post(
   "/verify-recaptcha",

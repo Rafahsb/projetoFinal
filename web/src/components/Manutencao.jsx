@@ -152,26 +152,46 @@ export function Manutencao(props) {
                             <Input
                                 size={"sm"}
                                 defaultValue={
-                                    props.manutencao.data_nota
-                                        ? props.manutencao.data_nota
+                                    props.manutencao.data_manutencao
+                                        ? props.manutencao.data_manutencao
                                               .split("/")
                                               .reverse()
                                               .join("-")
                                         : ""
                                 }
                                 type="date"
-                                label="Data:*"
-                                placeholder="Informe a data da realização do serviço:"
+                                label="Data Inicial:*"
+                                placeholder="Informe a data inicial do serviço:"
                                 required={true}
-                                name="data"
-                                error={errors.data}
-                                validations={register("data", {
+                                name="data_manutencao"
+                                error={errors.data_manutencao}
+                                validations={register("data_manutencao", {
                                     required: {
                                         value: true,
                                         message:
-                                            "A data é um campo obrigatório",
+                                            "A data inicial é um campo obrigatório",
                                     },
                                 })}
+                            />
+                        </Row>
+                        <Row className="mb-4">
+                            <Input
+                                size={"sm"}
+                                defaultValue={
+                                    props.manutencao.data_nota
+                                        ? props.manutencao.data_nota
+                                              .split("/")
+                                              .reverse()
+                                              .join("-")
+                                        : null
+                                }
+                                type="date"
+                                label="Data final:*"
+                                placeholder="Informe a data final da realização do serviço:"
+                             
+                                name="data_nota"
+                                error={errors.data_nota}
+                                validations={register("data_nota")}
                             />
                         </Row>
                         <Row className="mb-4">

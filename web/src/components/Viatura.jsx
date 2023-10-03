@@ -110,8 +110,8 @@ export function Viatura(props) {
                     validated={!!errors}
                 >
                     <Modal.Body>
-                        <Row className="d-flex align-items-start mb-4">
-                            <Col sm={6}>
+                        <Row className="d-flex align-items-start mb-0 mb-sm-3">
+                            <Col sm={6} className="mb-3 mb-sm-0">
                                 <Form.Group>
                                     <Form.Label>
                                         Seleciona uma marca:
@@ -145,7 +145,7 @@ export function Viatura(props) {
                                     </Form.Select>
                                 </Form.Group>
                             </Col>
-                            <Col sm={6}>
+                            <Col sm={6} className="mb-3 mb-sm-0">
                                 <Form.Group>
                                     <Form.Label>Seleciona uma cor:</Form.Label>
                                     <Form.Select
@@ -169,8 +169,8 @@ export function Viatura(props) {
                             </Col>
                         </Row>
 
-                        <Row className="d-flex align-items-start mb-4">
-                            <Col sm={6}>
+                        <Row className="d-flex align-items-start mb-0 mb-sm-3">
+                            <Col sm={6} className="mb-3 mb-sm-0">
                                 {" "}
                                 <Input
                                     size={"sm"}
@@ -190,7 +190,7 @@ export function Viatura(props) {
                                     })}
                                 />
                             </Col>
-                            <Col sm={6}>
+                            <Col sm={6} className="mb-3 mb-sm-0">
                                 <Input
                                     type="text"
                                     label="Chassi:*"
@@ -210,8 +210,8 @@ export function Viatura(props) {
                             </Col>
                         </Row>
 
-                        <Row className="d-flex align-items-start mb-3">
-                            <Col sm={6}>
+                        <Row className="d-flex align-items-start mb-0 mb-sm-3">
+                            <Col sm={6} className="mb-3 mb-sm-0">
                                 <Input
                                     type="number"
                                     defaultValue={props.viatura.portas}
@@ -229,7 +229,7 @@ export function Viatura(props) {
                                     })}
                                 />
                             </Col>
-                            <Col sm={6}>
+                            <Col sm={6} className="mb-3 mb-sm-0">
                                 <Input
                                     type="number"
                                     defaultValue={props.viatura.bancos}
@@ -249,8 +249,8 @@ export function Viatura(props) {
                             </Col>
                         </Row>
 
-                        <Row className="d-flex align-items-start mb-3">
-                            <Col sm={6}>
+                        <Row className="d-flex align-items-start mb-0 mb-sm-3">
+                            <Col sm={6} className="mb-3 mb-sm-0">
                                 <Input
                                     type="number"
                                     label="quilometragem:*"
@@ -268,7 +268,7 @@ export function Viatura(props) {
                                     })}
                                 />
                             </Col>
-                            <Col sm={6}>
+                            <Col sm={6} className="mb-3 mb-sm-0">
                                 <Input
                                     type="text"
                                     defaultValue={props.viatura.piloto}
@@ -287,8 +287,8 @@ export function Viatura(props) {
                                 />
                             </Col>
                         </Row>
-                        <Row className="d-flex align-items-start mb-3">
-                            <Col sm={6}>
+                        <Row className="d-flex align-items-start mb-0 mb-sm-3">
+                            <Col sm={6} className="mb-3 mb-sm-0">
                                 <Input
                                     type="text"
                                     defaultValue={props.viatura.placa}
@@ -312,8 +312,8 @@ export function Viatura(props) {
                                 />
                             </Col>
                         </Row>
-                        <Row className="d-flex align-items-start mb-3">
-                            <Col sm={6}>
+                        <Row className="d-flex align-items-start">
+                            <Col sm={6} className="mb-3 mb-sm-0">
                                 <Form.Group>
                                     <Form.Label>Selecione um órgão:</Form.Label>
                                     <Form.Select

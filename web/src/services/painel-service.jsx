@@ -49,3 +49,13 @@ export async function getDataDashboard5() {
     });
     return result;
 }
+
+export async function getTotalStatusViaturas() {
+    const accessToken = sessionStorage.getItem("token");
+    const result = await api.get("/totalStatusViaturas", {
+        headers: {
+            Authorization: `Bearer ${JSON.parse(accessToken)}`,
+        },
+    });
+    return result;
+}

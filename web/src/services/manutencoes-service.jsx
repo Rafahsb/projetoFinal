@@ -52,7 +52,8 @@ export async function updateManutencao(data) {
             numero_nota: data.numero_nota,
             descricao: data.descricao,
             preco: data.preco,
-            data: data.data,
+            data_nota: data.data_nota,
+            data_manutencao: data.data_manutencao,
             id_viatura: data.id_viatura,
         },
         {

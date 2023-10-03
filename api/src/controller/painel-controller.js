@@ -119,6 +119,23 @@ class PainelController {
       });
 
       return httpHelper.ok({ dashboard: data });
+
+    } catch (error) {
+      return httpHelper.internalError(error);
+    }
+  }
+
+  async totalStatusViaturas(request, response) {
+    const httpHelper = new HttpHelper(response);
+    try {
+      const data = await ViaturasModel.findAll({
+        attributes: ["status", [Sequelize.fn("COUNT", "status"), "total"]],
+        group: ["status"],
+        order: ["status"]
+      });
+
+      return httpHelper.ok({ dashboard: data });
+
     } catch (error) {
       return httpHelper.internalError(error);
     }

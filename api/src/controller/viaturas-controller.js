@@ -338,18 +338,27 @@ class ViaturaController {
         },
       });
 
+      const manutencaoExists = await ManutencoesModel.sequelize.query(`
+      SELECT * FROM viaturas INNER JOIN manutencoes ON manutencoes.id_viatura = viaturas.id_viatura
+      WHERE viaturas.id_viatura =  ${id} and data_nota isNull
+      order by id_manutencao desc
+      limit 1;
+      `);
+
       if (status !== "manutencao") {
-        const manutencaoExists = await ManutencoesModel.sequelize.query(`
-        SELECT * FROM viaturas INNER JOIN manutencoes ON manutencoes.id_viatura = viaturas.id_viatura
-        WHERE viaturas.id_viatura =  ${id} and data_nota isNull
-        order by id_manutencao desc
-        limit 1;
-        `);
 
         if (manutencaoExists[0][0] != undefined) {
           return httpHelper.badRequest({
             message:
               "Status inválido! A viatura possui uma manutenção cadastrada sem a data final.",
+            variant: "danger",
+          });
+        }
+      } else {
+        if(viaturaExists.status !== 'manutencao') {
+          return httpHelper.badRequest({
+            message:
+              "Não foi possível alterar o status. Cadastre uma manutenção informando esta viatura!",
             variant: "danger",
           });
         }
