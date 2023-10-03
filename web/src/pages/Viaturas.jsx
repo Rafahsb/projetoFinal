@@ -458,21 +458,15 @@ export function Viaturas() {
                                     <Col sm={6}>
                                         <Input
                                             type="text"
-                                            label="Piloto:*"
-                                            placeholder="Informe o nome do piloto:"
-                                            required={true}
+                                            label="Motorista:"
+                                            placeholder="Informe o nome do motorista:"
                                             name="piloto"
                                             error={errors.piloto}
                                             validations={register("piloto", {
-                                                required: {
-                                                    value: true,
-                                                    message:
-                                                        "O nome do piloto é um campo obrigatório",
-                                                },
                                                 minLength: {
                                                     value: 3,
                                                     message:
-                                                        "O nome do piloto deve ter pelo menos 3 caracteres",
+                                                        "O nome do motorista deve possuir ao menos 3 caracteres",
                                                 },
                                             })}
                                         />

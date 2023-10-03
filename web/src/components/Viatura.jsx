@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Button, Card, Form, Modal, Row } from "react-bootstrap";
+import { Button, Card, Form, Modal, Row, Tab, Tabs } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import Dropdown from "react-bootstrap/Dropdown";
 import { BsThreeDotsVertical } from "react-icons/bs";
@@ -8,6 +8,7 @@ import Col from "react-bootstrap/Col";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import PlagiarismOutlinedIcon from "@mui/icons-material/PlagiarismOutlined";
+import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import Localizacao from "../components/Localizacao";
 import { RemoveItem } from "../components/RemoveItem";
@@ -24,7 +25,9 @@ export function Viatura(props) {
     const [modalLocale, setModalLocale] = useState(false);
     const [modalDelete, setModalDelete] = useState(false);
     const [modalRelatorios, setModalRelatorios] = useState(false);
-    const location = { lat: -15.6014, lng: -56.0979 };
+    const [key, setKey] = useState("1");
+    const [isView, setIsView] = useState(false);
+    const location = { lat: props.viatura.lat, lng: props.viatura.long };
 
     async function viaturaHistorico() {
         try {
@@ -66,6 +69,12 @@ export function Viatura(props) {
                     </Dropdown.Toggle>
 
                     <Dropdown.Menu>
+                        <Dropdown.Item onClick={() => setIsView(true)}>
+                            <div className="d-flex">
+                                <VisibilityOutlinedIcon className="me-2"></VisibilityOutlinedIcon>
+                                Ver Mais
+                            </div>
+                        </Dropdown.Item>
                         <Dropdown.Item onClick={() => setIsUpdated(true)}>
                             <div className="d-flex">
                                 <EditOutlinedIcon className="me-2"></EditOutlinedIcon>
@@ -96,6 +105,241 @@ export function Viatura(props) {
                     </Dropdown.Menu>
                 </Dropdown>
             </td>
+            <Modal size="lg" show={isView} onHide={() => setIsView(false)}>
+                <Modal.Header>
+                    <Modal.Title>Ver Mais</Modal.Title>
+                </Modal.Header>
+
+                <Modal.Body>
+                    <Tabs
+                        id="controlled-tab-example"
+                        activeKey={key}
+                        onSelect={(k) => setKey(k)}
+                        className="mb-3"
+                    >
+                        <Tab Tab eventKey="1" title="Dados Viatura 1">
+                            <Row className="mb-4">
+                                <fieldset disabled>
+                                    <Form.Group>
+                                        <Form.Label>Marca:</Form.Label>
+                                        <Form.Select
+                                            defaultValue={props.viatura.marca}
+                                            size="lg"
+                                        >
+                                            <option disabled>
+                                                Clique para selecionar a marca
+                                            </option>
+                                            <option value={"Chevrolet"}>
+                                                Chevrolet
+                                            </option>
+                                            <option value={"Fiat"}>Fiat</option>
+                                            <option value={"Volkswagen"}>
+                                                Volkswagen
+                                            </option>
+                                            <option value={"Hyundai"}>
+                                                Hyundai
+                                            </option>
+                                            <option value={"Toyota"}>
+                                                Toyota
+                                            </option>
+                                            <option value={"Renault"}>
+                                                Renault
+                                            </option>
+                                            <option value={"Honda"}>
+                                                Honda
+                                            </option>
+                                            <option value={"Nissan  "}>
+                                                Nissan
+                                            </option>
+                                        </Form.Select>
+                                    </Form.Group>
+                                </fieldset>
+                            </Row>
+
+                            <Row className="mb-4">
+                                <fieldset disabled>
+                                    <Form.Group>
+                                        <Form.Label>Cor:</Form.Label>
+                                        <Form.Select
+                                            defaultValue={props.viatura.cor}
+                                            size="lg"
+                                        >
+                                            <option disabled>
+                                                Clique para selecionar uma cor
+                                            </option>
+                                            <option value={"Preto"}>
+                                                Preto
+                                            </option>
+                                            <option value={"Branco"}>
+                                                Branco
+                                            </option>
+                                            <option value={"Azul"}>Azul</option>
+                                            <option value={"Vermelho"}>
+                                                Vermelho
+                                            </option>
+                                            <option value={"Cinza"}>
+                                                Cinza
+                                            </option>
+                                            <option value={"Prata"}>
+                                                Prata
+                                            </option>
+                                        </Form.Select>
+                                    </Form.Group>
+                                </fieldset>
+                            </Row>
+
+                            <Row className="mb-4">
+                                <fieldset disabled>
+                                    {" "}
+                                    <Input
+                                        size={"sm"}
+                                        defaultValue={props.viatura.modelo}
+                                        type="text"
+                                        label="Modelo:*"
+                                        placeholder="Informe o modelo do carro:"
+                                        name="modelo"
+                                    />
+                                </fieldset>
+                            </Row>
+
+                            <Row className="mb-4">
+                                <fieldset disabled>
+                                    <Input
+                                        type="text"
+                                        label="Chassi:*"
+                                        defaultValue={props.viatura.chassi}
+                                        placeholder="Informe o chassi do carro:"
+                                        name="chassi"
+                                    />
+                                </fieldset>
+                            </Row>
+
+                            <Row className="mb-4">
+                                <fieldset disabled>
+                                    <Input
+                                        type="number"
+                                        defaultValue={props.viatura.portas}
+                                        label="Portas:*"
+                                        placeholder="Informe a quantidade de portas do carro:"
+                                        name="portas"
+                                    />
+                                </fieldset>
+                            </Row>
+                        </Tab>
+                        <Tab Tab eventKey="2" title="Dados viatura 2">
+                            <Row className="mb-4">
+                                <fieldset disabled>
+                                    <Input
+                                        type="number"
+                                        defaultValue={props.viatura.bancos}
+                                        label="Bancos:*"
+                                        placeholder="Informe a quantidade de bancos do carro:"
+                                        name="bancos"
+                                    />
+                                </fieldset>
+                            </Row>
+
+                            <Row className="mb-4">
+                                <fieldset disabled>
+                                    <Input
+                                        type="number"
+                                        label="quilometragem:*"
+                                        defaultValue={
+                                            props.viatura.quilometragem
+                                        }
+                                        placeholder="Informe a quantidade de km rodados do carro:"
+                                        name="quilometragem"
+                                    />
+                                </fieldset>
+                            </Row>
+
+                            <Row className="mb-4">
+                                <fieldset disabled>
+                                    <Input
+                                        type="text"
+                                        defaultValue={props.viatura.piloto}
+                                        label="Motorista:"
+                                        placeholder="Informe o nome do motorista:"
+                                        name="piloto"
+                                    />
+                                </fieldset>
+                            </Row>
+
+                            <Row className="mb-4">
+                                <fieldset disabled>
+                                    <Input
+                                        type="text"
+                                        defaultValue={props.viatura.placa}
+                                        label="Placa:*"
+                                        placeholder="Informe a placa do carro:"
+                                        name="placa"
+                                    />
+                                </fieldset>
+                            </Row>
+
+                            <Row className="mb-4">
+                                <fieldset disabled>
+                                    <Form.Group>
+                                        <Form.Label>Órgão:</Form.Label>
+                                        <Form.Select
+                                            defaultValue={
+                                                props.viatura.orgao_vinculado
+                                            }
+                                            size="lg"
+                                        >
+                                            <option disabled>
+                                                Clique para selecionar um órgão
+                                            </option>
+                                            <option value={"PF"}>
+                                                Polícia Federal
+                                            </option>
+                                            <option value={"PM"}>
+                                                Polícia Militar
+                                            </option>
+                                            <option value={"PC"}>
+                                                Polícia Cívil
+                                            </option>
+                                            <option value={"Ex"}>
+                                                Exército
+                                            </option>
+                                        </Form.Select>
+                                    </Form.Group>
+                                </fieldset>
+                            </Row>
+
+                            <Row className="mb-4">
+                                <fieldset disabled>
+                                    <Form.Group>
+                                        <Form.Label>Status:</Form.Label>
+                                        <Form.Select
+                                            defaultValue={props.viatura.status}
+                                            size="lg"
+                                        >
+                                            <option disabled>
+                                                Clique para selecionar um órgão
+                                            </option>
+                                            <option value={"manutencao"}>
+                                                Manutenção
+                                            </option>
+                                            <option value={"garagem"}>
+                                                Garagem
+                                            </option>
+                                            <option value={"patrulha"}>
+                                                Patrulha
+                                            </option>
+                                        </Form.Select>
+                                    </Form.Group>
+                                </fieldset>
+                            </Row>
+                        </Tab>
+                    </Tabs>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="primary" onClick={() => setIsView(false)}>
+                        Voltar
+                    </Button>
+                </Modal.Footer>
+            </Modal>
             <Modal
                 size="lg"
                 show={isUpdated}
@@ -272,16 +516,16 @@ export function Viatura(props) {
                                 <Input
                                     type="text"
                                     defaultValue={props.viatura.piloto}
-                                    label="Piloto:*"
-                                    placeholder="Informe o nome do piloto:"
+                                    label="Motorista:"
+                                    placeholder="Informe o nome do motorista:"
                                     required={true}
                                     name="piloto"
                                     error={errors.piloto}
                                     validations={register("piloto", {
-                                        required: {
-                                            value: true,
+                                        minLength: {
+                                            value: 3,
                                             message:
-                                                "A quilometragem é um campo obrigatório",
+                                                "O nome do motorista deve possuir ao menos 3 caracteres",
                                         },
                                     })}
                                 />

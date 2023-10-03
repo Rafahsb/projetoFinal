@@ -35,9 +35,7 @@ class ViaturaController {
       !cor ||
       !quilometragem ||
       !orgao_vinculado ||
-      !placa ||
-      !piloto ||
-      !status
+      !placa
     ) {
       return httpHelper.badRequest({
         message: "Ops! faltou preencher algum campo!",
@@ -81,9 +79,9 @@ class ViaturaController {
       });
     }
 
-    if (piloto.length < 3) {
+    if (piloto.length > 0 && piloto.length < 3) {
       return httpHelper.badRequest({
-        message: "O nome do piloto deve ter pelo menos 3 caracteres",
+        message: "O nome do motorista deve ter pelo menos 3 caracteres",
         variant: "danger",
       });
     }
@@ -114,7 +112,7 @@ class ViaturaController {
         orgao_vinculado,
         placa: placa.toUpperCase(),
         piloto,
-        status: "garagem",
+        status: piloto.length > 3 ? "patrulha" : "garagem",
         lat,
         long,
       });
@@ -346,7 +344,6 @@ class ViaturaController {
       `);
 
       if (status !== "manutencao") {
-
         if (manutencaoExists[0][0] != undefined) {
           return httpHelper.badRequest({
             message:
@@ -355,7 +352,7 @@ class ViaturaController {
           });
         }
       } else {
-        if(viaturaExists.status !== 'manutencao') {
+        if (viaturaExists.status !== "manutencao") {
           return httpHelper.badRequest({
             message:
               "Não foi possível alterar o status. Cadastre uma manutenção informando esta viatura!",
@@ -395,9 +392,23 @@ class ViaturaController {
         });
       }
 
-      if (piloto.length < 3) {
+      if (piloto.length > 0 && piloto.length < 3) {
         return httpHelper.badRequest({
-          message: "O nome do piloto deve ter pelo menos 3 caracteres",
+          message: "O nome do motorista deve ter pelo menos 3 caracteres",
+          variant: "danger",
+        });
+      }
+
+      if (piloto.length > 3 && status === "garagem") {
+        return httpHelper.badRequest({
+          message: "Não foi possível alterar, retire o motorista!",
+          variant: "danger",
+        });
+      }
+
+      if (piloto.length < 3 && status === "patrulha") {
+        return httpHelper.badRequest({
+          message: "Não foi possível alterar, informe o nome do motorista!",
           variant: "danger",
         });
       }
@@ -415,7 +426,7 @@ class ViaturaController {
           quilometragem,
           orgao_vinculado,
           piloto,
-          status,
+          status: piloto.length > 3 ? "patrulha" : "garagem",
         },
         {
           where: {

@@ -2,23 +2,13 @@ import React, { useEffect, useState } from "react";
 import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
 
 function Localizacao(props) {
-    const [currentLocation, setCurrentLocation] = useState(null);
+    console.log(Number(props.lat));
+    console.log(Number(props.lng));
+    const [currentLocation, setCurrentLocation] = useState({
+        lat: Number(props.lat),
+        lng: Number(props.lng),
+    });
     const googleMapsApiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
-
-    useEffect(() => {
-        // Acessar a API de geolocalização para obter a localização atual
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-                (position) => {
-                    const { latitude, longitude } = position.coords;
-                    setCurrentLocation({ lat: latitude, lng: longitude });
-                },
-                (error) => {
-                    console.error("Erro ao obter a localização:", error);
-                }
-            );
-        }
-    }, []);
 
     const mapContainerStyle = {
         width: "100%",

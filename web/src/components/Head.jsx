@@ -170,9 +170,6 @@ export function Head() {
                             >
                                 <Modal.Body>
                                     <Row className="mb-4">
-                                        {/* <FloatingLabel controlId="floatingPassword" label="Password">
-                                        <Form.Control type="password" placeholder="Password" />
-                                    </FloatingLabel> */}
                                         <fieldset disabled>
                                             <Input
                                                 size={"sm"}

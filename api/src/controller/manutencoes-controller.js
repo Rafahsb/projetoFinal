@@ -21,20 +21,20 @@ class ManutencoesController {
         });
       }
 
-    const manutencaoExists = await ManutencoesModel.sequelize.query(`
+      const manutencaoExists = await ManutencoesModel.sequelize.query(`
       SELECT * FROM viaturas INNER JOIN manutencoes ON manutencoes.id_viatura = viaturas.id_viatura
       WHERE viaturas.id_viatura =  ${id_viatura} and data_nota isNull
       order by id_manutencao desc
       limit 1;
    `);
-    
-   if (manutencaoExists[0][0] != undefined) {
-    return httpHelper.badRequest({
-      message:
-        "Status inválido! A viatura possui uma manutenção em andamento, finalize-a primeiro.",
-      variant: "danger",
-    });
-  }
+
+      if (manutencaoExists[0][0] != undefined) {
+        return httpHelper.badRequest({
+          message:
+            "Status inválido! A viatura possui uma manutenção em andamento, finalize-a primeiro.",
+          variant: "danger",
+        });
+      }
 
       if (numero_nota.length != 9) {
         return httpHelper.badRequest({
@@ -86,7 +86,7 @@ class ManutencoesController {
 
       await ViaturasModel.update(
         {
-          status: "manutencao"
+          status: "manutencao",
         },
         {
           where: {
@@ -96,7 +96,8 @@ class ManutencoesController {
       );
 
       return httpHelper.created({
-        message: "Manutenção cadastrada com sucesso! O status da viatura foi atualizado para 'Manutencao'",
+        message:
+          "Manutenção cadastrada com sucesso! O status da viatura foi atualizado para 'Manutencao'",
         variant: "success",
       });
     } catch (error) {
@@ -212,7 +213,7 @@ class ManutencoesController {
       request.body;
     let { data_nota } = request.body;
     try {
-      if(data_nota === '') {
+      if (data_nota === "") {
         data_nota = null;
       }
 
@@ -236,8 +237,8 @@ class ManutencoesController {
       }
 
       let dataInformadaNota;
-      
-      if(data_nota !== null) {
+
+      if (data_nota !== null) {
         dataInformadaNota = new Date(data_nota);
       }
       const dataInformadaManutencao = new Date(data_manutencao);
@@ -253,7 +254,7 @@ class ManutencoesController {
         });
       }
 
-      if(dataInformadaManutencao > dataInformadaNota  && data_nota !== null)  {
+      if (dataInformadaManutencao > dataInformadaNota && data_nota !== null) {
         return httpHelper.badRequest({
           message: "A data final não pode ser menor que a data inicial!",
           variant: "danger",
@@ -266,7 +267,6 @@ class ManutencoesController {
           descricao,
           preco,
           data_nota: dataInformadaNota,
-          id_viatura,
           data_manutencao: dataInformadaManutencao,
         },
         {
@@ -275,11 +275,11 @@ class ManutencoesController {
           },
         }
       );
-      
-      if(data_nota) {
+
+      if (data_nota) {
         await ViaturasModel.update(
           {
-            status: "garagem"
+            status: "garagem",
           },
           {
             where: {

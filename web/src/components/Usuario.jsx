@@ -6,6 +6,7 @@ import { BsThreeDotsVertical } from "react-icons/bs";
 import { Input } from "./Input";
 import { useNavigate } from "react-router-dom";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
+import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import { RemoveItem } from "../components/RemoveItem";
 import Col from "react-bootstrap/Col";
@@ -18,6 +19,7 @@ export function Usuario(props) {
     } = useForm();
     const [isUpdated, setIsUpdated] = useState(false);
     const [modalDelete, setModalDelete] = useState(false);
+    const [isView, setIsView] = useState(false);
     const navigate = useNavigate();
 
     async function editUsuario(data) {
@@ -65,6 +67,12 @@ export function Usuario(props) {
                     </Dropdown.Toggle>
 
                     <Dropdown.Menu>
+                        <Dropdown.Item onClick={() => setIsView(true)}>
+                            <div className="d-flex">
+                                <VisibilityOutlinedIcon className="me-2"></VisibilityOutlinedIcon>
+                                Ver Mais
+                            </div>
+                        </Dropdown.Item>
                         <Dropdown.Item onClick={() => setIsUpdated(true)}>
                             <div className="d-flex">
                                 <EditOutlinedIcon className="me-2"></EditOutlinedIcon>
@@ -80,6 +88,95 @@ export function Usuario(props) {
                     </Dropdown.Menu>
                 </Dropdown>
             </td>
+
+            <Modal size="lg" show={isView} onHide={() => setIsView(false)}>
+                <Modal.Header>
+                    <Modal.Title>Ver Mais</Modal.Title>
+                </Modal.Header>
+
+                <Modal.Body>
+                    <Row className="mb-4">
+                        <Row className="mb-4">
+                            <fieldset disabled>
+                                <Input
+                                    size={"sm"}
+                                    defaultValue={props.usuario.matricula}
+                                    type="text"
+                                    label="Matricula:*"
+                                    placeholder="Informe o nº da matricula:"
+                                    name="matricula"
+                                />
+                            </fieldset>
+                        </Row>
+
+                        <Row className="mb-4">
+                            <fieldset disabled>
+                                <Input
+                                    size={"sm"}
+                                    defaultValue={props.usuario.nome}
+                                    type="text"
+                                    label="Nome:*"
+                                    placeholder="Informe o nome do servidor:"
+                                    name="nome"
+                                />
+                            </fieldset>
+                        </Row>
+
+                        <Row className="mb-4">
+                            <fieldset disabled>
+                                <Input
+                                    size={"sm"}
+                                    defaultValue={props.usuario.email}
+                                    type="email"
+                                    label="E-mail:*"
+                                    placeholder="Informe o email:"
+                                    name="email"
+                                />
+                            </fieldset>
+                        </Row>
+
+                        <Row className="mb-4">
+                            <fieldset disabled>
+                                <Input
+                                    size={"sm"}
+                                    defaultValue={props.usuario.unidade}
+                                    type="text"
+                                    label="Unidade:*"
+                                    placeholder="Informe a unidade:"
+                                    name="unidade"
+                                />
+                            </fieldset>
+                        </Row>
+
+                        <Row className="mb-4">
+                            <fieldset disabled>
+                                <Form.Group>
+                                    <Form.Label>Cargo:</Form.Label>
+                                    <Form.Select
+                                        size="lg"
+                                        defaultValue={props.usuario.cargo}
+                                    >
+                                        <option disabled>
+                                            Clique para selecionar a marca
+                                        </option>
+                                        <option value={"Admin"}>
+                                            Administrador
+                                        </option>
+                                        <option value={"Usuario"}>
+                                            Usuário
+                                        </option>
+                                    </Form.Select>
+                                </Form.Group>
+                            </fieldset>
+                        </Row>
+                    </Row>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="primary" onClick={() => setIsView(false)}>
+                        Voltar
+                    </Button>
+                </Modal.Footer>
+            </Modal>
             <Modal
                 size="lg"
                 show={isUpdated}
