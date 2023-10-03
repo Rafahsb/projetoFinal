@@ -343,7 +343,7 @@ export function Painel() {
                                     >
                                         <p className="fs-1 m-0 fw-bold ">
                                             {" "}
-                                            {totalStatusViaturas[0] ? totalStatusViaturas[0].total : ''}
+                                            {totalStatusViaturas[0] ? totalStatusViaturas[0].total : 0}
                                         </p>
                                     </Col>
                                     <Col>
@@ -368,7 +368,7 @@ export function Painel() {
                                     >
                                         <p className="fs-1 m-0 fw-bold ">
                                             {" "}
-                                            {totalStatusViaturas[1] ? totalStatusViaturas[1].total : ''}
+                                            {totalStatusViaturas[1] ? totalStatusViaturas[1].total : 0}
                                         </p>
                                     </Col>
                                     <Col>
@@ -393,7 +393,7 @@ export function Painel() {
                                     >
                                         <p className="fs-1 m-0 fw-bold ">
                                             {" "}
-                                            {totalStatusViaturas[2] ? totalStatusViaturas[2].total : ''}
+                                            {totalStatusViaturas[2] ? totalStatusViaturas[2].total : 0}
                                         </p>
                                     </Col>
                                     <Col>
