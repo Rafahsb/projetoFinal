@@ -33,7 +33,7 @@ import {
     getDataDashboard4Relatorio,
     getDataDashboard5,
     getDataDashboard5Relatorio,
-    getTotalStatusViaturas
+    getTotalStatusViaturas,
 } from "../services/painel-service";
 import { useEffect, useState, useContext } from "react";
 import { UserContext } from "../contexts/UserContexts";
@@ -48,15 +48,15 @@ import ApexPie from "../components/ApexPie";
 import OrgaosEnum from "../enums/orgaosEnum";
 import PeopleAltOutlinedIcon from "@mui/icons-material/PeopleAltOutlined";
 import DirectionsCarOutlinedIcon from "@mui/icons-material/DirectionsCarOutlined";
-import EmojiTransportationOutlinedIcon from '@mui/icons-material/EmojiTransportationOutlined';
+import EmojiTransportationOutlinedIcon from "@mui/icons-material/EmojiTransportationOutlined";
 import PlagiarismOutlinedIcon from "@mui/icons-material/PlagiarismOutlined";
-import GarageOutlinedIcon from '@mui/icons-material/GarageOutlined';
-import CarRepairOutlinedIcon from '@mui/icons-material/CarRepairOutlined';
+import GarageOutlinedIcon from "@mui/icons-material/GarageOutlined";
+import CarRepairOutlinedIcon from "@mui/icons-material/CarRepairOutlined";
 import { saveAs } from "file-saver";
 
 export function Painel() {
     const currentYear = new Date().getFullYear();
-    const { menu } = useContext(UserContext);
+    const { menu, theme, setTheme } = useContext(UserContext);
     const [key, setKey] = useState("DM1");
     const [totalManutencoes, setTotalManutencoes] = useState([]);
     const [totalStatusViaturas, setTotalStatusViaturas] = useState({});
@@ -159,7 +159,7 @@ export function Painel() {
     async function filterDataDashboard2(data) {
         try {
             const result = await getDataDashboard2(data ? data.ano : "");
-            setDataDashboard2(result)
+            setDataDashboard2(result);
             const formattedData = result.data.dashboard2.map((item) => ({
                 name: `${item.mes}`,
                 Total: item.total_por_mes,
@@ -174,8 +174,10 @@ export function Painel() {
 
     async function findDataDashboard2Relatorio() {
         try {
-            const response = await getDataDashboard2Relatorio(dataDashboard2.data.ano);
-            
+            const response = await getDataDashboard2Relatorio(
+                dataDashboard2.data.ano
+            );
+
             const base64Data = response.data.relatorio;
             const byteCharacters = atob(base64Data);
             const byteNumbers = new Array(byteCharacters.length);
@@ -186,7 +188,10 @@ export function Painel() {
             const blob = new Blob([byteArray], {
                 type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
             });
-            saveAs(blob, `Gasto total em manutenções em ${dataDashboard2.data.ano}.xlsx`);
+            saveAs(
+                blob,
+                `Gasto total em manutenções em ${dataDashboard2.data.ano}.xlsx`
+            );
         } catch (error) {
             return console.error(error);
         }
@@ -380,11 +385,19 @@ export function Painel() {
                 <Col sm={menu ? 9 : 8} className="p-3">
                     <Row>
                         <Col>
-                            <p className="h3 mt-4">Painéis Gerenciais</p>
+                            <p
+                                className={
+                                    theme === "light"
+                                        ? "h3 mt-4"
+                                        : "h3 mt-4 text-light"
+                                }
+                            >
+                                Painéis Gerenciais
+                            </p>
                         </Col>
                     </Row>
                     <Row className="d-flex justify-content-end my-4">
-                    <Col lg={4} md={5} sm={6} xs={12} className="mb-3">
+                        <Col lg={4} md={5} sm={6} xs={12} className="mb-3">
                             <Card className="p-4 p-sm-3 p-md-4  shadow">
                                 <Row>
                                     <Col
@@ -433,15 +446,21 @@ export function Painel() {
                                     <Col
                                         className="d-flex align-items-center justify-content-center flex-column"
                                         xs={5}
-                                    >   
-                                    <DirectionsCarOutlinedIcon ></DirectionsCarOutlinedIcon>
+                                    >
+                                        <DirectionsCarOutlinedIcon></DirectionsCarOutlinedIcon>
                                         <p className="m-0">Viaturas</p>
                                     </Col>
                                 </Row>
                             </Card>
                         </Col>
-                       
-                        <Col lg={4} md={5} sm={6} xs={12} className="mb-3 mb-lg-0">
+
+                        <Col
+                            lg={4}
+                            md={5}
+                            sm={6}
+                            xs={12}
+                            className="mb-3 mb-lg-0"
+                        >
                             <Card className="p-4 p-sm-3 p-md-4  shadow">
                                 <Row>
                                     <Col
@@ -450,7 +469,9 @@ export function Painel() {
                                     >
                                         <p className="fs-1 m-0 fw-bold ">
                                             {" "}
-                                            {totalStatusViaturas[0] ? totalStatusViaturas[0].total : 0}
+                                            {totalStatusViaturas[0]
+                                                ? totalStatusViaturas[0].total
+                                                : 0}
                                         </p>
                                     </Col>
                                     <Col>
@@ -461,12 +482,21 @@ export function Painel() {
                                         xs={5}
                                     >
                                         <GarageOutlinedIcon></GarageOutlinedIcon>
-                                        <p className="m-0"> {totalStatusViaturas[0]?.status}</p>
+                                        <p className="m-0">
+                                            {" "}
+                                            {totalStatusViaturas[0]?.status}
+                                        </p>
                                     </Col>
                                 </Row>
                             </Card>
                         </Col>
-                        <Col lg={4} md={5} sm={6} xs={12} className="mb-3 mb-lg-0">
+                        <Col
+                            lg={4}
+                            md={5}
+                            sm={6}
+                            xs={12}
+                            className="mb-3 mb-lg-0"
+                        >
                             <Card className="p-4 p-sm-3 p-md-4  shadow">
                                 <Row>
                                     <Col
@@ -475,7 +505,9 @@ export function Painel() {
                                     >
                                         <p className="fs-1 m-0 fw-bold ">
                                             {" "}
-                                            {totalStatusViaturas[1] ? totalStatusViaturas[1].total : 0}
+                                            {totalStatusViaturas[1]
+                                                ? totalStatusViaturas[1].total
+                                                : 0}
                                         </p>
                                     </Col>
                                     <Col>
@@ -486,12 +518,21 @@ export function Painel() {
                                         xs={5}
                                     >
                                         <CarRepairOutlinedIcon></CarRepairOutlinedIcon>
-                                        <p className="m-0"> {totalStatusViaturas[1]?.status}</p>
+                                        <p className="m-0">
+                                            {" "}
+                                            {totalStatusViaturas[1]?.status}
+                                        </p>
                                     </Col>
                                 </Row>
                             </Card>
                         </Col>
-                        <Col lg={4} md={5} sm={6} xs={12} className="mb-3 mb-lg-0">
+                        <Col
+                            lg={4}
+                            md={5}
+                            sm={6}
+                            xs={12}
+                            className="mb-3 mb-lg-0"
+                        >
                             <Card className="p-4 p-sm-3 p-md-4  shadow">
                                 <Row>
                                     <Col
@@ -500,7 +541,9 @@ export function Painel() {
                                     >
                                         <p className="fs-1 m-0 fw-bold ">
                                             {" "}
-                                            {totalStatusViaturas[2] ? totalStatusViaturas[2].total : 0}
+                                            {totalStatusViaturas[2]
+                                                ? totalStatusViaturas[2].total
+                                                : 0}
                                         </p>
                                     </Col>
                                     <Col>
@@ -511,7 +554,9 @@ export function Painel() {
                                         xs={5}
                                     >
                                         <EmojiTransportationOutlinedIcon></EmojiTransportationOutlinedIcon>
-                                        <p className="m-0">{totalStatusViaturas[2]?.status}</p>
+                                        <p className="m-0">
+                                            {totalStatusViaturas[2]?.status}
+                                        </p>
                                     </Col>
                                 </Row>
                             </Card>
@@ -524,15 +569,20 @@ export function Painel() {
                             activeKey={key}
                             onSelect={(k) => setKey(k)}
                             className="mb-3"
+                            variant="pills"
                         >
                             <Tab eventKey="DM1" title="GM / VIATURA">
                                 <Col xs={12} className="">
                                     <Card
                                         style={{ height: "650px" }}
                                         className="p-2 shadow"
-                                    >   
+                                    >
                                         <div className="d-flex justify-content-end mt-2 me-2">
-                                            <Button onClick={() => findDataDashboardRelatorio()}>
+                                            <Button
+                                                onClick={() =>
+                                                    findDataDashboardRelatorio()
+                                                }
+                                            >
                                                 <div className="d-flex">
                                                     <PlagiarismOutlinedIcon className="me-2"></PlagiarismOutlinedIcon>
                                                     Exportar planilha
@@ -624,9 +674,13 @@ export function Painel() {
                                     <Card
                                         style={{ height: "500px" }}
                                         className="p-2 shadow"
-                                    >   
+                                    >
                                         <div className="d-flex justify-content-end mt-2 me-2">
-                                            <Button onClick={() => findDataDashboard2Relatorio()}>
+                                            <Button
+                                                onClick={() =>
+                                                    findDataDashboard2Relatorio()
+                                                }
+                                            >
                                                 <div className="d-flex">
                                                     <PlagiarismOutlinedIcon className="me-2"></PlagiarismOutlinedIcon>
                                                     Exportar planilha
@@ -682,16 +736,20 @@ export function Painel() {
                                 <Card
                                     style={{ height: "500px" }}
                                     className="p-2 shadow"
-                                >   
+                                >
                                     <div className="d-flex justify-content-end mt-2 me-2">
-                                        <Button onClick={() => findDataDashboard3Relatorio()}>
+                                        <Button
+                                            onClick={() =>
+                                                findDataDashboard3Relatorio()
+                                            }
+                                        >
                                             <div className="d-flex">
                                                 <PlagiarismOutlinedIcon className="me-2"></PlagiarismOutlinedIcon>
                                                 Exportar planilha
                                             </div>
                                         </Button>
                                     </div>
-                                    
+
                                     <p className="h4 my-3 text-center">
                                         Usuarios / Unidade
                                     </p>
@@ -710,9 +768,13 @@ export function Painel() {
                                 <Card
                                     style={{ height: "500px" }}
                                     className="p-2 shadow"
-                                >   
+                                >
                                     <div className="d-flex justify-content-end mt-2 me-2">
-                                        <Button onClick={() => findDataDashboard5Relatorio()}>
+                                        <Button
+                                            onClick={() =>
+                                                findDataDashboard5Relatorio()
+                                            }
+                                        >
                                             <div className="d-flex">
                                                 <PlagiarismOutlinedIcon className="me-2"></PlagiarismOutlinedIcon>
                                                 Exportar planilha
@@ -737,9 +799,13 @@ export function Painel() {
                                 <Card
                                     style={{ height: "500px" }}
                                     className="p-2 shadow"
-                                >   
+                                >
                                     <div className="d-flex justify-content-end mt-2 me-2">
-                                        <Button onClick={() => findDataDashboard4Relatorio()}>
+                                        <Button
+                                            onClick={() =>
+                                                findDataDashboard4Relatorio()
+                                            }
+                                        >
                                             <div className="d-flex">
                                                 <PlagiarismOutlinedIcon className="me-2"></PlagiarismOutlinedIcon>
                                                 Exportar planilha

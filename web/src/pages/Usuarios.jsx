@@ -25,6 +25,7 @@ import Notification from "../components/Notification";
 import PaginationComponent from "../components/PaginationComponent";
 import { useEffect, useState, useContext } from "react";
 import { UserContext } from "../contexts/UserContexts";
+import Layout from "../components/Layout";
 export function Usuarios() {
     let page = 1;
     let paginaAtual = 1;
@@ -35,7 +36,7 @@ export function Usuarios() {
     const [inputValue, setInputValue] = useState("");
     const [isCreated, setIsCreated] = useState(false);
     const [active, setActive] = useState(false);
-    const { menu } = useContext(UserContext);
+    const { menu, theme, setTheme } = useContext(UserContext);
     const {
         handleSubmit,
         register,
@@ -138,7 +139,7 @@ export function Usuarios() {
     }
 
     return (
-        <>
+        <Layout>
             {active && (
                 <Notification
                     variant={apiMessage.variant}
@@ -159,7 +160,15 @@ export function Usuarios() {
                 <Col sm={menu ? 9 : 8} className="p-3">
                     <Row>
                         <Col>
-                            <p className="h3 mt-4">Listar usuários</p>
+                            <p
+                                className={
+                                    theme === "light"
+                                        ? "h3 mt-4"
+                                        : "h3 mt-4 text-light"
+                                }
+                            >
+                                Listar usuários
+                            </p>
                         </Col>
                     </Row>
                     <Row className="mt-4">
@@ -388,6 +397,6 @@ export function Usuarios() {
                     </Modal>
                 </Col>
             </Row>
-        </>
+        </Layout>
     );
 }

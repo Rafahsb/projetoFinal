@@ -10,7 +10,7 @@ import HandymanOutlinedIcon from "@mui/icons-material/HandymanOutlined";
 import PeopleAltOutlinedIcon from "@mui/icons-material/PeopleAltOutlined";
 export function Navigation() {
     const [currentPath, setCurrentPath] = useState(window.location.pathname);
-    const { menu } = useContext(UserContext);
+    const { menu, theme, setTheme } = useContext(UserContext);
     useEffect(() => {
         const handleRouteChange = () => {
             setCurrentPath(window.location.pathname);
@@ -27,7 +27,13 @@ export function Navigation() {
 
     return (
         <Tab.Container id="left-tabs-example" defaultActiveKey="first">
-            <Row className="vh-sm-100 p-0 mt-4 w-100 ms-0 justify-content-center">
+            <Row
+                className={
+                    theme === "light"
+                        ? "vh-sm-100 p-0 pt-4 w-100 ms-0 justify-content-center bg-light"
+                        : "vh-sm-100 p-0 pt-4 w-100 ms-0 justify-content-center bg-dark"
+                }
+            >
                 <Col sm={12}>
                     <Nav
                         variant="pills"
@@ -91,34 +97,5 @@ export function Navigation() {
                 </Col>
             </Row>
         </Tab.Container>
-        // <Nav className="flex-column align-items-center align-items-sm-start border-end vh-sm-100  ">
-        //     <Nav.Link
-        //         href="/painel"
-        //         className={currentPath === "/painel" ? "active" : ""}
-        //     >
-        //         Painel
-        //     </Nav.Link>
-        //     <Nav.Link
-        //         href="/viaturas"
-        //         eventKey="link-1"
-        //         className={currentPath === "/viaturas" ? "active" : ""}
-        //     >
-        //         Viaturas
-        //     </Nav.Link>
-        //     <Nav.Link
-        //         href="/manutencoes"
-        //         eventKey="link-2"
-        //         className={currentPath === "/manutencoes" ? "active" : ""}
-        //     >
-        //         Manutenções
-        //     </Nav.Link>
-        //     <Nav.Link
-        //         href="/usuarios"
-        //         eventKey=""
-        //         className={currentPath === "/usuarios" ? "active" : ""}
-        //     >
-        //         Usuários
-        //     </Nav.Link>
-        // </Nav>
     );
 }

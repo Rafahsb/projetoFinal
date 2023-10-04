@@ -14,6 +14,8 @@ import { BsThreeDotsVertical } from "react-icons/bs";
 import { Input } from "./Input";
 import { useNavigate } from "react-router-dom";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
+import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
+import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import {
     getUsuario,
@@ -30,7 +32,8 @@ export function Head() {
         formState: { errors },
     } = useForm();
     const [usuario, setUsuario] = useState({});
-    const { user, setUser, logout, menu, setMenu } = useContext(UserContext);
+    const { user, setUser, logout, menu, setMenu, theme, setTheme } =
+        useContext(UserContext);
     const [isUpdated, setIsUpdated] = useState(false);
     const [isUpdated2, setIsUpdated2] = useState(false);
     const [key, setKey] = useState("dados");
@@ -45,6 +48,15 @@ export function Head() {
         logado();
     }, []);
 
+    function alterarThema() {
+        if (theme === "light") {
+            setTheme("dark");
+            localStorage.setItem("theme", "dark");
+        } else {
+            setTheme("light");
+            localStorage.setItem("theme", "light");
+        }
+    }
     async function logado() {
         try {
             const result = await getUsuario();
@@ -93,7 +105,11 @@ export function Head() {
 
     return (
         <>
-            <Navbar className="bg-body-tertiary p-0 shadow px-sm-5">
+            <Navbar
+                className="bg-body-tertiary p-0 shadow px-sm-5 "
+                bg={theme}
+                data-bs-theme={theme}
+            >
                 {active && (
                     <Notification
                         variant={apiMessage.variant}
@@ -120,13 +136,31 @@ export function Head() {
                     <Navbar.Brand className="d-flex align-items-center">
                         <Dropdown align={{ sm: "start" }}>
                             <Dropdown.Toggle
-                                variant="light"
+                                variant={theme}
                                 id="dropdown-basic"
                             >
                                 <Image src={Perfil} className="w-50" fluid />
                             </Dropdown.Toggle>
 
                             <Dropdown.Menu>
+                                <Dropdown.Item
+                                    onClick={() => {
+                                        alterarThema();
+                                    }}
+                                >
+                                    {" "}
+                                    {theme === "light" ? (
+                                        <>
+                                            <VisibilityOffOutlinedIcon className="me-2"></VisibilityOffOutlinedIcon>
+                                            Dark Mode
+                                        </>
+                                    ) : (
+                                        <>
+                                            <VisibilityOutlinedIcon className="me-2"></VisibilityOutlinedIcon>
+                                            Light Mode
+                                        </>
+                                    )}
+                                </Dropdown.Item>
                                 <Dropdown.Item
                                     onClick={() => {
                                         setIsUpdated(true);
@@ -170,7 +204,7 @@ export function Head() {
                                 validated={!!errors}
                             >
                                 <Modal.Body>
-                                <Row className="mb-4">
+                                    <Row className="mb-4">
                                         <Input
                                             size={"sm"}
                                             defaultValue={usuario.nome}
@@ -203,7 +237,6 @@ export function Head() {
                                         </fieldset>
                                     </Row>
 
-                                    
                                     <Row className="mb-4">
                                         <Input
                                             size={"sm"}

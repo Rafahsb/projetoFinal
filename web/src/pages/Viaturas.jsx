@@ -25,6 +25,7 @@ import PaginationComponent from "../components/PaginationComponent";
 import { useEffect, useState, useContext } from "react";
 import { UserContext } from "../contexts/UserContexts";
 import { RemoveItem } from "../components/RemoveItem";
+import Layout from "../components/Layout";
 
 export function Viaturas() {
     const [active, setActive] = useState(false);
@@ -37,7 +38,7 @@ export function Viaturas() {
     const [itemsPerPage, setItemsPerPage] = useState(1);
 
     const [totalPages, setTotalPages] = useState();
-    const { menu } = useContext(UserContext);
+    const { menu, theme } = useContext(UserContext);
     const {
         handleSubmit,
         register,
@@ -141,7 +142,7 @@ export function Viaturas() {
     }
 
     return (
-        <>
+        <Layout>
             {active && (
                 <Notification
                     variant={apiMessage.variant}
@@ -162,7 +163,15 @@ export function Viaturas() {
                 <Col sm={menu ? 9 : 8} className="p-3">
                     <Row>
                         <Col>
-                            <p className="h3 mt-4">Listar viaturas</p>
+                            <p
+                                className={
+                                    theme === "light"
+                                        ? "h3 mt-4"
+                                        : "h3 mt-4 text-light"
+                                }
+                            >
+                                Listar viaturas
+                            </p>
                         </Col>
                     </Row>
                     <Row className="mt-4">
@@ -540,6 +549,6 @@ export function Viaturas() {
                     </Modal>
                 </Col>
             </Row>
-        </>
+        </Layout>
     );
 }

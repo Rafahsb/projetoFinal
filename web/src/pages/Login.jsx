@@ -11,6 +11,8 @@ import { UserContext } from "../contexts/UserContexts";
 import Layout from "../components/Layout";
 import ReCAPTCHA from "react-google-recaptcha";
 import Notification from "../components/Notification";
+import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
+import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
 
 export function Login() {
     const {
@@ -18,16 +20,35 @@ export function Login() {
         register,
         formState: { errors },
     } = useForm();
-    const { login, error, setError, loading, setApiReCaptcha, active, apiMessage, setActive } = useContext(UserContext);
-  
+    const {
+        login,
+        error,
+        setError,
+        loading,
+        setApiReCaptcha,
+        active,
+        apiMessage,
+        theme,
+        setActive,
+        setTheme,
+    } = useContext(UserContext);
+
+    function alterarThema() {
+        if (theme === "light") {
+            setTheme("dark");
+            localStorage.setItem("theme", "dark");
+        } else {
+            setTheme("light");
+            localStorage.setItem("theme", "light");
+        }
+    }
     const googleCaptchaApiKey = process.env.REACT_APP_CAPTCHA_API_KEY;
     return (
-
-        <Layout >
+        <Layout>
             <Container
                 fluid
                 className="vw-100 vh-100 d-flex justify-content-center p-0"
-            >   
+            >
                 {active && (
                     <Notification
                         variant={apiMessage.variant}
@@ -53,7 +74,39 @@ export function Login() {
                         md={6}
                         className="d-flex flex-column justify-content-center align-items-center px-5"
                     >
-                        <h1 className="d-flex text-center mb-4">
+                        <div
+                            className="d-flex  justify-content-end w-100"
+                            onClick={() => alterarThema()}
+                        >
+                            {theme === "light" ? (
+                                <>
+                                    <VisibilityOffOutlinedIcon
+                                        className={
+                                            theme === "light"
+                                                ? "me-2"
+                                                : "me-2 text-light"
+                                        }
+                                    ></VisibilityOffOutlinedIcon>
+                                </>
+                            ) : (
+                                <>
+                                    <VisibilityOutlinedIcon
+                                        className={
+                                            theme === "light"
+                                                ? "me-2"
+                                                : "me-2 text-light"
+                                        }
+                                    ></VisibilityOutlinedIcon>
+                                </>
+                            )}
+                        </div>
+                        <h1
+                            className={
+                                theme === "light"
+                                    ? "d-flex text-center mb-4"
+                                    : "d-flex text-center mb-4 text-light"
+                            }
+                        >
                             Via<div className="text-primary">Gestão</div>
                         </h1>
                         <h2 className="w-100 text-left mb-3">Login</h2>
@@ -63,7 +116,10 @@ export function Login() {
                             validated={!!errors}
                             onSubmit={handleSubmit(login)}
                         >
-                            <Form.Group className="mb-3" controlId="formBasicEmail">
+                            <Form.Group
+                                className="mb-3"
+                                controlId="formBasicEmail"
+                            >
                                 <Input
                                     className="mb-4"
                                     label="Matricula"
@@ -102,9 +158,10 @@ export function Login() {
                                     })}
                                 />
                             </Form.Group>
-                             
-                            <ReCAPTCHA sitekey={googleCaptchaApiKey} 
-                            onChange={setApiReCaptcha}      
+
+                            <ReCAPTCHA
+                                sitekey={googleCaptchaApiKey}
+                                onChange={setApiReCaptcha}
                             />
                             <Form.Group
                                 className="mb-3 d-flex justify-content-end"

@@ -1,4 +1,4 @@
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { api } from "../services/api";
 export const UserContext = createContext(null);
@@ -10,6 +10,17 @@ export function UserContextProvider({ children }) {
     const [loading, setLoading] = useState(false);
     const [user, setUser] = useState(null);
     const [apiRecaptcha, setApiReCaptcha] = useState("");
+    const [theme, setTheme] = useState("light");
+
+    useEffect(() => {
+        const themeLocalStorage = localStorage.getItem("theme");
+
+        if (themeLocalStorage) {
+            setTheme(themeLocalStorage);
+        } else {
+            localStorage.setItem("theme", theme);
+        }
+    }, []);
 
     const navigate = useNavigate();
 
@@ -63,6 +74,8 @@ export function UserContextProvider({ children }) {
                 menu,
                 setMenu,
                 setApiReCaptcha,
+                theme,
+                setTheme,
             }}
         >
             {children}

@@ -25,6 +25,7 @@ import Notification from "../components/Notification";
 import PaginationComponent from "../components/PaginationComponent";
 import { useEffect, useState, useContext } from "react";
 import { UserContext } from "../contexts/UserContexts";
+import Layout from "../components/Layout";
 
 export function Manutencoes() {
     const [viaturas, setViaturas] = useState([]);
@@ -33,10 +34,9 @@ export function Manutencoes() {
     const [currentPage, setCurrentPage] = useState(1);
     let paginaAtual = 1;
     const [totalPages, setTotalPages] = useState();
-
     const [active, setActive] = useState(false);
     const [manutencoesList, setManutencoesList] = useState([]);
-    const { menu } = useContext(UserContext);
+    const { menu, theme } = useContext(UserContext);
     const [isCreated, setIsCreated] = useState(false);
     const {
         handleSubmit,
@@ -151,7 +151,7 @@ export function Manutencoes() {
     }
 
     return (
-        <>
+        <Layout>
             {active && (
                 <Notification
                     variant={apiMessage.variant}
@@ -173,7 +173,15 @@ export function Manutencoes() {
                 <Col sm={menu ? 9 : 8} className="p-3">
                     <Row>
                         <Col>
-                            <p className="h3 mt-4">Listar manutenções</p>
+                            <p
+                                className={
+                                    theme === "light"
+                                        ? "h3 mt-4"
+                                        : "h3 mt-4 text-light"
+                                }
+                            >
+                                Listar manutenções
+                            </p>
                         </Col>
                     </Row>
                     <Row className="mt-4">
@@ -395,6 +403,6 @@ export function Manutencoes() {
                     </Modal>
                 </Col>
             </Row>
-        </>
+        </Layout>
     );
 }
