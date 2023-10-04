@@ -74,12 +74,45 @@ function PrivateRouteQuery({ children }) {
     }
 }
 
+function Logged({ children }) {
+    const accessToken = sessionStorage.getItem("token");
+    const [token, setToken] = useState(false);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        (async () => {
+            try {
+                if (!accessToken) {
+                    navigate("/");
+                    return null;
+                }
+                await validaToken(accessToken);
+                setToken(true);
+            } catch (error) {
+                sessionStorage.removeItem("token");
+                navigate("/");
+                return null;
+            }
+        })();
+    }, [accessToken]);
+
+    if (token) {
+        return navigate("/painel");;
+    } else {
+        return children;
+    }
+}
+
 export function Navigations() {
     return (
         <BrowserRouter>
             <UserContextProvider>
                 <Routes>
-                    <Route index path="/" element={<Login />} />
+                    <Route index path="/" element={
+                        <Logged>
+                            <Login />
+                        </Logged>
+                    } />
                     <Route
                         path="/painel"
                         element={
