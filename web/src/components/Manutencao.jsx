@@ -528,6 +528,7 @@ export function Manutencao(props) {
                 }
                 handleClose={() => setModalDelete(false)}
                 remove={props.removeManutencao}
+                setModalDelete={setModalDelete}
             />
         </>
     );

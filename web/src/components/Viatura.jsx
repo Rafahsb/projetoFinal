@@ -699,6 +699,7 @@ export function Viatura(props) {
                  além de afetar os dashboards.`}
                 handleClose={() => setModalDelete(false)}
                 remove={props.removeViatura}
+                setModalDelete={setModalDelete}
             />
         </>
     );

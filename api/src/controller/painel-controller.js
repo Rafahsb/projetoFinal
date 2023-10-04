@@ -409,11 +409,22 @@ class PainelController {
   async totalStatusViaturas(request, response) {
     const httpHelper = new HttpHelper(response);
     try {
-      const data = await ViaturasModel.findAll({
-        attributes: ["status", [Sequelize.fn("COUNT", "status"), "total"]],
-        group: ["status"],
-        order: ["status"]
-      });
+      
+      const data = await ViaturasModel.sequelize.query(`
+      WITH status_desejados AS (
+        SELECT 'garagem' AS status
+        UNION ALL
+        SELECT 'patrulha'
+        UNION ALL
+        SELECT 'manutencao'
+      )
+      
+      SELECT sd.status, COALESCE(COUNT(v.status), 0) AS total
+      FROM status_desejados sd
+      LEFT JOIN viaturas v ON sd.status = v.status
+      GROUP BY sd.status
+      ORDER BY sd.status;
+      `)
 
       return httpHelper.ok({ dashboard: data });
 

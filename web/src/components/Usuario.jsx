@@ -321,6 +321,7 @@ export function Usuario(props) {
                 }
                 handleClose={() => setModalDelete(false)}
                 remove={props.removeUsuario}
+                setModalDelete={setModalDelete}
             />
         </>
     );

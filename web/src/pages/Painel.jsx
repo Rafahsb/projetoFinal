@@ -357,7 +357,8 @@ export function Painel() {
     async function findTotalStatusViaturas() {
         try {
             const result = await getTotalStatusViaturas();
-            setTotalStatusViaturas(result.data.dashboard);
+            console.log(result.data.dashboard[0]);
+            setTotalStatusViaturas(result.data.dashboard[0]);
         } catch (error) {
             console.error(error);
             navigate("/painel");
@@ -460,7 +461,7 @@ export function Painel() {
                                         xs={5}
                                     >
                                         <GarageOutlinedIcon></GarageOutlinedIcon>
-                                        <p className="m-0"> Garagem</p>
+                                        <p className="m-0"> {totalStatusViaturas[0]?.status}</p>
                                     </Col>
                                 </Row>
                             </Card>
@@ -485,7 +486,7 @@ export function Painel() {
                                         xs={5}
                                     >
                                         <CarRepairOutlinedIcon></CarRepairOutlinedIcon>
-                                        <p className="m-0"> Manutenção</p>
+                                        <p className="m-0"> {totalStatusViaturas[1]?.status}</p>
                                     </Col>
                                 </Row>
                             </Card>
@@ -510,7 +511,7 @@ export function Painel() {
                                         xs={5}
                                     >
                                         <EmojiTransportationOutlinedIcon></EmojiTransportationOutlinedIcon>
-                                        <p className="m-0">Patrulha</p>
+                                        <p className="m-0">{totalStatusViaturas[2]?.status}</p>
                                     </Col>
                                 </Row>
                             </Card>
