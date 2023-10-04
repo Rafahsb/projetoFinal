@@ -151,7 +151,6 @@ routes.post(
 );
 routes.post(
   "/alterarSenha",
-  authMiddleware,
   rateLimitMiddleware,
   usuarioController.alterarEsqueceuSenha
 );
@@ -231,14 +230,12 @@ routes.get(
   painelController.Dashboard5Relatorio
 );
 
-
 routes.get(
   "/totalStatusViaturas",
   authMiddleware,
   rateLimitMiddleware,
   painelController.totalStatusViaturas
 );
-
 
 // Verificações
 

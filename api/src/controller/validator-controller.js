@@ -36,7 +36,7 @@ class ValidatorController {
         httpHelper.ok({ message: "reCAPTCHA verificado com sucesso" });
       } else {
         return httpHelper.badRequest({
-          message: "Ops! Captcha incorreto!",
+          message: "Ops! Captcha não informado!",
           variant: "danger",
         });
       }

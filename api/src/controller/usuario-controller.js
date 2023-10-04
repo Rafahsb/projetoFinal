@@ -43,12 +43,13 @@ class UsuarioController {
       const resetLink = `${baseURL}/alterarSenha?token=${accessToken}`;
 
       const mailOptions = {
-        from: "viagestaoreset@gmail.com",
+        from: process.env.USEREMAIL,
         to: userExists.email,
         subject: "Redefinir senha - ViaGestão",
         text: `Clique no link a seguir para redefinir sua senha: ${resetLink}. Expira em 15 minutos!.`,
       };
 
+      console.log(mailOptions);
       transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
           return httpHelper.internalError(`Erro ao enviar o email: ${error}`);
@@ -342,7 +343,14 @@ class UsuarioController {
     }
     try {
       const filtro = await UsuariosModel.findOne({
-        attributes: ["matricula","nome", "email", "unidade", "cargo", "id_usuario"],
+        attributes: [
+          "matricula",
+          "nome",
+          "email",
+          "unidade",
+          "cargo",
+          "id_usuario",
+        ],
         where: { id_usuario: dadosUsuario.id },
       });
 

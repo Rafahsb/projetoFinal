@@ -9,7 +9,7 @@ const limiter = rateLimit({
 
 const limiter2 = rateLimit({
   windowMs: 15 * 60 * 1000, // Define o período de tempo (15 minutos)
-  max: 3, // Define o número máximo de solicitações permitidas no período
+  max: 5, // Define o número máximo de solicitações permitidas no período
   message:
     "Você atingiu o limite de solicitações. Tente novamente mais tarde. 15 minutos",
 });

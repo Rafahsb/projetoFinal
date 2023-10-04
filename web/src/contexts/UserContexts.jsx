@@ -28,7 +28,7 @@ export function UserContextProvider({ children }) {
         try {
             setLoading(true);
             const result = await api.post("/login", data);
-            const resultVerifyRecaptcha = await api.post("/verify-recaptcha", {
+            await api.post("/verify-recaptcha", {
                 recaptchaToken: apiRecaptcha,
             });
 
