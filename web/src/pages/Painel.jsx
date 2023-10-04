@@ -568,7 +568,7 @@ export function Painel() {
                             id="controlled-tab-example"
                             activeKey={key}
                             onSelect={(k) => setKey(k)}
-                            className="mb-3"
+                            className="mb-3 ms-3"
                             variant="pills"
                         >
                             <Tab eventKey="DM1" title="GM / VIATURA">

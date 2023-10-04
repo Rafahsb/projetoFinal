@@ -109,7 +109,15 @@ export function Login() {
                         >
                             Via<div className="text-primary">Gestão</div>
                         </h1>
-                        <h2 className="w-100 text-left mb-3">Login</h2>
+                        <h2
+                            className={
+                                theme === "light"
+                                    ? "w-100 text-left mb-3"
+                                    : "w-100 text-left mb-3 text-light"
+                            }
+                        >
+                            Login
+                        </h2>
                         <Form
                             className="w-100"
                             noValidate
