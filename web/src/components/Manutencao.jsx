@@ -12,7 +12,6 @@ import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import { RemoveItem } from "../components/RemoveItem";
 import { getViaturas } from "../services/viaturas-service";
 export function Manutencao(props) {
-    console.log(props);
     const {
         handleSubmit,
         register,

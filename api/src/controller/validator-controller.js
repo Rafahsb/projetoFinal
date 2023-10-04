@@ -10,7 +10,6 @@ class ValidatorController {
         token.replace(/"/g, ""),
         process.env.TOKEN_SECRET
       );
-      console.log("dados: ", dadosUsuario);
       return httpHelper.ok("Token válido");
     } catch (error) {
       return httpHelper.internalError(error);

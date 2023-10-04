@@ -203,11 +203,11 @@ class UsuarioController {
           page,
           {
             [Op.or]: [
-              { matricula: { [Op.like]: `%${filtro}%` } },
-              { nome: { [Op.like]: `%${filtro}%` } },
-              { email: { [Op.like]: `%${filtro}%` } },
-              { unidade: { [Op.like]: `%${filtro}%` } },
-              { cargo: { [Op.like]: `%${filtro}%` } },
+              { matricula: { [Op.iLike]: `%${filtro}%` } },
+              { nome: { [Op.iLike]: `%${filtro}%` } },
+              { email: { [Op.iLike]: `%${filtro}%` } },
+              { unidade: { [Op.iLike]: `%${filtro}%` } },
+              { cargo: { [Op.iLike]: `%${filtro}%` } },
             ],
           },
           ["id_usuario", "matricula", "nome", "email", "unidade", "cargo"]
@@ -342,7 +342,7 @@ class UsuarioController {
     }
     try {
       const filtro = await UsuariosModel.findOne({
-        attributes: ["matricula", "email", "unidade", "cargo", "id_usuario"],
+        attributes: ["matricula","nome", "email", "unidade", "cargo", "id_usuario"],
         where: { id_usuario: dadosUsuario.id },
       });
 
@@ -355,14 +355,13 @@ class UsuarioController {
   async editarPerfil(request, response) {
     const httpHelper = new HttpHelper(response);
     const { id } = request.params;
-    const { matricula, nome, email, unidade, cargo } = request.body;
+    const { nome, email, unidade, cargo } = request.body;
 
     try {
       await UsuariosModel.update(
         {
           id_usuario: id,
           nome,
-          matricula,
           email,
           unidade,
           cargo,
@@ -386,7 +385,7 @@ class UsuarioController {
   async atualizarUsuario(request, response) {
     const httpHelper = new HttpHelper(response);
     const { id } = request.params;
-    const { matricula, nome, senha, email, unidade, cargo } = request.body;
+    const { matricula, nome, email, unidade, cargo } = request.body;
 
     try {
       await UsuariosModel.update(

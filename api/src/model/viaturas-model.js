@@ -49,7 +49,7 @@ class ViaturasModel extends Model {
         },
         piloto: {
           type: DataTypes.TEXT,
-          allowNull: false,
+          allowNull: true,
         },
         status: {
           type: DataTypes.TEXT,

@@ -169,18 +169,41 @@ routes.get(
   rateLimitMiddleware,
   painelController.Dashboard
 );
+
+routes.get(
+  "/dashboardRelatorio",
+  authMiddleware,
+  rateLimitMiddleware,
+  painelController.DashboardRelatorio
+);
+
 routes.get(
   "/dashboard2/:ano?",
   authMiddleware,
   rateLimitMiddleware,
   painelController.Dashboard2
 );
+
+routes.get(
+  "/dashboard2Relatorio/:ano?",
+  authMiddleware,
+  rateLimitMiddleware,
+  painelController.Dashboard2Relatorio
+);
+
 routes.get(
   "/dashboard3",
   authMiddleware,
   rateLimitMiddleware,
   painelController.Dashboard3
 );
+routes.get(
+  "/dashboard3Relatorio",
+  authMiddleware,
+  rateLimitMiddleware,
+  painelController.Dashboard3Relatorio
+);
+
 routes.get(
   "/dashboard4",
   authMiddleware,
@@ -189,10 +212,23 @@ routes.get(
 );
 
 routes.get(
+  "/dashboard4Relatorio",
+  authMiddleware,
+  rateLimitMiddleware,
+  painelController.Dashboard4Relatorio
+);
+
+routes.get(
   "/dashboard5",
   authMiddleware,
   rateLimitMiddleware,
   painelController.Dashboard5
+);
+routes.get(
+  "/dashboard5Relatorio",
+  authMiddleware,
+  rateLimitMiddleware,
+  painelController.Dashboard5Relatorio
 );
 
 

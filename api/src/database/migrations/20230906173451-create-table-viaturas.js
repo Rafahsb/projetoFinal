@@ -49,7 +49,7 @@ module.exports = {
       },
       piloto: {
         type: Sequelize.TEXT,
-        allowNull: false,
+        allowNull: true,
       },
       status: {
         type: Sequelize.TEXT,

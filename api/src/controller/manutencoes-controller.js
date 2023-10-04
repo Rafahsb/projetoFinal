@@ -87,6 +87,7 @@ class ManutencoesController {
       await ViaturasModel.update(
         {
           status: "manutencao",
+          piloto: '',
         },
         {
           where: {
@@ -109,11 +110,43 @@ class ManutencoesController {
     const httpHelper = new HttpHelper(response);
     const { id } = request.params;
     try {
+
+      const data = await ManutencoesModel.findOne({
+        where: {
+          id_manutencao: id,
+        },
+      });
+
+      console.log(data);
+
       await ManutencoesModel.destroy({
         where: {
           id_manutencao: id,
         },
       });
+
+      const manutencaoExists = await ManutencoesModel.sequelize.query(`
+        SELECT * FROM viaturas INNER JOIN manutencoes ON manutencoes.id_viatura = viaturas.id_viatura
+        WHERE viaturas.id_viatura =  ${data.dataValues.id_viatura} and data_nota isNull
+        order by id_manutencao desc
+        limit 1;
+      `);
+
+      console.log(manutencaoExists[0][0]);
+      if (manutencaoExists[0][0] == undefined) {
+        await ViaturasModel.update(
+          {
+            status: "garagem",
+          },
+          {
+            where: {
+              id_viatura: data.dataValues.id_viatura,
+            },
+          }
+        );
+       
+      }
+
 
       return httpHelper.noContent();
     } catch (error) {
@@ -146,7 +179,6 @@ class ManutencoesController {
           type: Sequelize.QueryTypes.SELECT,
         }
       );
-      console.log(filtro);
       filtro.forEach((manutencao) => {
         manutencao.data_nota = Validates.formatDate(manutencao.data_nota);
         manutencao.data_manutencao = Validates.formatDate(
@@ -154,7 +186,6 @@ class ManutencoesController {
         );
       });
 
-      console.log(filtro);
       return httpHelper.ok({ Manutencoes: filtro });
     } catch (error) {
       return httpHelper.internalError(error);
@@ -166,13 +197,14 @@ class ManutencoesController {
     let busca = {};
 
     const { filtro, page } = request.query || null;
+    const filtroLowerCase = filtro ? filtro.toLowerCase() : "";
 
     try {
-      if (filtro != "undefined" && filtro != "") {
+      if (filtroLowerCase != "undefined" && filtroLowerCase != "") {
         busca = await paginationWhereManut(
           ManutencoesModel,
           page,
-          `manutencoes.numero_nota LIKE '%${filtro}%' OR manutencoes.descricao LIKE '%${filtro}%'`
+          `LOWER(manutencoes.numero_nota) LIKE '%${filtroLowerCase}%' OR LOWER(manutencoes.descricao) LIKE '%${filtroLowerCase}%'`
         );
       } else {
         busca = await paginationWhereManut(ManutencoesModel, page);
@@ -209,8 +241,7 @@ class ManutencoesController {
   async atualizarManutencao(request, response) {
     const httpHelper = new HttpHelper(response);
     const { id } = request.params;
-    const { numero_nota, descricao, preco, data_manutencao, id_viatura } =
-      request.body;
+    const { numero_nota, descricao, preco, data_manutencao, id_viatura } = request.body;
     let { data_nota } = request.body;
     try {
       if (data_nota === "") {
@@ -260,6 +291,8 @@ class ManutencoesController {
           variant: "danger",
         });
       }
+
+      
 
       await ManutencoesModel.update(
         {

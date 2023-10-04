@@ -169,13 +169,14 @@ class ViaturaController {
       if (filtro != "undefined" && filtro != "") {
         busca = await paginationWhere(ViaturasModel, page, {
           [Op.or]: [
-            { marca: { [Op.like]: `%${filtro}%` } },
-            { modelo: { [Op.like]: `%${filtro}%` } },
-            { chassi: { [Op.like]: `%${filtro}%` } },
-            { cor: { [Op.like]: `%${filtro}%` } },
-            { orgao_vinculado: { [Op.like]: `%${filtro}%` } },
-            { placa: { [Op.like]: `%${filtro}%` } },
-            { piloto: { [Op.like]: `%${filtro}%` } },
+            { marca: { [Op.iLike]: `%${filtro}%` } },
+            { modelo: { [Op.iLike]: `%${filtro}%` } },
+            { chassi: { [Op.iLike]: `%${filtro}%` } },
+            { cor: { [Op.iLike]: `%${filtro}%` } },
+            { orgao_vinculado: { [Op.iLike]: `%${filtro}%` } },
+            { placa: { [Op.iLike]: `%${filtro}%` } },
+            { piloto: { [Op.iLike]: `%${filtro}%` } },
+            { status: { [Op.iLike]: `%${filtro}%` } },
           ],
         });
       } else {
@@ -359,7 +360,15 @@ class ViaturaController {
             variant: "danger",
           });
         }
+        if(piloto.length > 3) {
+          return httpHelper.badRequest({
+            message:
+              "Não foi possível alterar o status. Apague o motorista! ",
+            variant: "danger",
+          });
+        }
       }
+
 
       if (!viaturaExists) return httpHelper.notFound("Viatura não encontrada!");
 

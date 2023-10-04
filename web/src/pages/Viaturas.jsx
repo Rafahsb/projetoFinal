@@ -218,7 +218,7 @@ export function Viaturas() {
                                         <th>Modelo</th>
                                         <th>Quilometragem</th>
                                         <th>Placa</th>
-                                        <th>Piloto</th>
+                                        <th>Motorista</th>
                                         <th>Status</th>
                                         <th>Ações</th>
                                     </tr>

@@ -62,6 +62,7 @@ export function Head() {
                 email: data.email,
                 unidade: data.unidade,
                 cargo: data.cargo,
+                nome: data.nome,
             });
             await logado();
             setApiMessage(result.data);
@@ -169,6 +170,26 @@ export function Head() {
                                 validated={!!errors}
                             >
                                 <Modal.Body>
+                                <Row className="mb-4">
+                                        <Input
+                                            size={"sm"}
+                                            defaultValue={usuario.nome}
+                                            type="text"
+                                            label="Nome:"
+                                            placeholder="Informe o nome:"
+                                            required={true}
+                                            name="nome"
+                                            error={errors.nome}
+                                            validations={register("nome", {
+                                                required: {
+                                                    value: true,
+                                                    message:
+                                                        "O nome é um campo obrigatório",
+                                                },
+                                            })}
+                                        />
+                                    </Row>
+
                                     <Row className="mb-4">
                                         <fieldset disabled>
                                             <Input
@@ -182,6 +203,7 @@ export function Head() {
                                         </fieldset>
                                     </Row>
 
+                                    
                                     <Row className="mb-4">
                                         <Input
                                             size={"sm"}

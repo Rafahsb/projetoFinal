@@ -24,10 +24,15 @@ import { getTotalViaturas } from "../services/viaturas-service";
 import { getTotalUsuarios } from "../services/usuarios-service";
 import {
     getDataDashboard,
+    getDataDashboardRelatorio,
     getDataDashboard2,
+    getDataDashboard2Relatorio,
     getDataDashboard3,
+    getDataDashboard3Relatorio,
     getDataDashboard4,
+    getDataDashboard4Relatorio,
     getDataDashboard5,
+    getDataDashboard5Relatorio,
     getTotalStatusViaturas
 } from "../services/painel-service";
 import { useEffect, useState, useContext } from "react";
@@ -44,8 +49,11 @@ import OrgaosEnum from "../enums/orgaosEnum";
 import PeopleAltOutlinedIcon from "@mui/icons-material/PeopleAltOutlined";
 import DirectionsCarOutlinedIcon from "@mui/icons-material/DirectionsCarOutlined";
 import EmojiTransportationOutlinedIcon from '@mui/icons-material/EmojiTransportationOutlined';
+import PlagiarismOutlinedIcon from "@mui/icons-material/PlagiarismOutlined";
 import GarageOutlinedIcon from '@mui/icons-material/GarageOutlined';
 import CarRepairOutlinedIcon from '@mui/icons-material/CarRepairOutlined';
+import { saveAs } from "file-saver";
+
 export function Painel() {
     const currentYear = new Date().getFullYear();
     const { menu } = useContext(UserContext);
@@ -56,6 +64,7 @@ export function Painel() {
     const [totalUsuarios, setTotalUsuarios] = useState({});
     const [listDashboard, setListDashboard] = useState({});
     const [listDashboard2, setListDashboard2] = useState({});
+    const [dataDashboard2, setDataDashboard2] = useState({});
     const [listDashboard3, setListDashboard3] = useState({});
     const [listDashboard4, setListDashboard4] = useState({});
     const [listDashboard5, setListDashboard5] = useState({});
@@ -128,9 +137,29 @@ export function Painel() {
         }
     }
 
+    async function findDataDashboardRelatorio() {
+        try {
+            const response = await getDataDashboardRelatorio();
+            const base64Data = response.data.relatorio;
+            const byteCharacters = atob(base64Data);
+            const byteNumbers = new Array(byteCharacters.length);
+            for (let i = 0; i < byteCharacters.length; i++) {
+                byteNumbers[i] = byteCharacters.charCodeAt(i);
+            }
+            const byteArray = new Uint8Array(byteNumbers);
+            const blob = new Blob([byteArray], {
+                type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            });
+            saveAs(blob, "Gastos em manutenções por viatura.xlsx");
+        } catch (error) {
+            return console.error(error);
+        }
+    }
+
     async function filterDataDashboard2(data) {
         try {
             const result = await getDataDashboard2(data ? data.ano : "");
+            setDataDashboard2(result)
             const formattedData = result.data.dashboard2.map((item) => ({
                 name: `${item.mes}`,
                 Total: item.total_por_mes,
@@ -140,6 +169,26 @@ export function Painel() {
         } catch (error) {
             console.error(error);
             navigate("/painel");
+        }
+    }
+
+    async function findDataDashboard2Relatorio() {
+        try {
+            const response = await getDataDashboard2Relatorio(dataDashboard2.data.ano);
+            
+            const base64Data = response.data.relatorio;
+            const byteCharacters = atob(base64Data);
+            const byteNumbers = new Array(byteCharacters.length);
+            for (let i = 0; i < byteCharacters.length; i++) {
+                byteNumbers[i] = byteCharacters.charCodeAt(i);
+            }
+            const byteArray = new Uint8Array(byteNumbers);
+            const blob = new Blob([byteArray], {
+                type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            });
+            saveAs(blob, `Gasto total em manutenções em ${dataDashboard2.data.ano}.xlsx`);
+        } catch (error) {
+            return console.error(error);
         }
     }
 
@@ -164,6 +213,25 @@ export function Painel() {
         } catch (error) {
             console.error(error);
             navigate("/painel");
+        }
+    }
+
+    async function findDataDashboard3Relatorio() {
+        try {
+            const response = await getDataDashboard3Relatorio();
+            const base64Data = response.data.relatorio;
+            const byteCharacters = atob(base64Data);
+            const byteNumbers = new Array(byteCharacters.length);
+            for (let i = 0; i < byteCharacters.length; i++) {
+                byteNumbers[i] = byteCharacters.charCodeAt(i);
+            }
+            const byteArray = new Uint8Array(byteNumbers);
+            const blob = new Blob([byteArray], {
+                type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            });
+            saveAs(blob, "Usuarios por unidade.xlsx");
+        } catch (error) {
+            return console.error(error);
         }
     }
 
@@ -194,6 +262,25 @@ export function Painel() {
         }
     }
 
+    async function findDataDashboard4Relatorio() {
+        try {
+            const response = await getDataDashboard4Relatorio();
+            const base64Data = response.data.relatorio;
+            const byteCharacters = atob(base64Data);
+            const byteNumbers = new Array(byteCharacters.length);
+            for (let i = 0; i < byteCharacters.length; i++) {
+                byteNumbers[i] = byteCharacters.charCodeAt(i);
+            }
+            const byteArray = new Uint8Array(byteNumbers);
+            const blob = new Blob([byteArray], {
+                type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            });
+            saveAs(blob, "Viaturas por órgão.xlsx");
+        } catch (error) {
+            return console.error(error);
+        }
+    }
+
     async function findDataDashboard5() {
         try {
             const result = await getDataDashboard5();
@@ -217,6 +304,26 @@ export function Painel() {
             navigate("/painel");
         }
     }
+
+    async function findDataDashboard5Relatorio() {
+        try {
+            const response = await getDataDashboard5Relatorio();
+            const base64Data = response.data.relatorio;
+            const byteCharacters = atob(base64Data);
+            const byteNumbers = new Array(byteCharacters.length);
+            for (let i = 0; i < byteCharacters.length; i++) {
+                byteNumbers[i] = byteCharacters.charCodeAt(i);
+            }
+            const byteArray = new Uint8Array(byteNumbers);
+            const blob = new Blob([byteArray], {
+                type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            });
+            saveAs(blob, "Usuarios por cargo.xlsx");
+        } catch (error) {
+            return console.error(error);
+        }
+    }
+
     async function findTotalManutencoes() {
         try {
             const result = await getTotalManutencoes();
@@ -250,7 +357,6 @@ export function Painel() {
     async function findTotalStatusViaturas() {
         try {
             const result = await getTotalStatusViaturas();
-            console.log('result total  status: ', result);
             setTotalStatusViaturas(result.data.dashboard);
         } catch (error) {
             console.error(error);
@@ -423,7 +529,15 @@ export function Painel() {
                                     <Card
                                         style={{ height: "650px" }}
                                         className="p-2 shadow"
-                                    >
+                                    >   
+                                        <div className="d-flex justify-content-end mt-2 me-2">
+                                            <Button onClick={() => findDataDashboardRelatorio()}>
+                                                <div className="d-flex">
+                                                    <PlagiarismOutlinedIcon className="me-2"></PlagiarismOutlinedIcon>
+                                                    Exportar planilha
+                                                </div>
+                                            </Button>
+                                        </div>
                                         <p className="h4 my-3 text-center">
                                             Gastos em manutenções / viatura
                                         </p>
@@ -509,7 +623,15 @@ export function Painel() {
                                     <Card
                                         style={{ height: "500px" }}
                                         className="p-2 shadow"
-                                    >
+                                    >   
+                                        <div className="d-flex justify-content-end mt-2 me-2">
+                                            <Button onClick={() => findDataDashboard2Relatorio()}>
+                                                <div className="d-flex">
+                                                    <PlagiarismOutlinedIcon className="me-2"></PlagiarismOutlinedIcon>
+                                                    Exportar planilha
+                                                </div>
+                                            </Button>
+                                        </div>
                                         <p className="h4 my-3 text-center">
                                             Gasto total em manutenções / Ano
                                         </p>
@@ -559,7 +681,16 @@ export function Painel() {
                                 <Card
                                     style={{ height: "500px" }}
                                     className="p-2 shadow"
-                                >
+                                >   
+                                    <div className="d-flex justify-content-end mt-2 me-2">
+                                        <Button onClick={() => findDataDashboard3Relatorio()}>
+                                            <div className="d-flex">
+                                                <PlagiarismOutlinedIcon className="me-2"></PlagiarismOutlinedIcon>
+                                                Exportar planilha
+                                            </div>
+                                        </Button>
+                                    </div>
+                                    
                                     <p className="h4 my-3 text-center">
                                         Usuarios / Unidade
                                     </p>
@@ -578,7 +709,15 @@ export function Painel() {
                                 <Card
                                     style={{ height: "500px" }}
                                     className="p-2 shadow"
-                                >
+                                >   
+                                    <div className="d-flex justify-content-end mt-2 me-2">
+                                        <Button onClick={() => findDataDashboard5Relatorio()}>
+                                            <div className="d-flex">
+                                                <PlagiarismOutlinedIcon className="me-2"></PlagiarismOutlinedIcon>
+                                                Exportar planilha
+                                            </div>
+                                        </Button>
+                                    </div>
                                     <p className="h4 my-3 text-center">
                                         Usuarios / Cargo
                                     </p>
@@ -597,7 +736,15 @@ export function Painel() {
                                 <Card
                                     style={{ height: "500px" }}
                                     className="p-2 shadow"
-                                >
+                                >   
+                                    <div className="d-flex justify-content-end mt-2 me-2">
+                                        <Button onClick={() => findDataDashboard4Relatorio()}>
+                                            <div className="d-flex">
+                                                <PlagiarismOutlinedIcon className="me-2"></PlagiarismOutlinedIcon>
+                                                Exportar planilha
+                                            </div>
+                                        </Button>
+                                    </div>
                                     <p className="h4 my-3 text-center">
                                         Viaturas / Orgão
                                     </p>

@@ -2,8 +2,6 @@ import React, { useEffect, useState } from "react";
 import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
 
 function Localizacao(props) {
-    console.log(Number(props.lat));
-    console.log(Number(props.lng));
     const [currentLocation, setCurrentLocation] = useState({
         lat: Number(props.lat),
         lng: Number(props.lng),

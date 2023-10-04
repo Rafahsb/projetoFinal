@@ -107,6 +107,7 @@ export async function updateUsuario(data) {
             email: data.email,
             unidade: data.unidade,
             cargo: data.cargo,
+            nome: data.nome,
         },
         {
             headers: {
