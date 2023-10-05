@@ -500,7 +500,7 @@ export function Manutencao(props) {
                                             <option
                                                 key={viatura.id_viatura}
                                                 value={viatura.id_viatura}
-                                            >{`${viatura.marca} - ${viatura.modelo} - ${viatura.chassi}`}</option>
+                                            >{`${viatura.marca} - ${viatura.modelo} - ${viatura.placa}`}</option>
                                         ))}
                                     </Form.Select>
                                 </Form.Group>

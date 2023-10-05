@@ -97,7 +97,7 @@ function Logged({ children }) {
     }, [accessToken]);
 
     if (token) {
-        return navigate("/painel");;
+        return navigate("/painel");
     } else {
         return children;
     }

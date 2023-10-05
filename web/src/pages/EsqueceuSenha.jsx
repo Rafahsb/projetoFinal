@@ -2,6 +2,7 @@ import { useForm } from "react-hook-form";
 import { Input } from "../components/Input";
 import { Navigate, useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import toast, { Toaster } from 'react-hot-toast';
 import { useState } from "react";
 import Row from "react-bootstrap/Row";
 import { Button, Col, Container, Form, Card, Modal } from "react-bootstrap";
@@ -19,14 +20,21 @@ export function EsqueceuSenha() {
     } = useForm();
 
     async function requestPassword(params) {
+        const toastResetEmail = toast.loading("Enviando email...");
         try {
             await resetPassword(params);
+            toast.success("Email enviado com sucesso", {
+                id: toastResetEmail
+            })
             setTitle("Esqueceu sua senha?");
             setMessage(
                 "Foi enviado um e-mail com um link para redefinição de senha! clique em 'ok' para voltar para a tela de login."
             );
             setModal(true);
         } catch (error) {
+            toast.error("Não foi possivel enviar o email", {
+                id: toastResetEmail
+            })
             setTitle("Esqueceu sua senha?");
     
             if(error.response.status === 429 ) {
@@ -49,6 +57,7 @@ export function EsqueceuSenha() {
 
     return (
         <Layout key={3}>
+            <Toaster />
             <Container className="vh-100 d-flex justify-content-center align-items-center">
                 <Row className="w-100 d-flex justify-content-center">
                     <Col sm={6}>
